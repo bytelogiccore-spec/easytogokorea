@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - Profile & Wallet</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        .profile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding: 0 24px;
+        }
+
+        .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .badge-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .badge-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #F5F5F7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 2px solid transparent;
+        }
+
+        .badge-icon.active {
+            background: #FFF9F7;
+            border-color: var(--accent);
+        }
+
+        .pass-stack {
+            position: relative;
+            height: 200px;
+            margin-top: 16px;
+        }
+
+        .pass-card {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .pass-card:nth-child(1) {
+            z-index: 3;
+            transform: translateY(0);
+        }
+
+        .pass-card:nth-child(2) {
+            z-index: 2;
+            transform: translateY(40px) scale(0.95);
+            opacity: 0.9;
+        }
+
+        .pass-card:nth-child(3) {
+            z-index: 1;
+            transform: translateY(80px) scale(0.9);
+            opacity: 0.8;
+        }
+
+        .pass-stack:active .pass-card {
+            transform: translateY(0) scale(1) !important;
+            opacity: 1 !important;
+            z-index: 4;
+            position: relative;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <span class="icon">📶</span>
+                <span class="icon">🔋</span>
+            </div>
+        </div>
+
+        <div class="app-content" style="padding-bottom: 90px; overflow-y: auto;">
+            <div class="profile-header mt-8">
+                <button class="icon-btn clear" style="font-size: 22px;"
+                    onclick="document.getElementById('settings-modal').classList.add('active')">⚙️</button>
+                <div style="display: flex; gap: 8px;">
+                    <button class="pill-btn glass" style="padding: 6px 12px; font-size: 12px;">English</button>
+                    <button class="icon-btn clear" style="font-size: 22px;">💳</button>
+                </div>
+            </div>
+
+            <div class="user-info">
+                <div class="avatar">A</div>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                        <h2 style="margin: 0; font-size: 20px;">Alex Wanderlust</h2>
+                        <span class="badge" style="background:#1A1A2E; color:white;">Lv.4</span>
+                    </div>
+                    <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">Traveler from UK 🇬🇧</p>
+                </div>
+            </div>
+
+            <div class="dashboard-stats" style="display: flex; padding: 0 24px; gap: 8px; margin-bottom: 24px;">
+                <div class="card" style="flex:1; margin:0; padding:12px; text-align:center;">
+                    <h4 style="margin:0 0 4px 0; font-size:20px; color:var(--primary);">12</h4>
+                    <p style="margin:0; font-size:11px; color:var(--text-secondary);">작성 후기</p>
+                </div>
+                <div class="card" style="flex:1; margin:0; padding:12px; text-align:center;">
+                    <h4 style="margin:0 0 4px 0; font-size:20px; color:var(--primary);">34</h4>
+                    <p style="margin:0; font-size:11px; color:var(--text-secondary);">장소 찜</p>
+                </div>
+                <div class="card" style="flex:1; margin:0; padding:12px; text-align:center;">
+                    <h4 style="margin:0 0 4px 0; font-size:20px; color:var(--primary);">3</h4>
+                    <p style="margin:0; font-size:11px; color:var(--text-secondary);">게시글 태그</p>
+                </div>
+            </div>
+
+            <div style="padding: 0 24px;">
+                <h3 class="section-title" style="font-size: 16px;">🏆 나의 획득 뱃지</h3>
+                <div class="badge-grid mb-32">
+                    <div class="badge-item">
+                        <div class="badge-icon active">👑</div>
+                        <span>궁궐<br>탐험가</span>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon active">🍜</div>
+                        <span>매운맛<br>마스터</span>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon active">🎭</div>
+                        <span>인디<br>서포터</span>
+                    </div>
+                    <div class="badge-item">
+                        <div class="badge-icon">🔒</div>
+                        <span style="color:var(--text-secondary);">미획득</span>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+                    <h3 class="section-title" style="font-size: 16px; margin:0;">🎫 내 지갑 (Passes & Tickets)</h3>
+                    <button class="text-btn" style="font-size: 12px; padding:0;">자세히 보기</button>
+                </div>
+
+                <div class="pass-stack" onclick="this.classList.toggle('active')">
+                    <!-- Pass 1: Active KT Pass -->
+                    <div class="card pass-card"
+                        style="background: linear-gradient(135deg, #1A4B9B, #0A2B5E); color: white; border: none; padding: 20px;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h3 style="margin: 0; font-size: 16px;">🇰🇷 Korea Tourism Pass</h3>
+                            <span style="font-size: 24px;">🛜</span>
+                        </div>
+                        <p style="margin: 0 0 16px 0; font-size: 12px; opacity: 0.8;">3 Days Transit + Tour Pass</p>
+                        <div
+                            style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; text-align: center;">
+                            <p style="margin: 0; font-size: 12px; font-weight: 600;">잔여 42시간 15분</p>
+                            <p style="margin: 4px 0 0 0; font-size: 10px; opacity: 0.7;">단말기에 NFC 태그하여 탑승</p>
+                        </div>
+                    </div>
+
+                    <!-- Pass 2: Shuttle QR -->
+                    <div class="card pass-card"
+                        style="background: #FFF9F7; border: 2px solid var(--accent); padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <h3 style="margin: 0; font-size: 15px; color: var(--accent);">진해 군항제 왕복 셔틀</h3>
+                            <span class="badge" style="background:white; color:var(--text-primary);">D-3</span>
+                        </div>
+                        <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600;">성인 2명 | 08:00 출발 (홍대)</p>
+                        <button class="pill-btn full-width mild"
+                            style="background:white; border:1px solid #ddd; margin-top:8px;">탑승 QR 보기</button>
+                    </div>
+
+                    <!-- Pass 3: Templestay -->
+                    <div class="card pass-card"
+                        style="background: white; border: 1px solid #eee; padding: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.1);">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <h3 style="margin: 0; font-size: 15px; color: var(--text-primary);">조계사 템플스테이</h3>
+                            <span class="badge" style="background:#F5F5F7; color:var(--text-primary);">D-12</span>
+                        </div>
+                        <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600;">휴식형 1박 2일 | 14:00 체크인</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="height: 40px;"></div>
+        </div>
+
+        <!-- Settings Modal Overlay -->
+        <div class="modal-overlay" id="settings-modal">
+            <div class="bottom-sheet" style="height: 85vh; overflow-y: auto;">
+                <div class="sheet-handle"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3 class="section-title" style="margin:0;">설정 (Settings)</h3>
+                    <button class="icon-btn clear" style="box-shadow:none; background:transparent;"
+                        onclick="document.getElementById('settings-modal').classList.remove('active')">✕</button>
+                </div>
+
+                <h4 style="margin: 24px 0 12px 0; font-size: 14px; color: var(--text-secondary);">💬 외부 메신저 연동 (CS/알림용)
+                </h4>
+                <div class="card" style="padding: 0 16px;">
+                    <div class="setting-item">
+                        <span style="font-weight:600; display:flex; gap:8px;">
+                            <span>🟢</span> WhatsApp
+                        </span>
+                        <span style="color:var(--text-secondary); font-size:13px;">연결됨</span>
+                    </div>
+                    <div class="setting-item">
+                        <span style="font-weight:600; display:flex; gap:8px;">
+                            <span>💬</span> LINE
+                        </span>
+                        <button class="pill-btn mild" style="padding: 6px 12px; font-size:12px;">연결하기</button>
+                    </div>
+                    <div class="setting-item">
+                        <span style="font-weight:600; display:flex; gap:8px;">
+                            <span>🟢</span> WeChat
+                        </span>
+                        <button class="pill-btn mild" style="padding: 6px 12px; font-size:12px;">연결하기</button>
+                    </div>
+                </div>
+
+                <h4 style="margin: 32px 0 12px 0; font-size: 14px; color: var(--text-secondary);">🧠 오프라인 AI 다국어 팩 (ML
+                    Kit)</h4>
+                <div class="card" style="padding: 0 16px;">
+                    <div class="setting-item">
+                        <span style="font-weight:600;">🇰🇷 한국어 (기본)</span>
+                        <span style="color:var(--text-secondary); font-size:13px;">설치됨</span>
+                    </div>
+                    <div class="setting-item">
+                        <span style="font-weight:600;">🇺🇸 영어 (English)</span>
+                        <span style="color:var(--text-secondary); font-size:13px;">설치됨 (30MB)</span>
+                    </div>
+                    <div class="setting-item">
+                        <span style="font-weight:600;">🇯🇵 일본어 (日本語)</span>
+                        <span style="color:#007AFF; font-size:13px; font-weight:600;">⬇️ 다운로드</span>
+                    </div>
+                </div>
+
+                <button class="pill-btn full-width mild" style="margin-top: 32px; color: #FF3B30;">로그아웃</button>
+            </div>
+        </div>
+
+        <!-- Gesture Navigation -->
+        <div class="gesture-nav-container">
+            <button id="gesture-fab" class="gesture-btn">
+                <span style="filter: grayscale(1) brightness(2);">📷</span>
+            </button>
+        </div>
+        <script src="gesture-nav.js"></script>
+    </div>
+</body>
+
+</html>

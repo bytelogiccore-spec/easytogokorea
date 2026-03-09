@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - Festivals & Shuttle</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <span class="icon">📶</span>
+                <span class="icon">🔋</span>
+            </div>
+        </div>
+
+        <div class="app-content booking-content">
+            <header class="header bg-white fixed-header">
+                <button class="icon-btn clear" onclick="history.back()">←</button>
+                <h2 class="header-title">진해 군항제 (벚꽃 축제)</h2>
+                <button class="icon-btn clear">🔗</button>
+            </header>
+
+            <div class="cover-image">
+                <div class="image-placeholder cherry-blossom-cover"></div>
+                <button class="play-btn">▶️ 축제 하이라이트 영상</button>
+            </div>
+
+            <div class="details-section">
+                <span class="badge indy" style="background: #FFF0F5; color: #D81B60;">봄꽃 축제</span>
+                <h1>진해 군항제</h1>
+
+                <ul class="info-list">
+                    <li><span class="icon">📅</span> 2026.03.25 - 04.05</li>
+                    <li><span class="icon">📍</span> 경상남도 창원시 진해구 중원로터리 등</li>
+                </ul>
+
+                <!-- Weather Context -->
+                <div class="card context-card tip-card mt-16"
+                    style="flex-direction: row; align-items: center; gap: 12px; padding: 16px;">
+                    <div class="emoji" style="font-size: 32px;">⛅</div>
+                    <div style="flex: 1;">
+                        <h4 style="margin: 0; font-size: 14px;">쌀쌀한 봄바람 주의</h4>
+                        <p style="margin: 4px 0 0 0; font-size: 12px; color: var(--text-secondary);">현재 16°C. 얇은 가디건이나
+                            외투를 꼭 챙기세요!</p>
+                    </div>
+                </div>
+
+                <!-- Shuttle Booking -->
+                <div class="card pay-what-you-want mt-16" style="border: 2px solid var(--accent); background: #FFF9F7;">
+                    <div class="pwyw-header">
+                        <span class="emoji">🚌</span>
+                        <h3>왕복 셔틀 버스 묶음 패키지</h3>
+                    </div>
+                    <p>서울 (명동/홍대/강남) 출발 편. 복잡한 KTX 환승 없이 다이렉트로 축제장까지 모십니다.</p>
+
+                    <div class="shuttle-info mt-12"
+                        style="background: white; border-radius: var(--radius-sm); padding: 12px; font-size: 13px; font-weight: 600;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: var(--text-secondary);">가는 편</span>
+                            <span>08:00 AM 출발 (홍대)</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--text-secondary);">오는 편</span>
+                            <span>19:00 PM 복귀 (진해역)</span>
+                        </div>
+                    </div>
+
+                    <button class="pill-btn full-width primary mt-16" id="shuttleBtn">잔여 12석 예약하기 (₩ 45,000)</button>
+                </div>
+            </div>
+
+            <!-- Success Overlay -->
+            <div class="overlay hidden" id="successPopup">
+                <div class="tip-card card text-center">
+                    <div class="success-icon">🚌</div>
+                    <h2 class="tip-title">셔틀 버스 예약 완료!</h2>
+                    <p class="tip-subtitle">모바일 탑승권(QR)은 내 프로필 월렛에서 확인할 수 있습니다.</p>
+                    <button class="pill-btn full-width primary mt-16" onclick="location.href='profile.html'">탑승권
+                        확인하기</button>
+                    <button class="text-btn"
+                        onclick="document.getElementById('successPopup').classList.add('hidden');">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('shuttleBtn').addEventListener('click', function () {
+            document.getElementById('successPopup').classList.remove('hidden');
+        });
+    </script>
+</body>
+
+</html>

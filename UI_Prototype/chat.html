@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - Inbox & AI Chat</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        .chat-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            text-decoration: none;
+            color: inherit;
+            transition: background 0.2s;
+        }
+
+        .chat-row:hover {
+            background: #f9f9fa;
+        }
+
+        .chat-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            background: linear-gradient(135deg, #FFD194 0%, #70E1F5 100%);
+        }
+
+        .chat-details {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .chat-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .chat-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .chat-preview {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ai-header {
+            background: linear-gradient(135deg, #1A1A1D 0%, #303036 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 0 0 32px 32px;
+            margin-bottom: 16px;
+        }
+
+        .ai-input-bar {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 12px 16px;
+            border-radius: 24px;
+            margin-top: 16px;
+            gap: 12px;
+        }
+
+        .ai-input-bar input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .ai-input-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .ai-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .ai-suggestion {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            white-space: nowrap;
+            display: inline-block;
+            margin-right: 8px;
+            margin-top: 12px;
+            cursor: pointer;
+        }
+
+        .badge-new {
+            background: var(--accent);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar transparent">
+            <span>9:41</span>
+            <div class="icons">
+                <span class="icon">📶</span>
+                <span class="icon">🔋</span>
+            </div>
+        </div>
+
+        <div class="app-content" style="padding: 0; overflow-x: hidden;">
+
+            <!-- AI Header Section -->
+            <div class="ai-header">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <button class="icon-btn clear" style="color:white; box-shadow:none; background:transparent;"
+                        onclick="history.back()">✕</button>
+                    <h2 style="font-size:20px; font-weight:700; margin:0;">AI 비서 & 인박스</h2>
+                    <div style="width:44px;"></div>
+                </div>
+
+                <div class="ai-input-bar">
+                    <button class="ai-btn">🎙️</button>
+                    <input type="text" placeholder="어떤 도움이 필요하신가요?">
+                    <button class="ai-btn">✨</button>
+                </div>
+
+                <div style="overflow-x:auto; white-space:nowrap; padding-bottom:4px; margin-top:8px;">
+                    <div class="ai-suggestion">비오는 날 실내 코스 추천</div>
+                    <div class="ai-suggestion">가까운 약국 찾아줘</div>
+                    <div class="ai-suggestion">내일 일정 브리핑</div>
+                </div>
+            </div>
+
+            <div style="padding: 16px 24px;">
+                <h3 class="section-title" style="margin-bottom: 8px;">최근 메시지</h3>
+            </div>
+
+            <!-- Messages List -->
+            <div class="messages-list">
+
+                <div class="chat-row" style="background:#FFF9F7;">
+                    <div class="chat-avatar"
+                        style="background: linear-gradient(135deg, #FFB75E 0%, #ED8F03 100%); color:white;">
+                        🤖
+                    </div>
+                    <div class="chat-details">
+                        <div class="chat-title-row">
+                            <h3 class="chat-title">EasyToGo AI 비서</h3>
+                            <span class="chat-time" style="color:var(--accent); font-weight:700;">방금 전</span>
+                        </div>
+                        <p class="chat-preview" style="color:#1C1C1E; font-weight:600;">내일 홍대 일정 추가해드렸습니다. 식당 예약도
+                            도와드릴까요?</p>
+                    </div>
+                </div>
+
+                <div class="chat-row">
+                    <div class="chat-avatar" style="background: #EAF1F3;">
+                        🏢
+                    </div>
+                    <div class="chat-details">
+                        <div class="chat-title-row">
+                            <h3 class="chat-title">하나투어 패키지 담당자</h3>
+                            <span class="chat-time">오늘 10:30</span>
+                        </div>
+                        <p class="chat-preview">네, 탑승 위치는 명동역 4번출구 앞입니다. WhatsApp으로 바우처를 전송했어요.</p>
+                    </div>
+                </div>
+
+                <div class="chat-row">
+                    <div class="chat-avatar" style="background: #FDF3E5;">
+                        🗣️
+                    </div>
+                    <div class="chat-details">
+                        <div class="chat-title-row">
+                            <h3 class="chat-title">김민수 통역사</h3>
+                            <span class="chat-time">어제</span>
+                        </div>
+                        <p class="chat-preview">약국 도착하시면 통화 버튼 다시 눌러주세요.</p>
+                    </div>
+                </div>
+
+                <div class="chat-row">
+                    <div class="chat-avatar" style="background: #F0F4FF;">
+                        ⛩️
+                    </div>
+                    <div class="chat-details">
+                        <div class="chat-title-row">
+                            <h3 class="chat-title">조계사 템플스테이 사무국</h3>
+                            <span class="chat-time">3월 1일</span>
+                        </div>
+                        <p class="chat-preview">예약이 확정되었습니다. 자세한 안내는 첨부파일 확인.</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</body>
+
+</html>

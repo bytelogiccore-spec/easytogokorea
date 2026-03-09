@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - Notifications</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <span class="icon">📶</span>
+                <span class="icon">🔋</span>
+            </div>
+        </div>
+
+        <div class="app-content">
+            <header class="header">
+                <button class="icon-btn" onclick="history.back()">←</button>
+                <div class="header-center">
+                    <h2 class="header-title">알림 (Notifications)</h2>
+                </div>
+                <div class="header-right" style="width: 44px;"></div>
+            </header>
+
+            <div class="notification-list">
+                <div class="noti-item unread">
+                    <div class="noti-icon alert">🚨</div>
+                    <div class="noti-content">
+                        <h4>일정 경고: 경복궁 휴무일</h4>
+                        <p>내일(화요일)은 경복궁 휴무일입니다. 일정을 수정하시겠습니까?</p>
+                        <span class="noti-time">방금 전</span>
+                    </div>
+                </div>
+
+                <div class="noti-item unread">
+                    <div class="noti-icon social">💬</div>
+                    <div class="noti-content">
+                        <h4>새로운 동행 메시지</h4>
+                        <p>@Tom_UK 님이 "Looking for someone to share Korean BBQ..." 글에 응답했습니다.</p>
+                        <span class="noti-time">10분 전</span>
+                    </div>
+                </div>
+
+                <div class="noti-item">
+                    <div class="noti-icon system">🎫</div>
+                    <div class="noti-content">
+                        <h4>티켓 발급 완료</h4>
+                        <p>홍대고양이 인디 라이브 티켓 발급이 완료되었습니다.</p>
+                        <span class="noti-time">2시간 전</span>
+                    </div>
+                </div>
+
+                <div class="noti-item">
+                    <div class="noti-icon system">💳</div>
+                    <div class="noti-content">
+                        <h4>결제 완료</h4>
+                        <p>할머니 뼈해장국 11,000원이 카카오페이로 결제되었습니다.</p>
+                        <span class="noti-time">어제</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

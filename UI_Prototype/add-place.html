@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - 장소 추가</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        .add-place-header .header-center { max-width: none; }
+        .place-search-wrap { margin: 16px 0 20px; }
+        .place-card-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid #F0F0F0;
+        }
+        .place-card-row:last-child { border-bottom: none; }
+        .place-card-row .place-info { min-width: 0; }
+        .place-card-row .place-name { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
+        .place-card-row .place-meta { font-size: 12px; color: var(--text-secondary); }
+        .place-card-row .add-btn {
+            flex-shrink: 0;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .section-label { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 12px; padding-left: 4px; }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <span class="icon">📶</span>
+                <span class="icon">🔋</span>
+            </div>
+        </div>
+
+        <div class="app-content planner-content">
+            <header class="header add-place-header">
+                <button class="icon-btn" onclick="history.back()">←</button>
+                <div class="header-center">
+                    <span class="subtitle">일정에 추가</span>
+                    <h2 class="header-title">장소 추가</h2>
+                </div>
+                <div style="width: 44px;"></div>
+            </header>
+
+            <p class="section-label">어느 날에 추가할까요?</p>
+            <div class="day-tabs planner-day-tabs" role="tablist">
+                <button type="button" class="day-tab" role="tab">Day 1</button>
+                <button type="button" class="day-tab active" role="tab">Day 2</button>
+                <button type="button" class="day-tab" role="tab">Day 3</button>
+                <button type="button" class="day-tab" role="tab">귀국</button>
+            </div>
+
+            <div class="place-search-wrap">
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="장소 이름 또는 키워드 검색">
+                </div>
+            </div>
+
+            <p class="section-label">추천 장소</p>
+            <div class="card" style="padding: 0 20px;">
+                <div class="place-card-row">
+                    <div class="place-info">
+                        <div class="place-name">🏯 인사동 거리</div>
+                        <div class="place-meta">전통·공예 · 도보 10분</div>
+                    </div>
+                    <button class="pill-btn primary add-btn" onclick="location.href='planner.html'">추가</button>
+                </div>
+                <div class="place-card-row">
+                    <div class="place-info">
+                        <div class="place-name">🍵 북촌 한옥마을</div>
+                        <div class="place-meta">전통·산책 · 도보 15분</div>
+                    </div>
+                    <button class="pill-btn primary add-btn" onclick="location.href='planner.html'">추가</button>
+                </div>
+                <div class="place-card-row">
+                    <div class="place-info">
+                        <div class="place-name">🎭 낙산공원</div>
+                        <div class="place-meta">공원·전망 · 버스 20분</div>
+                    </div>
+                    <button class="pill-btn primary add-btn" onclick="location.href='planner.html'">추가</button>
+                </div>
+                <div class="place-card-row">
+                    <div class="place-info">
+                        <div class="place-name">🥢 광장시장</div>
+                        <div class="place-meta">맛집·전통시장 · 지하철 15분</div>
+                    </div>
+                    <button class="pill-btn primary add-btn" onclick="location.href='planner.html'">추가</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

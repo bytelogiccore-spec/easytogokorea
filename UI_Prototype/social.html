@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - Social Feed & Profile</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <span class="icon">📶</span>
+                <span class="icon">🔋</span>
+            </div>
+        </div>
+
+        <div class="app-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="profile-badge">👑 궁궐 탐험가</div>
+                <div class="header-center dropdown">
+                    <span>서울 피드 ⌵</span>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn search">🔍</button>
+                </div>
+            </header>
+
+            <button class="new-post-btn">
+                <span class="emoji">📝</span> 내 여행후기 쓰기
+            </button>
+
+            <!-- Social Feed Card -->
+            <section class="section mt-24">
+                <div class="card social-card">
+                    <div class="social-header">
+                        <div class="author-info">
+                            <div class="author-avatar placeholder-avatar"></div>
+                            <div class="author-details">
+                                <div class="author-name">@Sarah_NY <span class="author-badge">👑 BTS 마스터</span></div>
+                                <div class="post-location">📍 광장시장 (Gwangjang Market)</div>
+                            </div>
+                        </div>
+                        <button class="follow-btn">➕ Follow</button>
+                    </div>
+
+                    <div class="social-image">
+                        <!-- Placeholder warm gradient -->
+                        <div class="image-placeholder tall">
+                            <div class="photo-indicator">1 / 3</div>
+                        </div>
+                    </div>
+
+                    <div class="social-actions">
+                        <div class="actions-left">
+                            <button class="action-icon">❤️</button>
+                            <button class="action-icon">💬</button>
+                            <button class="action-icon">📨</button>
+                        </div>
+                        <button class="action-icon">🔖</button>
+                    </div>
+
+                    <div class="social-likes">좋아요 1.2k개</div>
+
+                    <div class="social-content">
+                        <p><span class="author-name-inline">@Sarah_NY</span> Finally tried the famous mung bean pancake!
+                            It's so crispy and delicious. Highly recommend!</p>
+                        <button class="translate-btn">🌐 한국어로 번역 보기</button>
+                        <p class="hashtags">#FoodieSeoul #GwangjangMarket</p>
+                    </div>
+
+                    <div class="social-add-itinerary">
+                        <button class="pill-btn full-width mild">👉 내 일정에 '광장시장' 추가하기</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Gesture Navigation -->
+        <div class="gesture-nav-container">
+            <button id="gesture-fab" class="gesture-btn">
+                <span style="filter: grayscale(1) brightness(2);">📷</span>
+            </button>
+        </div>
+        <script src="gesture-nav.js"></script>
+    </div>
+</body>
+
+</html>

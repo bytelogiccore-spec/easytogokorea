@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - Map & Itinerary</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <span class="icon">📶</span>
+                <span class="icon">🔋</span>
+            </div>
+        </div>
+
+        <!-- Full-screen map background -->
+        <div class="map-bg">
+            <div class="map-pin pin-1">🏯 조계사</div>
+            <div class="map-pin pin-2 active">🔵 현위치</div>
+            <div class="map-pin pin-3">🥩 비건 식당</div>
+
+            <svg class="map-route" viewBox="0 0 390 600">
+                <path d="M 120 200 Q 180 300 160 380" stroke="#FF7043" stroke-width="4" stroke-dasharray="8,8"
+                    fill="none" class="route-line" />
+                <text x="130" y="290" fill="#FF7043" font-weight="700">15 min</text>
+            </svg>
+        </div>
+
+        <div class="app-content map-overlay">
+            <header class="header map-header">
+                <button class="icon-btn" onclick="history.back()">←</button>
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="장소/경로 검색">
+                </div>
+            </header>
+
+            <div class="map-filters">
+                <button class="filter-chip">🎫 K-POP 성지</button>
+                <button class="filter-chip active">🏯 전통 체험</button>
+                <button class="filter-chip nfc-chip">💳 NFC 패스 활성</button>
+            </div>
+
+            <button class="icon-btn locate-btn">🧭</button>
+
+            <!-- Bottom Sheet: Itinerary -->
+            <div class="bottom-sheet">
+                <div class="sheet-handle"></div>
+                <div class="sheet-title-row">
+                    <h3 class="sheet-title">👇 내 일정</h3>
+                    <a href="planner.html" class="sheet-link-all">일정 편집 →</a>
+                </div>
+                <div class="day-tabs" role="tablist">
+                    <button type="button" class="day-tab" role="tab" aria-selected="false">Day 1</button>
+                    <button type="button" class="day-tab active" role="tab" aria-selected="true">Day 2</button>
+                    <button type="button" class="day-tab" role="tab" aria-selected="false">Day 3</button>
+                    <button type="button" class="day-tab" role="tab" aria-selected="false">귀국</button>
+                </div>
+                <p class="sheet-day-label">Day 2: 서울 도심</p>
+
+                <div class="timeline">
+                    <div class="timeline-item start">
+                        <div class="time">10:00 AM</div>
+                        <div class="dot blue"></div>
+                        <div class="content">출발 (안국역)</div>
+                    </div>
+                    <div class="timeline-item pending">
+                        <div class="time">10:15 AM</div>
+                        <div class="dot orange"></div>
+                        <div class="content">
+                            조계사 (템플스테이)
+                            <div class="sub-text">도보 15분 소요</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

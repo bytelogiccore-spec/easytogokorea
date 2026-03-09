@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - AR Navigation</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar transparent">
+            <span>9:41</span>
+            <div class="icons">
+                <span class="icon">📶</span>
+                <span class="icon">🔋</span>
+            </div>
+        </div>
+
+        <div class="app-content scanner-content">
+            <!-- Simulated Camera Background for AR -->
+            <div class="camera-bg blur-bg"></div>
+
+            <header class="header scanner-header">
+                <button class="icon-btn" onclick="history.back()">←</button>
+                <button class="pill-btn glass small">종료</button>
+            </header>
+
+            <!-- AR Overlay Elements -->
+            <div class="ar-elements">
+                <div class="ar-pin destination">
+                    <span class="emoji">🏯</span>
+                    <div class="ar-info">
+                        <h4>조계사</h4>
+                        <p>150m 앞</p>
+                    </div>
+                </div>
+
+                <!-- Floating 3D Arrow Path Simulation -->
+                <div class="ar-path">
+                    <div class="ar-arrow arrow-1"></div>
+                    <div class="ar-arrow arrow-2"></div>
+                    <div class="ar-arrow arrow-3"></div>
+                </div>
+
+                <div class="ar-pin info-point left-side">
+                    <span class="emoji">☕</span>
+                    <div class="ar-info">
+                        <h4>전통 찻집</h4>
+                        <p>50m</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom AR Navigation Panel -->
+            <div class="ar-bottom-panel">
+                <div class="ar-nav-card">
+                    <div class="direction-icon">⤴️</div>
+                    <div class="nav-text">
+                        <h3>50m 앞 우회전</h3>
+                        <p>인사동길 방면</p>
+                    </div>
+                    <div class="eta-box">
+                        <span class="time">3 min</span>
+                        <span class="dist">150m</span>
+                    </div>
+                </div>
+
+                <div class="action-row mt-16 center">
+                    <button class="pill-btn glass" onclick="location.href='map.html'">🗺️ 2D 미니맵</button>
+                    <button class="pill-btn glass SOS-btn" onclick="document.getElementById('sos-modal').classList.add('active')">🚨 SOS</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SOS 모달 (위치 확인 및 긴급 연락) - AR 모드에서 SOS 버튼 클릭 시 -->
+        <div class="modal-overlay" id="sos-modal" onclick="if(event.target===this) this.classList.remove('active')">
+            <div class="bottom-sheet" onclick="event.stopPropagation()">
+                <div class="sheet-handle"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <h3 class="section-title" style="margin:0;">위치 확인 및 긴급 연락</h3>
+                    <button class="icon-btn" style="box-shadow:none; background:transparent;" onclick="document.getElementById('sos-modal').classList.remove('active')">✕</button>
+                </div>
+                <p style="font-size:14px; color:var(--text-secondary); margin-bottom:20px;">QR 스캔 결과: 가로등 (서울 종로구 175)</p>
+                <div class="card" style="margin-bottom:16px; padding:16px;">
+                    <h4 style="margin:0 0 8px 0; font-size:15px; color:#FF3B30;">🚨 119/112 긴급 문자</h4>
+                    <p style="margin:0 0 16px 0; font-size:12px; color:#666; background:#F5F5F5; padding:10px; border-radius:8px;">"Emergency! Location:<br>Seoul Jongno-gu Sejong-daero 175<br>(37.5704N, 126.9760E)<br>I need medical help."</p>
+                    <button class="pill-btn full-width" style="background:#FF3B30; color:white;" onclick="document.getElementById('sos-modal').classList.remove('active')">✉️ 구조 문자 전송</button>
+                </div>
+                <div class="card" style="padding:16px;">
+                    <h4 style="margin:0 0 8px 0; font-size:15px;">🚕 택시 호출 (KakaoT)</h4>
+                    <p style="margin:0 0 16px 0; font-size:12px; color:var(--text-secondary);">현재 스캔된 위치를 카카오T 출발지로 지정하여 실행합니다.</p>
+                    <button class="pill-btn full-width mild" onclick="document.getElementById('sos-modal').classList.remove('active')">🚕 카카오T 앱 열기</button>
+                </div>
+                <button class="text-btn full-width mt-24" onclick="document.getElementById('sos-modal').classList.remove('active')" style="color:var(--text-secondary);">닫기</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - Neo Minimalism UI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <span class="icon">📶</span>
+                <span class="icon">🔋</span>
+            </div>
+        </div>
+
+        <div class="app-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="profile-badge">👑 궁궐 탐험가</div>
+                <div class="header-right">
+                    <button class="icon-btn search" onclick="location.href='search.html'" title="AI 검색">🤖</button>
+                    <button class="icon-btn noti" onclick="location.href='notifications.html'">🔔</button>
+                </div>
+            </header>
+
+            <h1 class="greeting">Hello, Alex! 👋</h1>
+
+            <!-- Context Cards -->
+            <div class="context-cards">
+                <div class="card weather-card">
+                    <div class="icon-large">⛅</div>
+                    <div class="info">
+                        <span class="value">22°C</span>
+                        <span class="label">Seoul</span>
+                    </div>
+                </div>
+                <a href="wallet.html" class="card wallet-card" style="text-decoration:none; color:inherit;">
+                    <div class="icon-large">💳</div>
+                    <div class="info">
+                        <span class="value">₩ 45,000</span>
+                        <span class="label">잔액</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Quick Actions (맨 위 배치: 그리팅·카드 바로 아래) -->
+            <section class="section">
+                <h2 class="section-title">빠른 실행</h2>
+                <div class="quick-actions">
+                    <button class="action-btn" onclick="location.href='templestay.html'">
+                        <span class="emoji">🏯</span>
+                        <span>템플스테이</span>
+                    </button>
+                    <button class="action-btn" onclick="location.href='culture.html'">
+                        <span class="emoji">🎫</span>
+                        <span>K-POP 공연</span>
+                    </button>
+                    <button class="action-btn" onclick="location.href='market.html'">
+                        <span class="emoji">🛒</span>
+                        <span>전통 마켓</span>
+                    </button>
+                    <button class="action-btn" onclick="location.href='shuttle.html'">
+                        <span class="emoji">🚌</span>
+                        <span>축제 셔틀</span>
+                    </button>
+                </div>
+                <p class="quick-more">
+                    <a href="living.html">의료·기타 서비스 더보기</a>
+                </p>
+            </section>
+
+            <!-- Pop-up Events Section -->
+            <section class="section">
+                <h2 class="section-title">🔥 팝업 이벤트</h2>
+                <div class="card feed-card popup-card">
+                    <div class="feed-image" style="height: 140px;">
+                        <div class="image-placeholder"
+                            style="background: linear-gradient(135deg, #FF9A9E, #FECFEF); display:flex; align-items:center; justify-content:center; font-size: 3rem;">
+                            🌉💃
+                        </div>
+                    </div>
+                    <div class="feed-content">
+                        <h3 style="color: #ff4757; font-weight: 800;">K-POP 랜덤 댄스 @ 한강공원 물빛무대</h3>
+                        <p>오늘 오후 5시! 야외 무대에서 글로벌 K-POP 팬들과 함께 뛰어놀아요! ✨ (우천 시 취소)</p>
+                    </div>
+                    <div class="feed-actions" style="justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 600; color: #ff4757;">🔥 5.8k 참여 대기 중</span>
+                        <button class="action-btn"
+                            style="padding: 6px 16px; font-size: 0.85rem; background: #2f3542; color: white; border-radius: 20px;"
+                            onclick="location.href='popup-event-detail.html'">위치 보기</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feed Section: 오늘의 추천 카로셀 -->
+            <section class="section">
+                <h2 class="section-title">오늘의 추천 💡</h2>
+                <div class="recommend-carousel">
+                    <a href="recommendation-detail.html?id=1" class="card feed-card recommend-card">
+                        <div class="feed-image recommend-cover">
+                            <div class="image-placeholder" style="background: linear-gradient(135deg, #FFD194 0%, #70E1F5 100%);">🧖</div>
+                            <span class="feed-overlay-tl">찜질방</span>
+                            <div class="feed-overlay-br">
+                                <span class="overlay-title">찜질방 양머리 수건</span>
+                                <span class="overlay-meta">❤️ 1.2k · 💬 34</span>
+                                <span class="overlay-arrow">›</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="recommendation-detail.html?id=2" class="card feed-card recommend-card">
+                        <div class="feed-image recommend-cover">
+                            <div class="image-placeholder" style="background: linear-gradient(135deg, #A8E6CF 0%, #DCEDC1 100%);">👘</div>
+                            <span class="feed-overlay-tl">한복</span>
+                            <div class="feed-overlay-br">
+                                <span class="overlay-title">한복 체험 & 사진관</span>
+                                <span class="overlay-meta">❤️ 2.1k · 💬 89</span>
+                                <span class="overlay-arrow">›</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="recommendation-detail.html?id=3" class="card feed-card recommend-card">
+                        <div class="feed-image recommend-cover">
+                            <div class="image-placeholder" style="background: linear-gradient(135deg, #FFB6B6 0%, #FFE66D 100%);">🥢</div>
+                            <span class="feed-overlay-tl">체험</span>
+                            <div class="feed-overlay-br">
+                                <span class="overlay-title">김치 만들기 체험</span>
+                                <span class="overlay-meta">❤️ 890 · 💬 21</span>
+                                <span class="overlay-arrow">›</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+        </div>
+
+        <!-- Gesture Navigation -->
+        <div class="gesture-nav-container">
+            <button id="gesture-fab" class="gesture-btn">
+                <span style="filter: grayscale(1) brightness(2);">📷</span>
+            </button>
+        </div>
+        <script src="gesture-nav.js"></script>
+    </div>
+</body>
+
+</html>

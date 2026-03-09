@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - Local Market</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            padding: 0 24px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            border: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-img {
+            height: 140px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .product-info {
+            padding: 12px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-brand {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .product-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-price {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-top: auto;
+        }
+
+        .product-usd {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .add-cart-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+        }
+        .cart-wrap { position: relative; }
+        .cart-badge {
+            position: absolute; top: 4px; right: 4px;
+            background: var(--accent); color: white; font-size: 10px; font-weight: 700;
+            min-width: 16px; height: 16px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; padding: 0 4px;
+        }
+        .banner-single {
+            background: var(--accent-light);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius-sm);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 24px 0;
+        }
+        .banner-single .banner-icon { font-size: 20px; }
+        .banner-single p { margin: 0; font-size: 13px; font-weight: 600; color: var(--accent); }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <span class="icon">📶</span>
+                <span class="icon">🔋</span>
+            </div>
+        </div>
+
+        <div class="app-content planner-content">
+            <header class="header page-header bg-white">
+                <button class="icon-btn clear" onclick="history.back()">←</button>
+                <h2 class="header-title">K-로컬 마켓</h2>
+                <div class="cart-wrap">
+                    <button class="icon-btn clear" onclick="document.getElementById('checkoutPopup').classList.remove('hidden');">🛍️</button>
+                    <span class="cart-badge">2</span>
+                </div>
+            </header>
+
+            <div class="banner-single">
+                <span class="banner-icon">📦</span>
+                <p>직배송 혜택: ₩50,000 이상 무료 배송</p>
+            </div>
+
+            <div class="filter-row">
+                <button class="filter-chip active">🎁 기프트세트</button>
+                <button class="filter-chip">🍜 K-푸드</button>
+                <button class="filter-chip">💄 K-뷰티</button>
+                <button class="filter-chip">👕 전통의류</button>
+            </div>
+
+            <!-- Products -->
+            <div class="product-grid mt-8">
+                <div class="product-card">
+                    <div class="product-img">🧑‍🌾</div>
+                    <div class="product-info">
+                        <span class="product-brand">정관장 ★4.9</span>
+                        <h3 class="product-title">K-Ginseng Energy Stick (홍삼 앰플)</h3>
+                        <span class="product-price">₩ 35,000</span>
+                        <span class="product-usd">approx $26.5</span>
+                        <button class="add-cart-btn">담기</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-img">🧴</div>
+                    <div class="product-info">
+                        <span class="product-brand">OliveYoung ★4.7</span>
+                        <h3 class="product-title">Mediheal Moisturizing Pack 10ea</h3>
+                        <span class="product-price">₩ 20,000</span>
+                        <span class="product-usd">approx $15.1</span>
+                        <button class="add-cart-btn">담기</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-img">🪭</div>
+                    <div class="product-info">
+                        <span class="product-brand">인사동 공방 ★4.8</span>
+                        <h3 class="product-title">Traditional Korean Hand Fan</h3>
+                        <span class="product-price">₩ 15,000</span>
+                        <span class="product-usd">approx $11.3</span>
+                        <button class="add-cart-btn">담기</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-img">🍵</div>
+                    <div class="product-info">
+                        <span class="product-brand">오설록 ★4.9</span>
+                        <h3 class="product-title">Jeju Green Tea Blend Set</h3>
+                        <span class="product-price">₩ 28,000</span>
+                        <span class="product-usd">approx $21.2</span>
+                        <button class="add-cart-btn">담기</button>
+                    </div>
+                </div>
+            </div>
+            <div style="height: 100px;"></div>
+
+            <!-- Checkout Overlay -->
+            <div class="overlay hidden" id="checkoutPopup" style="align-items: flex-end; padding-bottom: 0;">
+                <div class="card"
+                    style="width: 100%; border-radius: 30px 30px 0 0; margin: 0; padding: 32px 24px; max-height: 85vh; overflow-y: auto;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <h2 class="tip-title" style="margin:0;">결제 및 배송</h2>
+                        <button class="icon-btn clear"
+                            onclick="document.getElementById('checkoutPopup').classList.add('hidden');">✕</button>
+                    </div>
+
+                    <p style="color:var(--text-secondary); font-size:14px; margin-bottom:8px;">총 상품 금액 (2 Items)</p>
+                    <h2 style="margin:0 0 24px 0;">₩ 55,000</h2>
+
+                    <h4 style="margin-bottom: 12px; font-size: 15px;">수령 방법 선택 (Delivery)</h4>
+
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <label class="card hover-effect"
+                            style="margin:0; padding:16px; border:2px solid var(--accent); background:#FFF9F7; display:flex; gap:16px; cursor:pointer;">
+                            <input type="radio" name="delivery" checked style="margin-top:4px;">
+                            <div>
+                                <h4
+                                    style="margin:0 0 4px 0; font-size:15px; display:flex; align-items:center; gap:6px;">
+                                    🏨 현재 호텔로 배송 <span class="badge"
+                                        style="background:#fff; border:1px solid #ddd;">무료</span></h4>
+                                <p style="margin:0; font-size:12px; color:var(--text-secondary);">Shilla Stay
+                                    Gwanghwamun<br>오늘 오후 8시 전 도착 보장</p>
+                            </div>
+                        </label>
+
+                        <label class="card hover-effect"
+                            style="margin:0; padding:16px; border:1px solid #eee; display:flex; gap:16px; cursor:pointer;">
+                            <input type="radio" name="delivery" style="margin-top:4px;">
+                            <div>
+                                <h4
+                                    style="margin:0 0 4px 0; font-size:15px; display:flex; align-items:center; gap:6px;">
+                                    ✈️ 출국 공항에서 수령 <span class="badge"
+                                        style="background:#fff; border:1px solid #ddd;">무료</span></h4>
+                                <p style="margin:0; font-size:12px; color:var(--text-secondary);">인천국제공항 T1 / 픽업
+                                    데스크<br>03/20 보호 보관 대기</p>
+                            </div>
+                        </label>
+
+                        <label class="card hover-effect"
+                            style="margin:0; padding:16px; border:1px solid #eee; display:flex; gap:16px; cursor:pointer;">
+                            <input type="radio" name="delivery" style="margin-top:4px;">
+                            <div>
+                                <h4 style="margin:0 0 4px 0; font-size:15px;">🏠 내 국가 집으로 EMS 배송</h4>
+                                <p style="margin:0; font-size:12px; color:var(--text-secondary);">Fedex / K-Post
+                                    연동<br>배송비 결제 단계에서 자동 청구</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <button class="pill-btn full-width primary mt-24" onclick="location.href='index.html'">총 ₩ 55,000
+                        결제하기</button>
+                    <div style="height: 30px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

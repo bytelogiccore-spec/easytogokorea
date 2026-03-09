@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - Itinerary Planner</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <span class="icon">📶</span>
+                <span class="icon">🔋</span>
+            </div>
+        </div>
+
+        <div class="app-content planner-content">
+            <header class="header">
+                <button class="icon-btn" onclick="history.back()">←</button>
+                <div class="header-center">
+                    <span class="subtitle">내 여행 폴더</span>
+                    <h2 class="header-title planner-day-title">Day 2: 서울 도심 투어</h2>
+                </div>
+                <button class="text-btn primary" style="font-weight: 700;">저장</button>
+            </header>
+
+            <div class="day-tabs planner-day-tabs" role="tablist">
+                <button type="button" class="day-tab" role="tab" aria-selected="false">Day 1</button>
+                <button type="button" class="day-tab active" role="tab" aria-selected="true">Day 2</button>
+                <button type="button" class="day-tab" role="tab" aria-selected="false">Day 3</button>
+                <button type="button" class="day-tab" role="tab" aria-selected="false">귀국</button>
+            </div>
+
+            <div class="planner-actions">
+                <button class="pill-btn primary no-shadow" onclick="location.href='add-place.html'">
+                    <span class="icon">➕</span> 장소 추가
+                </button>
+            </div>
+
+            <div class="planner-list mt-24">
+                <!-- Draggable Item 1 -->
+                <div class="planner-item drag-card">
+                    <div class="drag-handle">☰</div>
+                    <div class="item-content">
+                        <div class="item-header">
+                            <span class="icon">📍</span>
+                            <h4>조계사 (템플스테이)</h4>
+                            <span class="time-range">09:00 - 11:30</span>
+                        </div>
+                        <div class="transport-info">
+                            <span class="t-icon">🚶</span> 도보 15분 / <span class="t-icon">🚌</span> 버스 10분
+                        </div>
+                    </div>
+                </div>
+
+                <div class="connection-line"></div>
+
+                <!-- Draggable Item 2 -->
+                <div class="planner-item drag-card">
+                    <div class="drag-handle">☰</div>
+                    <div class="item-content">
+                        <div class="item-header">
+                            <span class="icon">🥩</span>
+                            <h4>발우공양 비건 식당</h4>
+                            <span class="tag confirmed">12:00 예약 확정</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="connection-line"></div>
+
+                <!-- Draggable Item 3 (Warning) -->
+                <div class="planner-item drag-card warning-state">
+                    <div class="drag-handle">☰</div>
+                    <div class="item-content">
+                        <div class="item-header">
+                            <span class="icon">🏯</span>
+                            <h4>경복궁</h4>
+                            <span class="tag warning">⚠️ 오후 휴무</span>
+                        </div>
+                        <p class="warning-text">일정 경고: 이 날짜 오후에는 개방하지 않습니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-fixed-actions">
+                <button class="pill-btn full-width mild">📥 친구와 일정 공유 (초대 링크)</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

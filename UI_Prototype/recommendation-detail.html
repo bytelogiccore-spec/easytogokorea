@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - 오늘의 추천</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        .detail-cover { height: 220px; display: flex; align-items: center; justify-content: center; font-size: 4rem; margin: 0 -24px 24px -24px; border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+        .detail-title { font-size: 22px; font-weight: 800; margin-bottom: 12px; color: var(--text-primary); line-height: 1.3; }
+        .detail-meta { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .detail-desc { font-size: 15px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 24px; }
+        .detail-stats { display: flex; gap: 20px; margin-bottom: 28px; font-size: 15px; color: var(--text-secondary); font-weight: 600; }
+        .detail-actions { display: flex; flex-direction: column; gap: 12px; }
+        .detail-actions .pill-btn { justify-content: center; }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <span class="icon">📶</span>
+                <span class="icon">🔋</span>
+            </div>
+        </div>
+
+        <div class="app-content">
+            <header class="header">
+                <button class="icon-btn" onclick="history.back()">←</button>
+                <div class="header-center">
+                    <span class="subtitle">오늘의 추천</span>
+                    <h2 class="header-title">상세</h2>
+                </div>
+                <div style="width: 44px;"></div>
+            </header>
+
+            <div id="detail-cover" class="detail-cover">🧖</div>
+            <h1 id="detail-title" class="detail-title">찜질방 양머리 수건 만들기</h1>
+            <div id="detail-meta" class="detail-meta">📍 서울 · ⏱ 약 2시간</div>
+            <p id="detail-desc" class="detail-desc">한국의 귀여운 찜질방 문화를 직접 경험해보세요! 양머리 수건을 접어 머리에 올려보는 체험과 함께 사우나 이용도 가능해요.</p>
+            <div class="detail-stats">
+                <span id="detail-likes">❤️ 1.2k</span>
+                <span id="detail-comments">💬 34</span>
+            </div>
+            <div class="detail-actions">
+                <button class="pill-btn primary full-width" onclick="location.href='map.html'">🗺️ 위치 보기</button>
+                <button class="pill-btn mild full-width" onclick="location.href='planner.html'">➕ 일정에 추가</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        (function() {
+            var data = {
+                1: {
+                    emoji: '🧖',
+                    gradient: 'linear-gradient(135deg, #FFD194 0%, #70E1F5 100%)',
+                    title: '찜질방 양머리 수건 만들기',
+                    meta: '📍 서울 · ⏱ 약 2시간',
+                    desc: '한국의 귀여운 찜질방 문화를 직접 경험해보세요! 양머리 수건을 접어 머리에 올려보는 체험과 함께 사우나 이용도 가능해요.',
+                    likes: '1.2k',
+                    comments: '34'
+                },
+                2: {
+                    emoji: '👘',
+                    gradient: 'linear-gradient(135deg, #A8E6CF 0%, #DCEDC1 100%)',
+                    title: '한복 체험 & 사진관',
+                    meta: '📍 경복궁 인근 · ⏱ 1~2시간',
+                    desc: '전통 한복을 입고 궁궐에서 추억 남기기. 남녀 한복 대여와 단체 사진 촬영까지 한 번에!',
+                    likes: '2.1k',
+                    comments: '89'
+                },
+                3: {
+                    emoji: '🥢',
+                    gradient: 'linear-gradient(135deg, #FFB6B6 0%, #FFE66D 100%)',
+                    title: '김치 만들기 체험',
+                    meta: '📍 인사동 · ⏱ 약 3시간',
+                    desc: '전통 방식으로 배추김치 담그기 1일 클래스. 담근 김치는 포장해서 가져갈 수 있어요.',
+                    likes: '890',
+                    comments: '21'
+                }
+            };
+            var params = new URLSearchParams(window.location.search);
+            var id = params.get('id') || '1';
+            var item = data[id] || data[1];
+            document.getElementById('detail-cover').textContent = item.emoji;
+            document.getElementById('detail-cover').style.background = item.gradient;
+            document.getElementById('detail-title').textContent = item.title;
+            document.getElementById('detail-meta').textContent = item.meta;
+            document.getElementById('detail-desc').textContent = item.desc;
+            document.getElementById('detail-likes').textContent = '❤️ ' + item.likes;
+            document.getElementById('detail-comments').textContent = '💬 ' + item.comments;
+            document.title = 'EasyToGoKorea - ' + item.title;
+        })();
+    </script>
+</body>
+
+</html>

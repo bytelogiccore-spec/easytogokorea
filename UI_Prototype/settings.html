@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - 설정</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .settings-header {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 24px;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+        .settings-header .icon-btn { flex-shrink: 0; }
+        .settings-header h1 { margin: 0; font-size: 20px; font-weight: 700; }
+        .settings-content {
+            padding: 0 24px 100px;
+            max-width: 100%;
+            min-width: 0;
+        }
+        .settings-section {
+            margin-bottom: 32px;
+        }
+        .settings-section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            padding-left: 4px;
+        }
+        .settings-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid #F0F0F0;
+            min-height: 56px;
+            min-width: 0;
+        }
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+        .setting-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            min-width: 0;
+            overflow-wrap: break-word;
+        }
+        .setting-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        .toggle-switch {
+            width: 50px;
+            height: 28px;
+            background: #E5E5EA;
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .toggle-switch.on {
+            background: var(--accent);
+        }
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .toggle-switch.on::after {
+            transform: translateX(22px);
+        }
+        .setting-value {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .setting-value.accent {
+            color: var(--accent);
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <span class="icon">📶</span>
+                <span class="icon">🔋</span>
+            </div>
+        </div>
+        <header class="settings-header">
+            <button class="icon-btn" type="button" onclick="location.href='search.html'">←</button>
+            <h1>설정</h1>
+        </header>
+        <div class="app-content">
+        <main class="settings-content">
+            <section class="settings-section">
+                <h2 class="settings-section-title">온디바이스 AI</h2>
+                <div class="settings-card">
+                    <div class="setting-row">
+                        <div>
+                            <div class="setting-label">🎤 음성 응답</div>
+                            <div class="setting-desc">답변을 음성으로 재생</div>
+                        </div>
+                        <div class="toggle-switch on" role="switch" aria-checked="true" onclick="this.classList.toggle('on')"></div>
+                    </div>
+                    <div class="setting-row">
+                        <div>
+                            <div class="setting-label">📴 오프라인 우선</div>
+                            <div class="setting-desc">가능하면 로컬 AI만 사용</div>
+                        </div>
+                        <div class="toggle-switch on" role="switch" aria-checked="true" onclick="this.classList.toggle('on')"></div>
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-label">🌐 응답 언어</div>
+                        <span class="setting-value">한국어</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h2 class="settings-section-title">알림 및 데이터</h2>
+                <div class="settings-card">
+                    <div class="setting-row">
+                        <div>
+                            <div class="setting-label">🔔 푸시 알림</div>
+                            <div class="setting-desc">일정·경로 추천 알림</div>
+                        </div>
+                        <div class="toggle-switch on" role="switch" aria-checked="true" onclick="this.classList.toggle('on')"></div>
+                    </div>
+                    <div class="setting-row">
+                        <div>
+                            <div class="setting-label">📥 AI 언어 팩</div>
+                            <div class="setting-desc">오프라인 번역·음성용</div>
+                        </div>
+                        <span class="setting-value accent">관리</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h2 class="settings-section-title">정보</h2>
+                <div class="settings-card">
+                    <div class="setting-row">
+                        <div class="setting-label">📱 앱 버전</div>
+                        <span class="setting-value">1.0.0</span>
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-label">🔒 개인정보 처리방침</div>
+                        <span class="setting-value accent">보기</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+        </div>
+    </div>
+</body>
+
+</html>

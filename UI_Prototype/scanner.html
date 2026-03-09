@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - Smart QR Scanner</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <!-- Status Bar -->
+        <div class="status-bar transparent">
+            <span>9:41</span>
+            <div class="icons">
+                <span class="icon">📶</span>
+                <span class="icon">🔋</span>
+            </div>
+        </div>
+
+        <div class="app-content scanner-content">
+            <!-- Camera View Element (Simulated) -->
+            <div class="camera-bg"></div>
+
+            <header class="header scanner-header">
+                <button class="icon-btn" onclick="history.back()">✕</button>
+                <button class="icon-btn"
+                    onclick="document.getElementById('scanner-help-modal').classList.add('active')">❓</button>
+            </header>
+
+            <div class="scanner-focus-area">
+                <div class="focus-box">
+                    <div class="corner topleft"></div>
+                    <div class="corner topright"></div>
+                    <div class="corner bottomleft"></div>
+                    <div class="corner bottomright"></div>
+                    <div class="scan-line"></div>
+                </div>
+                <p class="scan-instructions">
+                    가로등 번호판이나 식당 메뉴의<br>QR 코드를 사각형 안에 맞춰주세요
+                </p>
+
+            </div>
+
+            <!-- Bottom Actions -->
+            <div class="scanner-bottom-actions" style="bottom: 150px; flex-direction: column; gap: 16px;">
+                <div class="action-row">
+                    <button class="pill-btn glass full-width">🔦 플래시</button>
+                </div>
+                <div class="action-row">
+                    <button class="pill-btn glass full-width" onclick="location.href='menu.html'">
+                        <span class="emoji">🍽️</span> 식당 메뉴 번역 & 주문
+                    </button>
+                    <button class="pill-btn primary full-width" onclick="location.href='ar_guide.html'">
+                        <span class="emoji">🚶</span> 주변 AR 가이드 켜기
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 스캐너 도움말 모달 -->
+        <div class="modal-overlay" id="scanner-help-modal"
+            onclick="if(event.target===this) this.classList.remove('active')">
+            <div class="bottom-sheet" onclick="event.stopPropagation()">
+                <div class="sheet-handle"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h3 class="section-title" style="margin:0;">❓ 스캐너 사용 방법</h3>
+                    <button class="icon-btn" style="box-shadow:none; background:transparent;"
+                        onclick="document.getElementById('scanner-help-modal').classList.remove('active')">✕</button>
+                </div>
+                <div class="card" style="padding:16px; margin-bottom:12px;">
+                    <h4 style="margin:0 0 8px 0; font-size:15px;">📷 QR 스캔</h4>
+                    <p style="margin:0; font-size:13px; color:var(--text-secondary); line-height:1.5;">가로등 번호판, 식당 메뉴판,
+                        관광 안내판 등의 QR 코드를 사각형 안에 맞춰 스캔하세요.</p>
+                </div>
+                <div class="card" style="padding:16px; margin-bottom:12px;">
+                    <h4 style="margin:0 0 8px 0; font-size:15px;">🚨 가로등 QR (긴급)</h4>
+                    <p style="margin:0; font-size:13px; color:var(--text-secondary); line-height:1.5;">가로등에 부착된 QR을 스캔하면
+                        현재 위치가 119/112 긴급 문자로 전송되며, 택시 호출 링크를 사용할 수 있습니다.</p>
+                </div>
+                <button class="pill-btn full-width mild"
+                    onclick="document.getElementById('scanner-help-modal').classList.remove('active')">확인</button>
+            </div>
+        </div>
+
+        <!-- Gesture Navigation -->
+        <div class="gesture-nav-container">
+            <button id="gesture-fab" class="gesture-btn">
+                <span style="filter: grayscale(1) brightness(2);">📷</span>
+            </button>
+        </div>
+        <script src="gesture-nav.js"></script>
+    </div>
+</body>
+
+</html>

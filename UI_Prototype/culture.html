@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - Culture Booking</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="icons">
+                <span class="icon">📶</span>
+                <span class="icon">🔋</span>
+            </div>
+        </div>
+
+        <div class="app-content booking-content">
+            <header class="header bg-white fixed-header">
+                <button class="icon-btn clear" onclick="history.back()">←</button>
+                <h2 class="header-title">공연 상세</h2>
+                <button class="icon-btn clear">🔗</button>
+            </header>
+
+            <div class="cover-image">
+                <div class="image-placeholder band-cover"></div>
+                <button class="play-btn">▶️ 15s 미리듣기</button>
+            </div>
+
+            <div class="details-section">
+                <span class="badge indy">인디 라이브</span>
+                <h1>홍대고양이</h1>
+
+                <ul class="info-list">
+                    <li><span class="icon">📅</span> 2026.03.15 (토) 19:00</li>
+                    <li><span class="icon">📍</span> 마포구 청년문화공간 (유휴공간)</li>
+                </ul>
+
+                <div class="card pay-what-you-want">
+                    <div class="pwyw-header">
+                        <span class="emoji">🎫</span>
+                        <h3>자율 관람료 (Free Entry)</h3>
+                    </div>
+                    <p>이 공연은 대관료 지원으로 기본 티켓이 <strong>무료</strong>입니다. 관람 후 만족하신 만큼 <strong>팁(Tip)</strong>으로 아티스트를
+                        응원해주세요!</p>
+                </div>
+
+                <div class="bottom-fixed-actions">
+                    <button class="pill-btn full-width mild mb-12">🎁 굿즈 함께 미리 주문 (MD)</button>
+                    <button class="pill-btn full-width primary">🎫 티켓 1장 무료 발급받기</button>
+                </div>
+            </div>
+
+            <!-- Hidden Tip Popup Simulate -->
+            <div class="overlay hidden" id="tipPopup">
+                <div class="tip-card card">
+                    <h2 class="tip-title">🎉 공연은 어떠셨나요?</h2>
+                    <p class="tip-subtitle">작은 후원이 아티스트의 꿈을 키웁니다.</p>
+
+                    <div class="tip-options">
+                        <button class="tip-btn">☕ 커피 ₩ 5,000</button>
+                        <button class="tip-btn">🍔 식사 ₩ 15,000</button>
+                        <button class="tip-btn custom">직접 입력 ₩ _____</button>
+                    </div>
+
+                    <button class="pill-btn full-width primary mt-16">💖 Apple Pay 1초 응원</button>
+                    <button class="text-btn">나중에 하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

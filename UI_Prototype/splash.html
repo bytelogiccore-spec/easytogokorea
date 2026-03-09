@@ -1,0 +1,507 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - Splash</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #FDFCF9;
+            --accent: #FF7043;
+        }
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #E6E5E1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .mobile-frame {
+            width: 390px;
+            height: 844px;
+            background-color: var(--bg-color);
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            border-radius: 50px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            animation: fadeInLogo 1s ease-out 0.5s forwards;
+        }
+
+        .logo-img {
+            width: 120px;
+            height: auto;
+            margin-bottom: 24px;
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1C1C1E;
+            letter-spacing: -1px;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .slogan {
+            font-size: 14px;
+            font-weight: 600;
+            color: #FF7043;
+            margin-top: 8px;
+            opacity: 0;
+            animation: slideUpFade 1s ease-out 1s forwards;
+        }
+
+        /* SVG Animations */
+        .svg-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Clouds */
+        .cloud {
+            position: absolute;
+            animation: floatClouds 20s linear infinite;
+        }
+
+        .cloud1 {
+            top: 15%;
+            left: -30%;
+            width: 120px;
+            animation-duration: 15s;
+        }
+
+        .cloud2 {
+            top: 25%;
+            left: -40%;
+            width: 180px;
+            animation-duration: 25s;
+            animation-delay: 2s;
+            opacity: 0.8;
+        }
+
+        .cloud3 {
+            top: 10%;
+            left: -20%;
+            width: 100px;
+            animation-duration: 18s;
+            animation-delay: 7s;
+            opacity: 0.6;
+        }
+
+        .airplane {
+            display: block;
+        }
+
+
+        /* === Animated Logo Styles === */
+        .logo-svg-container {
+            position: absolute;
+            top: 32%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            z-index: 10;
+            opacity: 0;
+            animation: fadeInLogo 0.8s ease-out 0.3s forwards;
+        }
+
+        .logo-svg-container svg#easy-logo {
+            width: 100%;
+            height: auto;
+            overflow: visible;
+        }
+
+        #taeguk-o {
+            transform-box: fill-box;
+            transform-origin: center;
+        }
+
+        #taeguk-colors {
+            transform-box: fill-box;
+            transform-origin: center;
+        }
+
+        .bouncy-letter {
+            display: inline-block;
+            opacity: 0;
+        }
+
+        .sub-text {
+            opacity: 0;
+        }
+
+        .clouds path {
+            stroke-dasharray: 200;
+            stroke-dashoffset: 200;
+        }
+
+        @keyframes letterPop {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.3) skewX(20deg);
+            }
+
+            50% {
+                opacity: 1;
+                transform: translateY(-15px) scale(1.2) skewX(-10deg);
+            }
+
+            75% {
+                transform: translateY(5px) scale(0.95) skewX(5deg);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1) skewX(0deg);
+            }
+        }
+
+
+        @keyframes fadeInLogo {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -40%) scale(0.9);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes slideUpFade {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floatClouds {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(500px);
+            }
+        }
+
+        @keyframes flyPlane {
+
+            /* Legacy ??no longer used, kept for reference */
+            0% {
+                bottom: -100px;
+                left: -50px;
+                transform: scale(0.5) rotate(45deg);
+            }
+
+            100% {
+                bottom: 80%;
+                left: 110%;
+                transform: scale(0.8) rotate(10deg);
+            }
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Transition overlay */
+        .transition-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .transition-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+
+        <div class="svg-container">
+            <!-- Clouds SVG -->
+            <svg class="cloud cloud1" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M17.5 19C19.9853 19 22 16.9853 22 14.5C22 12.1325 20.177 10.2038 17.8596 10.0152C17.3784 6.6432 14.4842 4 11 4C7.13401 4 4 7.13401 4 11C4 11.234 4.01148 11.4653 4.03375 11.6925C1.77494 12.2155 0 14.28 0 16.75C0 19.6495 2.35051 22 5.25 22H16.5C18.433 22 20 20.433 20 18.5C20 16.567 18.433 15 16.5 15H15.5"
+                    opacity="0.8" />
+            </svg>
+            <svg class="cloud cloud2" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M17.5 19C19.9853 19 22 16.9853 22 14.5C22 12.1325 20.177 10.2038 17.8596 10.0152C17.3784 6.6432 14.4842 4 11 4C7.13401 4 4 7.13401 4 11C4 11.234 4.01148 11.4653 4.03375 11.6925C1.77494 12.2155 0 14.28 0 16.75C0 19.6495 2.35051 22 5.25 22H16.5C18.433 22 20 20.433 20 18.5C20 16.567 18.433 15 16.5 15H15.5"
+                    opacity="0.6" />
+            </svg>
+            <svg class="cloud cloud3" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M17.5 19C19.9853 19 22 16.9853 22 14.5C22 12.1325 20.177 10.2038 17.8596 10.0152C17.3784 6.6432 14.4842 4 11 4C7.13401 4 4 7.13401 4 11C4 11.234 4.01148 11.4653 4.03375 11.6925C1.77494 12.2155 0 14.28 0 16.75C0 19.6495 2.35051 22 5.25 22H16.5C18.433 22 20 20.433 20 18.5C20 16.567 18.433 15 16.5 15H15.5"
+                    opacity="0.9" />
+            </svg>
+
+            <!-- Old airplane removed - replaced by animated logo below -->
+        </div>
+
+        <!-- Animated Logo SVG -->
+        <div class="logo-svg-container">
+            <svg id="easy-logo" viewBox="0 0 550 220" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#38BDF8" />
+                        <stop offset="100%" stop-color="#0284C7" />
+                    </linearGradient>
+                    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feDropShadow dx="0" dy="8" stdDeviation="5" flood-color="#0F172A" flood-opacity="0.12" />
+                    </filter>
+                </defs>
+
+                <!-- Distort/Popping Typography -->
+                <g class="text-group">
+                    <text x="75" y="135" font-family="'Outfit', sans-serif" font-weight="900" font-size="64"
+                        fill="#0F172A">
+                        <tspan x="75" class="bouncy-letter l-1">E</tspan>
+                        <tspan x="115" class="bouncy-letter l-2">A</tspan>
+                        <tspan x="160" class="bouncy-letter l-3">S</tspan>
+                        <tspan x="200" class="bouncy-letter l-4">Y</tspan>
+                        <tspan x="260" class="bouncy-letter l-5">T</tspan>
+                        <tspan x="295" class="bouncy-letter l-6">O</tspan>
+                        <tspan x="365" class="bouncy-letter l-7">G</tspan>
+                    </text>
+
+                    <!-- Taeguk O for 'GO' -->
+                    <g transform="translate(438, 114)">
+                        <g id="taeguk-o" class="bouncy-letter l-8">
+                            <g id="taeguk-colors" opacity="0" style="transform: rotate(220deg) scale(1);">
+                                <circle cx="0" cy="0" r="21" fill="#0047A0" />
+                                <path d="M -21,0 A 21,21 0 0,0 21,0 Z" fill="#CD2E3A" />
+                                <circle cx="10.5" cy="0" r="10.5" fill="#CD2E3A" />
+                                <circle cx="-10.5" cy="0" r="10.5" fill="#0047A0" />
+                            </g>
+                            <circle id="taeguk-white" cx="0" cy="0" r="17" fill="#FFFFFF" />
+                            <circle cx="0" cy="0" r="21" fill="none" stroke="#0F172A" stroke-width="8" />
+                        </g>
+                    </g>
+
+                    <text x="260" y="180" font-family="'Outfit', sans-serif" font-weight="900" font-size="20"
+                        fill="#c3cfe9" letter-spacing="14" text-anchor="middle" class="sub-text">KOREA</text>
+                </g>
+
+                <!-- Flight Path (above text) -->
+                <path id="flight-path" class="flight-path" d="M -20,170 Q 200,30 445,115" fill="none" stroke="#0047A0"
+                    stroke-width="3" stroke-dasharray="8,14" stroke-linecap="round" />
+
+                <!-- Realistic Airplane (above text) -->
+                <g id="airplane-wrapper">
+                    <g id="airplane" class="airplane" filter="url(#softShadow)">
+                        <path
+                            d="M 30,0 C 28,-3 20,-4 10,-4 L -20,-4 C -26,-4 -28,-2 -28,0 C -28,2 -26,4 -20,4 L 10,4 C 20,4 28,3 30,0 Z"
+                            fill="#E2E8F0" />
+                        <path d="M 28,0 C 26,-2 18,-3 8,-3 L -18,-3 C -24,-3 -26,-1.5 -26,0 Z" fill="#F8FAFC"
+                            opacity="0.6" />
+                        <path d="M 30,0 C 32,-1 34,0 32,0 C 34,0 32,1 30,0 Z" fill="#94A3B8" />
+                        <path d="M 5,-3 L -8,-22 L -14,-22 L -4,-3 Z" fill="#0047A0" />
+                        <path d="M 5,3 L -8,22 L -14,22 L -4,3 Z" fill="#0047A0" />
+                        <path d="M -8,-22 L -14,-22 L -15,-24 L -9,-24 Z" fill="#0055C4" opacity="0.7" />
+                        <path d="M -8,22 L -14,22 L -15,24 L -9,24 Z" fill="#0055C4" opacity="0.7" />
+                        <path d="M -22,-4 L -26,-14 L -30,-14 L -24,-4 Z" fill="#CD2E3A" />
+                        <path d="M -22,-3 L -28,-10 L -30,-10 L -24,-3 Z" fill="#0047A0" opacity="0.8" />
+                        <path d="M -22,3 L -28,10 L -30,10 L -24,3 Z" fill="#0047A0" opacity="0.8" />
+                        <circle cx="15" cy="-1" r="1.2" fill="#38BDF8" />
+                        <circle cx="10" cy="-1" r="1" fill="#38BDF8" />
+                        <circle cx="6" cy="-1" r="1" fill="#38BDF8" />
+                        <circle cx="2" cy="-1" r="1" fill="#38BDF8" />
+                        <ellipse cx="-28" cy="0" rx="3" ry="1.5" fill="#38BDF8" opacity="0.4" />
+                    </g>
+                </g>
+            </svg>
+        </div>
+
+        <div class="logo-container">
+            <div class="slogan">Journey Made Simple</div>
+        </div>
+
+
+        <!-- Fade out transition -->
+        <div class="transition-overlay" id="transition" style="background-color: #FDFCF9;"></div>
+
+    </div>
+
+    <script>
+        // === Animated Logo Script ===
+        document.addEventListener("DOMContentLoaded", () => {
+            runLogoAnimation();
+        });
+
+        function runLogoAnimation() {
+            const letters = document.querySelectorAll('.bouncy-letter');
+            const subText = document.querySelector('.sub-text');
+            const airplaneContainer = document.querySelector('#airplane-wrapper');
+            const airplane = document.querySelector('#airplane');
+            const flightPath = document.querySelector('.flight-path');
+            const taegukO = document.querySelector('#taeguk-o');
+            const taegukColors = document.querySelector('#taeguk-colors');
+            const taegukWhite = document.querySelector('#taeguk-white');
+
+            if (!airplaneContainer || !flightPath) return;
+
+            // Reset
+            letters.forEach(letter => {
+                letter.style.animation = 'none';
+                letter.style.opacity = '0';
+            });
+            subText.style.transition = 'none';
+            subText.style.opacity = '0';
+            subText.style.transform = 'translateY(20px) scale(0.9)';
+            subText.style.letterSpacing = '4px';
+
+            flightPath.style.transition = 'none';
+            const pathTotalLen = flightPath.getTotalLength();
+            flightPath.style.strokeDasharray = `${pathTotalLen} ${pathTotalLen}`;
+            flightPath.style.strokeDashoffset = pathTotalLen;
+            flightPath.style.opacity = '0';
+
+            airplaneContainer.style.opacity = '0';
+            airplaneContainer.style.transform = 'none';
+            airplane.style.transform = 'scale(0.3) rotate(-20deg)';
+            airplane.style.transition = 'none';
+
+            taegukColors.style.transition = 'none';
+            taegukColors.setAttribute('opacity', '0');
+            taegukWhite.style.transition = 'none';
+            taegukWhite.setAttribute('opacity', '1');
+
+            void document.body.offsetWidth;
+
+            // BeeKrafty letter reveal
+            setTimeout(() => {
+                letters.forEach((letter, index) => {
+                    setTimeout(() => {
+                        letter.style.animation = 'letterPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards';
+                    }, index * 80);
+                });
+            }, 800);
+
+            // Subtitle
+            setTimeout(() => {
+                subText.style.transition = 'all 1s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                subText.style.opacity = '1';
+                subText.style.transform = 'translateY(0) scale(1)';
+                subText.style.letterSpacing = '14px';
+            }, 1400);
+
+            // Flight path + airplane
+            setTimeout(() => {
+                flightPath.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.45, 0, 0.15, 1), opacity 0.3s ease';
+                flightPath.style.opacity = '1';
+                flightPath.style.strokeDashoffset = '0';
+
+                airplaneContainer.style.opacity = '1';
+                airplane.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                airplane.style.transform = 'scale(1) rotate(0deg)';
+
+                animateAirplaneAlongPath(airplaneContainer, flightPath, 1500, () => {
+                    // IMPACT!
+                    airplaneContainer.style.transition = 'opacity 0.15s ease';
+                    airplaneContainer.style.opacity = '0';
+                    flightPath.style.transition = 'opacity 0.3s ease';
+                    flightPath.style.opacity = '0';
+
+                    taegukWhite.style.transition = 'opacity 0.3s ease';
+                    taegukWhite.setAttribute('opacity', '0');
+                    taegukColors.style.transition = 'opacity 0.3s ease';
+                    taegukColors.setAttribute('opacity', '1');
+
+                    taegukO.style.transition = 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    taegukO.style.transform = 'rotate(360deg) scale(1.15)';
+                    setTimeout(() => {
+                        taegukO.style.transition = 'transform 0.5s ease';
+                        taegukO.style.transform = 'rotate(360deg) scale(1)';
+                    }, 800);
+                });
+            }, 1600);
+        }
+
+        function animateAirplaneAlongPath(container, path, duration, onComplete) {
+            const pathLength = path.getTotalLength();
+            let start = null;
+            let reqId;
+            function step(timestamp) {
+                if (!start) start = timestamp;
+                const progress = Math.min((timestamp - start) / duration, 1);
+                const ease = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+                const pt = path.getPointAtLength(ease * pathLength);
+                const next = path.getPointAtLength(Math.min(ease * pathLength + 1, pathLength));
+                const angle = Math.atan2(next.y - pt.y, next.x - pt.x) * 180 / Math.PI;
+                container.style.transform = `translate(${pt.x}px, ${pt.y}px) rotate(${angle}deg)`;
+                if (progress < 1) {
+                    reqId = window.requestAnimationFrame(step);
+                } else {
+                    window.cancelAnimationFrame(reqId);
+                    if (onComplete) onComplete();
+                }
+            }
+            reqId = window.requestAnimationFrame(step);
+        }
+
+        // Redirect after animations
+        setTimeout(() => {
+            const overlay = document.getElementById('transition');
+            overlay.classList.add('active');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 500);
+        }, 4500);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyToGoKorea - Living & Visa</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        .interpreter-hero {
+            background: linear-gradient(135deg, #FF7043 0%, #FF9A9E 100%);
+            color: white;
+            padding: 32px 24px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 24px;
+            box-shadow: 0 16px 32px rgba(255, 112, 67, 0.3);
+            text-align: center;
+        }
+
+        .emergency-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .emergency-btn {
+            background: var(--card-bg);
+            border: none;
+            padding: 16px 8px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .emergency-btn.red {
+            color: #FF3B30;
+            border: 1px solid #FFEBE5;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mobile-frame">
+        <div class="status-bar transparent" style="color:#1C1C1E;">
+            <span>9:41</span>
+            <div class="icons">
+                <span class="icon">📶</span>
+                <span class="icon">🔋</span>
+            </div>
+        </div>
+
+        <div class="app-content" style="padding-bottom: 90px; overflow-y: auto;">
+            <header class="header">
+                <button class="icon-btn clear" onclick="history.back()">❮</button>
+                <h2 style="font-size:18px; font-weight:700; margin:0;">생활 및 비자 (Living in KR)</h2>
+                <div style="width:44px;"></div>
+            </header>
+
+            <h3 class="section-title">🗣️ 실시간 도우미 및 통역 연결</h3>
+
+            <div class="interpreter-hero">
+                <h2 style="margin: 0 0 8px 0; font-size: 22px;">전화 통역사 매칭</h2>
+                <p style="margin: 0 0 20px 0; font-size: 14px; opacity: 0.9;">지원: 영어, 중국어, 일본어, 스페인어<br>기본 5분 무료 (이후 분당
+                    500원)</p>
+                <button class="pill-btn full-width" style="background: white; color: var(--accent); font-size: 16px;">
+                    📞 즉시 호출하기
+                </button>
+            </div>
+
+            <div class="emergency-grid">
+                <button class="emergency-btn red">
+                    <span style="font-size:24px;">🚓</span>
+                    112 경찰
+                </button>
+                <button class="emergency-btn red">
+                    <span style="font-size:24px;">🚒</span>
+                    119 소방
+                </button>
+                <button class="emergency-btn">
+                    <span style="font-size:24px;">ℹ️</span>
+                    1330 안내
+                </button>
+            </div>
+
+            <h3 class="section-title">📋 장기 체류 가이드</h3>
+
+            <div class="card" style="padding: 0 16px; margin-bottom: 16px;">
+                <div class="setting-item">
+                    <div>
+                        <h4 style="margin: 0 0 4px 0; font-size: 15px;">🪪 외국인등록증 (ARC) 안내</h4>
+                        <p style="margin: 0; font-size: 12px; color: var(--text-secondary);">출입국사무소 예약 및 서류 발급 안내</p>
+                    </div>
+                    <span style="color:var(--text-secondary);">❯</span>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <h4 style="margin: 0 0 4px 0; font-size: 15px;">🏦 은행 계좌 개설 가이드</h4>
+                        <p style="margin: 0; font-size: 12px; color: var(--text-secondary);">외국인 개설 가능 은행 목록 (여권, ARC
+                            필요)</p>
+                    </div>
+                    <span style="color:var(--text-secondary);">❯</span>
+                </div>
+                <div class="setting-item">
+                    <div>
+                        <h4 style="margin: 0 0 4px 0; font-size: 15px;">🏠 단기/월세 주거 지원</h4>
+                        <p style="margin: 0; font-size: 12px; color: var(--text-secondary);">1개월 이상 중장기 거주자를 위한 추천</p>
+                    </div>
+                    <span style="color:var(--text-secondary);">❯</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Gesture Navigation -->
+        <div class="gesture-nav-container">
+            <button id="gesture-fab" class="gesture-btn">
+                <span style="filter: grayscale(1) brightness(2);">📷</span>
+            </button>
+        </div>
+        <script src="gesture-nav.js"></script>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy To Go Korea - Dynamic Playful Logo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="logo-wrapper">
+        <div class="logo-container">
+            <!-- Playful Dynamic Blue Sky SVG Logo -->
+            <svg id="easy-logo" viewBox="0 0 550 220" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <!-- Vibrant Gradients for that "pop" look -->
+                    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#38BDF8" />
+                        <stop offset="100%" stop-color="#0284C7" />
+                    </linearGradient>
+                    <!-- Deep modern shadow -->
+                    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feDropShadow dx="0" dy="8" stdDeviation="5" flood-color="#0F172A" flood-opacity="0.12" />
+                    </filter>
+                </defs>
+
+                <!-- Bouncy Clouds -->
+                <g class="clouds">
+                    <path class="cloud-1" d="M 50,140 Q 90,105 130,140 Q 170,115 210,140" fill="none" stroke="#FFFFFF"
+                        stroke-width="8" stroke-linecap="round" filter="url(#softShadow)" />
+                    <path class="cloud-2" d="M 360,165 Q 400,130 440,165 Q 480,145 520,165" fill="none" stroke="#FFFFFF"
+                        stroke-width="10" stroke-linecap="round" filter="url(#softShadow)" />
+                    <!-- Additional playful small cloud -->
+                    <path class="cloud-3" d="M 280,60 Q 300,40 320,60" fill="none" stroke="#FFFFFF" stroke-width="5"
+                        stroke-linecap="round" opacity="0.5" />
+                </g>
+
+
+                <!-- Distort/Popping Typography groups -->
+                <g class="text-group">
+                    <text x="75" y="135" font-family="'Outfit', sans-serif" font-weight="900" font-size="64"
+                        fill="#0F172A">
+                        <!-- Grouped letters for bouncy reveal. Exact X offsets so SVGator distort style works cleanly -->
+                        <tspan x="75" class="bouncy-letter l-1">E</tspan>
+                        <tspan x="115" class="bouncy-letter l-2">A</tspan>
+                        <tspan x="160" class="bouncy-letter l-3">S</tspan>
+                        <tspan x="200" class="bouncy-letter l-4">Y</tspan>
+
+                        <!-- Extra space -->
+                        <tspan x="260" class="bouncy-letter l-5">T</tspan>
+                        <tspan x="295" class="bouncy-letter l-6">O</tspan>
+
+                        <!-- Extra space -->
+                        <tspan x="365" class="bouncy-letter l-7">G</tspan>
+                    </text>
+
+                    <!-- Filled Taeguk O for 'GO' -->
+                    <g transform="translate(438, 114)">
+                        <g id="taeguk-o" class="bouncy-letter l-8">
+                            <!-- Standard Red & Blue Taeguk filling the O -->
+                            <!-- Red on TOP, Blue on BOTTOM, no rotation -->
+                            <g id="taeguk-colors" opacity="0" style="transform: rotate(220deg) scale(1);">
+                                <!-- Base Blue Circle (full) -->
+                                <circle cx="0" cy="0" r="21" fill="#0047A0" />
+                                <!-- Top Red Semicircle -->
+                                <path d="M -21,0 A 21,21 0 0,0 21,0 Z" fill="#CD2E3A" />
+                                <!-- Red Bulge (right, extends red downward-right) -->
+                                <circle cx="10.5" cy="0" r="10.5" fill="#CD2E3A" />
+                                <!-- Blue Bulge (left, extends blue upward-left) -->
+                                <circle cx="-10.5" cy="0" r="10.5" fill="#0047A0" />
+                            </g>
+                            <!-- White fill visible before airplane impact -->
+                            <circle id="taeguk-white" cx="0" cy="0" r="17" fill="#FFFFFF" />
+                            <!-- The black ring making it the letter 'O' -->
+                            <circle cx="0" cy="0" r="21" fill="none" stroke="#0F172A" stroke-width="8" />
+                        </g>
+                    </g>
+
+                    <!-- Punchy Subtitle -->
+                    <text x="260" y="180" font-family="'Outfit', sans-serif" font-weight="900" font-size="20"
+                        fill="#c3cfe9" letter-spacing="14" text-anchor="middle" class="sub-text">KOREA</text>
+                </g>
+
+                <!-- Dynamic Curving Flight Path (rendered ABOVE text) -->
+                <path id="flight-path" class="flight-path" d="M -20,170 Q 200,30 445,115" fill="none" stroke="#0047A0"
+                    stroke-width="3" stroke-dasharray="8,14" stroke-linecap="round" />
+
+                <!-- Realistic Airplane (rendered ABOVE text) -->
+                <g id="airplane-wrapper">
+                    <g id="airplane" class="airplane" filter="url(#softShadow)">
+                        <!-- Fuselage -->
+                        <path
+                            d="M 30,0 C 28,-3 20,-4 10,-4 L -20,-4 C -26,-4 -28,-2 -28,0 C -28,2 -26,4 -20,4 L 10,4 C 20,4 28,3 30,0 Z"
+                            fill="#E2E8F0" />
+                        <!-- Fuselage highlight -->
+                        <path d="M 28,0 C 26,-2 18,-3 8,-3 L -18,-3 C -24,-3 -26,-1.5 -26,0 Z" fill="#F8FAFC"
+                            opacity="0.6" />
+                        <!-- Nose cone -->
+                        <path d="M 30,0 C 32,-1 34,0 32,0 C 34,0 32,1 30,0 Z" fill="#94A3B8" />
+                        <!-- Main wings (swept back) -->
+                        <path d="M 5,-3 L -8,-22 L -14,-22 L -4,-3 Z" fill="#0047A0" />
+                        <path d="M 5,3 L -8,22 L -14,22 L -4,3 Z" fill="#0047A0" />
+                        <!-- Wing tips -->
+                        <path d="M -8,-22 L -14,-22 L -15,-24 L -9,-24 Z" fill="#0055C4" opacity="0.7" />
+                        <path d="M -8,22 L -14,22 L -15,24 L -9,24 Z" fill="#0055C4" opacity="0.7" />
+                        <!-- Tail fin (vertical) -->
+                        <path d="M -22,-4 L -26,-14 L -30,-14 L -24,-4 Z" fill="#CD2E3A" />
+                        <!-- Tail wings (horizontal) -->
+                        <path d="M -22,-3 L -28,-10 L -30,-10 L -24,-3 Z" fill="#0047A0" opacity="0.8" />
+                        <path d="M -22,3 L -28,10 L -30,10 L -24,3 Z" fill="#0047A0" opacity="0.8" />
+                        <!-- Windows -->
+                        <circle cx="15" cy="-1" r="1.2" fill="#38BDF8" />
+                        <circle cx="10" cy="-1" r="1" fill="#38BDF8" />
+                        <circle cx="6" cy="-1" r="1" fill="#38BDF8" />
+                        <circle cx="2" cy="-1" r="1" fill="#38BDF8" />
+                        <!-- Engine glow -->
+                        <ellipse cx="-28" cy="0" rx="3" ry="1.5" fill="#38BDF8" opacity="0.4" />
+                    </g>
+                </g>
+
+            </svg>
+        </div>
+
+        <div class="actions">
+            <button id="replay-btn" class="modern-btn">Play Distort Reveal</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
