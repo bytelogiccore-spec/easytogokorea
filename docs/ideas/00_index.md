@@ -28,6 +28,9 @@
 | 17 | [3D AR 낙서](17_3d_ar_graffiti.md) | 🎨 AR/소셜 | GPS 기반 3D 디지털 낙서, 추천순 크기 변환, 공간 앵커링 |
 | 18 | [QR 교통카드](18_qr_transit_card.md) | 🚇 교통 | QR 기반 대중교통 결제 안내·연동, 무료 교통 API 통합 |
 | 19 | [인증·보안·결제](19_auth_security_payment.md) | 🔐 보안 | 단계별 인증, 결제 위임 전략, 의료 데이터 온디바이스 보안 |
+| 20 | [게이미파이드 내비게이션](20_gamified_navigation.md) | 🎮 내비 | RPG 스타일 미니맵 + 퀘스트 네비게이션 |
+| 21 | [AR 실내 내비게이션](21_ar_indoor_navigation.md) | 🏢 AR | Cloud Anchor + BLE + IMU 하이브리드 실내 내비 |
+| 22 | [근거리 AI 번역 채팅](22_proximity_ai_chat.md) | 💬 AI | BLE 근거리 사용자 발견 + On-device AI 실시간 번역 P2P 채팅 |
 | 20 | [게임형 내비게이션](20_gamified_navigation.md) | 🎮 내비/퀘스트 | 미니맵+AR 전환, 여행 퀘스트 시스템, 보상·뱃지, 의료관광 퀘스트 |
 | 21 | [AR 실내 길안내](21_ar_indoor_navigation.md) | 🚇 실내AR | 4단계 하이브리드 측위, Phase별 SDK 전략, 관리자 맵핑 워크플로 |
 
