@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EasyToGo - Now Plan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <!-- Mobile Device Simulator Container -->
+    <div
+        class="bg-blue-600 text-white h-[100dvh] max-h-[850px] w-full max-w-[400px] relative flex flex-col justify-between shadow-2xl rounded-[3rem] border-[8px] border-gray-900 ring-1 ring-gray-200 overflow-hidden p-8">
+
+        <!-- Top nav -->
+        <header class="flex justify-between items-center">
+            <button class="text-4xl font-bold">&larr;</button>
+            <span class="text-sm font-bold uppercase tracking-widest text-blue-200">Day 2 • 10:00 AM</span>
+            <!-- Optional: A tiny button to see the boring "List view" -->
+            <button class="text-sm font-bold uppercase tracking-widest text-blue-200 hover:text-white">List</button>
+        </header>
+
+        <!-- Main Focus Area (What to do NOW) -->
+        <main class="flex-1 flex flex-col justify-center">
+            <!-- Tiny "Next action" hint to pull them in -->
+            <p class="text-blue-200 font-bold uppercase tracking-widest text-sm mb-4">Now destination</p>
+
+            <!-- Giant, overwhelming text -->
+            <h1 class="text-[3.5rem] font-black tracking-tighter leading-none mb-6">Gyeongbok-gung<br>Palace</h1>
+
+            <!-- Brutally simple secondary info -->
+            <p class="text-2xl font-bold text-blue-100">Royal Palace Tour.</p>
+            <p class="text-xl font-bold text-blue-200 mt-2">2 hours estimated.</p>
+        </main>
+
+        <!-- Action / Pagination -->
+        <footer class="w-full flex justify-between items-end">
+            <!-- Only 3 dots because minimal. 1st is big, rest are small. -->
+            <div class="flex gap-2 items-center mb-4">
+                <div class="w-4 h-4 bg-white rounded-full"></div>
+                <div class="w-2 h-2 bg-blue-300 rounded-full"></div>
+                <div class="w-2 h-2 bg-blue-300 rounded-full"></div>
+                <div class="w-2 h-2 bg-blue-300 rounded-full"></div>
+            </div>
+
+            <!-- Giant Go Action -->
+            <button
+                class="text-6xl font-black flex items-center gap-2 hover:scale-110 active:scale-95 transition-transform origin-right">
+                GO &rarr;
+            </button>
+        </footer>
+
+    </div>
+</body>
+
+</html>

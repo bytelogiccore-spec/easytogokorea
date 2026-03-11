@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use async_graphql::SimpleObject;
 
 // ── AirKorea API raw response ──
 
@@ -43,7 +44,7 @@ pub struct AirRawItem {
 
 // ── Transformed output ──
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, SimpleObject)]
 pub struct AirQuality {
     pub measured_at: String,
     pub overall: AqiLevel,
@@ -55,7 +56,7 @@ pub struct AirQuality {
     pub sulfur_dioxide: Option<String>,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, SimpleObject)]
 pub struct AqiLevel {
     pub value: Option<String>,
     pub grade: String,
@@ -64,7 +65,7 @@ pub struct AqiLevel {
     pub advice: String,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, SimpleObject)]
 pub struct PollutantInfo {
     pub value: Option<String>,
     pub grade: String,

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EasyToGo - Day 2 Plan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <!-- Mobile Device Simulator Container -->
+    <div
+        class="bg-white text-black h-[100dvh] max-h-[850px] w-full max-w-[400px] relative flex flex-col shadow-2xl rounded-[3rem] border-[8px] border-gray-900 ring-1 ring-gray-200 overflow-hidden">
+
+        <!-- Header -->
+        <header
+            class="p-8 sticky top-0 bg-white/90 backdrop-blur z-10 flex justify-between items-end border-b-2 border-black">
+            <div>
+                <button class="text-3xl font-bold mb-2">&larr;</button>
+                <h1 class="text-4xl font-black tracking-tighter">Day 2</h1>
+            </div>
+            <button
+                class="w-10 h-10 bg-black text-white rounded-full flex justify-center items-center font-bold text-xl hover:bg-blue-600 transition-colors">
+                M
+            </button>
+        </header>
+
+        <!-- Vertical Brutalist Timeline -->
+        <main class="flex-1 overflow-y-auto px-8 py-10 flex flex-col gap-12">
+
+            <!-- Item 1 (Past - grayed out) -->
+            <div class="opacity-30">
+                <p class="text-lg font-bold text-gray-400 font-mono">08:00</p>
+                <h2 class="text-3xl font-black tracking-tight mt-1">Namsan Hanok Village</h2>
+            </div>
+
+            <!-- Item 2 (Current - Active Blue Focus) -->
+            <div class="relative py-4">
+                <!-- Highlight bar -->
+                <div class="absolute -left-8 top-0 bottom-0 w-2 bg-blue-600"></div>
+                <p class="text-[1.5rem] font-bold text-blue-600 font-mono tracking-tighter">10:00 &rarr;</p>
+                <h2 class="text-[2.75rem] leading-[1] font-black tracking-tighter mt-1">Gyeongbok-gung<br>Palace</h2>
+                <div class="mt-4 flex gap-3">
+                    <span class="px-4 py-1 border-2 border-black rounded-full text-sm font-bold">2 hr</span>
+                    <span
+                        class="px-4 py-1 border-2 border-black rounded-full text-sm font-bold bg-black text-white">Tickets</span>
+                </div>
+            </div>
+
+            <!-- Item 3 (Future) -->
+            <div>
+                <p class="text-lg font-bold text-gray-500 font-mono tracking-tighter">12:30</p>
+                <h2 class="text-3xl font-black tracking-tight mt-1">Myeongdong Kyoja</h2>
+                <p class="text-md font-bold text-gray-400 mt-1">Lunch • 1 min walk</p>
+            </div>
+
+            <!-- Item 4 (Future) -->
+            <div>
+                <p class="text-lg font-bold text-gray-500 font-mono tracking-tighter">14:00</p>
+                <h2 class="text-3xl font-black tracking-tight mt-1">N Seoul Tower</h2>
+                <p class="text-md font-bold text-gray-400 mt-1">Cable Car • 20 min transit</p>
+            </div>
+
+            <div class="h-20"></div> <!-- spacing -->
+        </main>
+
+        <!-- Add Button (Minimal floating circle) -->
+        <button
+            class="absolute bottom-8 right-8 w-16 h-16 bg-blue-600 rounded-full text-white text-4xl font-black flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
+            +
+        </button>
+    </div>
+</body>
+
+</html>

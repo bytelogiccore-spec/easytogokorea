@@ -26,7 +26,7 @@
 
 ```
 타겟: 외국인 관광객 / 장기 체류자
-플랫폼: iOS + Android (Flutter 기반)
+플랫폼: Desktop/Mobile (Tauri V2 + Svelte)
 특징:
   - 설치 즉시 언어 자동 감지 → 원클릭 온보딩
   - 입력 최소화 UX (카드형 터치 선택, QR 스캔 중심)
@@ -51,7 +51,7 @@
 
 ```
 타겟: 여행사, 식당, 사찰/문화기관, 특산품 판매자, 의료기관
-플랫폼: Windows (Tauri), iOS/Android (Flutter)
+플랫폼: Windows (Tauri), Desktop/Mobile (Tauri V2 + Svelte)
 특징:
   - 예약 관리 대시보드
   - 상품/메뉴 등록 및 다국어 자동 번역 (Papago/DeepL API)

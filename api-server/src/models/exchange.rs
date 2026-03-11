@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use async_graphql::SimpleObject;
 
 // ── BOK API raw response ──
 
@@ -9,6 +10,7 @@ pub struct BokApiRoot {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 pub struct BokStatisticSearch {
     pub list_total_count: Option<i32>,
     pub row: Option<Vec<BokRawRow>>,
@@ -16,6 +18,7 @@ pub struct BokStatisticSearch {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+#[allow(dead_code)]
 pub struct BokRawRow {
     pub stat_name: Option<String>,
     pub item_name1: Option<String>,
@@ -26,7 +29,7 @@ pub struct BokRawRow {
 
 // ── Transformed output ──
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, SimpleObject)]
 pub struct ExchangeRate {
     pub currency: String,
     pub currency_name: String,
@@ -36,7 +39,7 @@ pub struct ExchangeRate {
     pub flag_emoji: String,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, SimpleObject)]
 pub struct ExchangeRateList {
     pub base: String,
     pub rates: Vec<ExchangeRate>,

@@ -28,6 +28,8 @@
 | 17 | [3D AR 낙서](17_3d_ar_graffiti.md) | 🎨 AR/소셜 | GPS 기반 3D 디지털 낙서, 추천순 크기 변환, 공간 앵커링 |
 | 18 | [QR 교통카드](18_qr_transit_card.md) | 🚇 교통 | QR 기반 대중교통 결제 안내·연동, 무료 교통 API 통합 |
 | 19 | [인증·보안·결제](19_auth_security_payment.md) | 🔐 보안 | 단계별 인증, 결제 위임 전략, 의료 데이터 온디바이스 보안 |
+| 20 | [게임형 내비게이션](20_gamified_navigation.md) | 🎮 내비/퀘스트 | 미니맵+AR 전환, 여행 퀘스트 시스템, 보상·뱃지, 의료관광 퀘스트 |
+| 21 | [AR 실내 길안내](21_ar_indoor_navigation.md) | 🚇 실내AR | 4단계 하이브리드 측위, Phase별 SDK 전략, 관리자 맵핑 워크플로 |
 
 ---
 
@@ -51,8 +53,8 @@
 | **사용자 전면 무료** | 모든 핵심 기능 무료 — 입문 장벽 제거로 사용자 수 극대화 |
 | **수익은 B2B** | 거래 수수료 + 사업자 SaaS 구독료가 주 수익원 |
 | **입력 최소화** | 핵심 액션 5터치 이내 완료, QR 스캔 중심, Zero-Keyboard |
-| **사용자 앱: 모바일 전용** | iOS + Android (Flutter) |
-| **사업자 앱: 모바일 + Windows** | Flutter + Tauri |
+| **사용자 앱: 모바일 전용** | Desktop/Mobile (Tauri V2 + Svelte) |
+| **사업자 앱: 모바일 + Windows** | Tauri V2 + Svelte |
 
 ---
 

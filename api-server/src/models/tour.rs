@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use async_graphql::SimpleObject;
 
 // ── TourAPI raw response structures ──
 
@@ -22,6 +23,7 @@ pub struct TourApiHeader {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[allow(dead_code)]
 pub struct TourApiBody {
     pub items: Option<TourApiItems>,
     pub num_of_rows: Option<i32>,
@@ -52,6 +54,7 @@ impl TourApiItemList {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 pub struct TourApiRawItem {
     pub contentid: Option<String>,
     pub contenttypeid: Option<String>,
@@ -74,7 +77,7 @@ pub struct TourApiRawItem {
 
 // ── Transformed output models ──
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, SimpleObject)]
 pub struct Attraction {
     pub id: String,
     pub name: String,
@@ -129,7 +132,7 @@ fn content_type_name(code: &str) -> String {
     }
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, SimpleObject)]
 pub struct AttractionList {
     pub items: Vec<Attraction>,
     pub total_count: i32,

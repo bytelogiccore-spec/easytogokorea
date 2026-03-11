@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EasyToGo 파트너스 - Windows 데스크톱 관리자</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+            color: white;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Brutalist Cut edges */
+        .ticket-cut {
+            clip-path: polygon(0 0,
+                    100% 0,
+                    100% calc(100% - 15px),
+                    calc(100% - 15px) 100%,
+                    0 100%);
+        }
+
+        /* Windows title bar drag area */
+        .win-drag {
+            -webkit-app-region: drag;
+        }
+
+        .win-no-drag {
+            -webkit-app-region: no-drag;
+        }
+    </style>
+</head>
+
+<body class="h-screen w-screen flex flex-col">
+
+    <!-- Custom Windows Title Bar -->
+    <header
+        class="h-10 bg-black border-b border-gray-800 flex items-center justify-between px-4 win-drag z-50 shrink-0">
+        <div class="flex items-center gap-3">
+            <span class="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></span>
+            <span class="text-xs font-bold tracking-widest text-gray-400">EasyToGo 파트너스 <span
+                    class="text-white">v2.4.1</span></span>
+        </div>
+        <div class="flex items-center gap-4 win-no-drag">
+            <button class="w-3 h-3 rounded-full bg-gray-600 hover:bg-gray-400 transition-colors"></button>
+            <button class="w-3 h-3 rounded-full bg-gray-600 hover:bg-gray-400 transition-colors"></button>
+            <button
+                class="w-3 h-3 rounded-full border border-gray-500 hover:bg-red-500 hover:border-red-500 transition-colors flex items-center justify-center">
+            </button>
+        </div>
+    </header>
+
+    <!-- App Layout -->
+    <div class="flex flex-1 overflow-hidden">
+
+        <!-- Left Sidebar (Nav & Metrics) -->
+        <aside class="w-64 bg-black border-r border-gray-900 flex flex-col shrink-0">
+            <!-- Clinic Info -->
+            <div class="p-6 border-b border-gray-900">
+                <h1 class="text-3xl font-black tracking-tighter leading-none mb-2">드림<br>성형외과</h1>
+                <p class="text-[10px] font-mono text-gray-500">ID: KP-902 / 서울 강남구</p>
+            </div>
+
+            <!-- Global Metrics -->
+            <div class="p-6 border-b border-gray-900 space-y-4">
+                <div>
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 mb-1">실시간 신규 매칭</p>
+                    <p class="text-4xl font-mono font-black text-blue-500">14</p>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase tracking-widest text-gray-500 mb-1">금일 예상 매출 (USD)</p>
+                    <p class="text-xl font-mono font-bold">$12,400</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 overflow-y-auto p-4 space-y-2">
+                <button
+                    class="w-full text-left px-4 py-3 bg-blue-600 text-white font-bold text-[11px] uppercase tracking-widest rounded ticket-cut flex justify-between items-center">
+                    <span>실시간 매칭 큐</span>
+                    <span class="bg-black text-blue-500 px-2 py-0.5 text-[10px] font-mono">14</span>
+                </button>
+                <button
+                    class="w-full text-left px-4 py-3 text-gray-400 hover:bg-gray-900 font-bold text-[11px] uppercase tracking-widest rounded transition-colors flex justify-between items-center">
+                    <span>진행 중인 입찰</span>
+                    <span class="bg-gray-800 text-gray-400 px-2 py-0.5 text-[10px] font-mono">3</span>
+                </button>
+                <button
+                    class="w-full text-left px-4 py-3 text-gray-400 hover:bg-gray-900 font-bold text-[11px] uppercase tracking-widest rounded transition-colors">
+                    확정된 수술 일정
+                </button>
+                <button
+                    class="w-full text-left px-4 py-3 text-gray-400 hover:bg-gray-900 font-bold text-[11px] uppercase tracking-widest rounded transition-colors">
+                    환자 의료 기록함
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Middle Column (Request List) -->
+        <section class="w-96 bg-[#0a0a0a] border-r border-gray-900 flex flex-col shrink-0">
+            <div class="p-4 border-b border-gray-900 flex justify-between items-center bg-black">
+                <h2 class="text-xs font-black tracking-widest text-gray-400 uppercase">신규 발생 인바운드</h2>
+                <div class="flex gap-2">
+                    <button class="p-1 hover:text-blue-500 transition-colors text-gray-500"><svg class="w-4 h-4"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z">
+                            </path>
+                        </svg></button>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-3">
+
+                <!-- Selected Active Item -->
+                <div
+                    class="bg-blue-600/10 border border-blue-500 p-4 ticket-cut cursor-pointer relative overflow-hidden group">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500"></div>
+                    <div class="flex justify-between items-start mb-2 pl-2">
+                        <span
+                            class="bg-blue-600 text-white px-2 py-0.5 text-[9px] font-black uppercase tracking-widest">[긴급]
+                            98% 일치</span>
+                        <span class="font-mono text-[10px] text-blue-400">1분 전</span>
+                    </div>
+                    <h3 class="font-black text-lg tracking-tighter text-white pl-2">#US-70A</h3>
+                    <p class="text-[11px] font-bold text-gray-300 mb-3 pl-2">안면윤곽 & 코 성형 재수술</p>
+                    <div class="flex gap-4 pl-2">
+                        <div>
+                            <p class="text-[8px] uppercase tracking-widest text-gray-500">신청 예산</p>
+                            <p class="font-mono text-xs font-bold text-white">~$5k</p>
+                        </div>
+                        <div>
+                            <p class="text-[8px] uppercase tracking-widest text-gray-500">일정</p>
+                            <p class="font-mono text-xs font-bold text-white">10/10-15</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Unread Items -->
+                <div
+                    class="bg-black border border-gray-800 p-4 ticket-cut hover:border-gray-500 transition-colors cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <span
+                            class="bg-gray-800 text-gray-300 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest">[일반]
+                            82% 일치</span>
+                        <span class="font-mono text-[10px] text-gray-500">14분 전</span>
+                    </div>
+                    <h3 class="font-black text-lg tracking-tighter text-gray-300">#JP-124</h3>
+                    <p class="text-[11px] font-bold text-gray-500 mb-3">피부 종합 정밀 진단 & 리프팅</p>
+                    <div class="flex gap-4">
+                        <div>
+                            <p class="text-[8px] uppercase tracking-widest text-gray-600">신청 예산</p>
+                            <p class="font-mono text-xs font-bold text-gray-400">상담 후 결정</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-black border border-gray-800 p-4 ticket-cut hover:border-gray-500 transition-colors cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <span
+                            class="bg-gray-800 text-gray-300 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest">[보통]
+                            65% 일치</span>
+                        <span class="font-mono text-[10px] text-gray-500">1시간 전</span>
+                    </div>
+                    <h3 class="font-black text-lg tracking-tighter text-gray-300">#SG-091</h3>
+                    <p class="text-[11px] font-bold text-gray-500 mb-3">보톡스 & 풀페이스 필러</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Main Column (Details & Bidding Panel) -->
+        <main class="flex-1 bg-black flex flex-col relative">
+
+            <!-- Detail Header -->
+            <header class="h-20 border-b border-gray-900 p-6 flex justify-between items-center shrink-0">
+                <div>
+                    <h2 class="text-2xl font-black tracking-tighter flex items-center gap-3">
+                        환자 #US-70A
+                        <span class="text-[10px] font-mono bg-white text-black px-2 py-1 rounded">VIP 등급</span>
+                    </h2>
+                </div>
+                <!-- Action Buttons -->
+                <div class="flex gap-4">
+                    <button
+                        class="px-6 py-2 border border-gray-600 text-gray-300 text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition-colors">매칭
+                        거절</button>
+                    <button
+                        class="px-8 py-2 bg-blue-600 text-white text-xs font-bold uppercase tracking-widest shadow-[4px_4px_0px_#ffffff] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_#ffffff] transition-all">제안서
+                        (견적) 전송</button>
+                </div>
+            </header>
+
+            <!-- Split Panel Content -->
+            <div class="flex-1 flex overflow-hidden">
+                <!-- Left: Patient Med OCR Viewer -->
+                <div class="w-[55%] border-r border-gray-900 p-6 overflow-y-auto flex flex-col relative" id="ocr-panel">
+
+                    <!-- State 1: Drag & Drop Area (Default) -->
+                    <div id="drop-zone"
+                        class="absolute inset-x-6 inset-y-6 bg-[#080808] z-30 flex flex-col items-center justify-center border-2 border-dashed border-gray-700 hover:border-blue-500 hover:bg-[#0a0f1a] transition-all cursor-pointer group rounded-lg">
+                        <svg class="w-16 h-16 text-gray-700 group-hover:text-blue-500 mb-6 transition-colors"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        <h3 class="text-xl font-black tracking-tighter text-white mb-2 uppercase">원무과 EMR 차트 업로드</h3>
+                        <p class="text-xs font-bold text-gray-500">PDF 파일을 이곳에 드래그 앤 드롭하세요</p>
+                        <p class="text-[10px] text-gray-600 mt-4 text-center max-w-[250px]">EasyToGo 의료 특화 On-Device
+                            LLM이 즉시 다국어 번역 및 구조화를 시작합니다.</p>
+                    </div>
+
+                    <!-- State 2: Translating (Loading) -->
+                    <div id="loading-zone"
+                        class="absolute inset-x-6 inset-y-6 bg-black z-20 flex flex-col items-center justify-center hidden rounded-lg">
+                        <div
+                            class="w-12 h-12 border-4 border-gray-800 border-t-blue-500 rounded-full animate-spin mb-6">
+                        </div>
+                        <h3 class="text-lg font-black tracking-widest text-blue-500 mb-2 uppercase animate-pulse">의학 정보
+                            다국어 번역 중...</h3>
+                        <p class="text-[10px] font-mono text-gray-500" id="loading-text">OCR 텍스트 추출 중 [12%]</p>
+                    </div>
+
+                    <!-- State 3: Result Viewer (Hidden initially, shown after loading) -->
+                    <div id="result-zone"
+                        class="flex flex-col h-full opacity-0 pointer-events-none transition-opacity duration-1000">
+                        <h3 class="text-[11px] font-black tracking-widest text-gray-500 uppercase mb-4">입수된 AI 분석 의료 기록본
+                            (현지
+                            암호화)</h3>
+
+                        <!-- Simulating Brutalist Medical PDF View -->
+                        <div
+                            class="flex-1 bg-white text-black p-8 shadow-inner overflow-hidden flex flex-col relative w-full h-[800px] font-mono">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-amber-500"></div>
+                            <div class="border-b-2 border-black pb-4 mb-6 flex justify-between items-start">
+                                <h4 class="text-2xl font-black uppercase tracking-tighter">해외 초진 차트 번역본</h4>
+                                <p class="text-[10px] font-bold opacity-50 text-right">EasyToGo 온디바이스 AI 번역 엔진<br>(서버
+                                    미저장
+                                    방식)</p>
+                            </div>
+
+                            <div class="space-y-6">
+                                <div>
+                                    <p class="text-[11px] uppercase font-bold text-gray-500 mb-1">희망 시술 부위 전문</p>
+                                    <ul class="list-disc pl-5 font-bold text-[13px] tracking-tight">
+                                        <li>하악각 축소술 / 안면윤곽 (V-Line)</li>
+                                        <li>코 재수술 (기존 실리콘 제거 및 자가 연골 사용 희망)</li>
+                                    </ul>
+                                </div>
+
+                                <!-- OCR Scanned Area -->
+                                <div class="border border-dashed border-gray-400 p-4 bg-gray-50 relative">
+                                    <span
+                                        class="absolute -top-2 left-2 bg-white px-2 text-[10px] text-gray-500 uppercase font-bold">환자
+                                        현지 의사 소견 (해독 완료)</span>
+                                    <p class="text-[13px] leading-relaxed tracking-tight">환자는 하관의 미세한 비대칭으로 스트레스를 받고 있음.
+                                        2021년 뉴욕에서 1차 코 성형술을 받았으나, 코끝이 뭉뚝해져 더 높은 콧대와 날렵하고 입체적인 윤곽을 원함. 전신 마취에 대한 특이 알레르기
+                                        및
+                                        부작용 징후 없음. 심전도 정상. BMI: 21.0.</p>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="bg-gray-100 p-3">
+                                        <p class="text-[10px] uppercase font-bold text-gray-500 mb-1">복용 약물 및 기저질환</p>
+                                        <p class="font-bold text-sm">가벼운 천식 (약물 처방 중)</p>
+                                    </div>
+                                    <div class="bg-gray-100 p-3">
+                                        <p class="text-[10px] uppercase font-bold text-gray-500 mb-1">한국 체류 가능 기간</p>
+                                        <p class="font-bold text-sm">최소 2주일 이상 가능</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                class="mt-auto border-t-2 border-black pt-4 flex justify-between text-xs font-bold text-gray-500">
+                                <span>--- 기록 종료 ---</span>
+                                <span class="text-amber-600 font-bold">대외비 / 원외부 유출을 엄금함</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Bid Proposal Form -->
+                    <div class="w-[45%] p-6 overflow-y-auto bg-[#050505]">
+                        <h3
+                            class="text-[11px] font-black tracking-widest text-blue-500 uppercase mb-6 flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 bg-blue-500"></span>
+                            맞춤 견적서 및 혜택 설정
+                        </h3>
+
+                        <form class="space-y-8">
+                            <!-- Pricing -->
+                            <div class="space-y-4">
+                                <h4
+                                    class="text-[10px] text-gray-500 uppercase tracking-widest font-bold border-b border-gray-800 pb-2">
+                                    1. 예상 청구 비용 견적</h4>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-[10px] uppercase text-gray-400 font-bold mb-2">기본
+                                            수술/시술비
+                                            (USD)</label>
+                                        <input type="text" value="3,200"
+                                            class="w-full bg-black border border-gray-700 p-3 text-white font-mono text-xl focus:border-blue-500 outline-none transition-colors">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] uppercase text-gray-400 font-bold mb-2">마취 및 정밀
+                                            진단비</label>
+                                        <input type="text" value="400"
+                                            class="w-full bg-black border border-gray-700 p-3 text-white font-mono text-xl focus:border-blue-500 outline-none transition-colors">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Amenities & Support -->
+                            <div class="space-y-4">
+                                <h4
+                                    class="text-[10px] text-gray-500 uppercase tracking-widest font-bold border-b border-gray-800 pb-2">
+                                    2. 제휴 서비스 특전 제공 (Perks)</h4>
+
+                                <div class="space-y-3">
+                                    <label
+                                        class="flex justify-between items-center p-3 border border-gray-700 bg-gray-900/50 cursor-pointer hover:border-gray-500 transition-colors">
+                                        <span class="font-bold text-[13px]">병원 내 전담 영어 통역사 항시 대기</span>
+                                        <input type="checkbox" checked class="w-4 h-4 accent-blue-600">
+                                    </label>
+                                    <label
+                                        class="flex justify-between items-center p-3 border border-blue-500 bg-blue-900/20 cursor-pointer transition-colors">
+                                        <span class="font-bold text-[13px] text-blue-100">공항-병원 간 VIP 안심 택시 픽업</span>
+                                        <input type="checkbox" checked class="w-4 h-4 accent-blue-600">
+                                    </label>
+                                    <label
+                                        class="flex justify-between items-center p-3 border border-gray-700 bg-gray-900/50 cursor-pointer hover:border-gray-500 transition-colors">
+                                        <span class="font-bold text-[13px]">EasyToGo 제휴 강남권 호텔 10% 숙박 지원</span>
+                                        <input type="checkbox" class="w-4 h-4 accent-blue-600">
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Recovery -->
+                            <div class="space-y-4">
+                                <h4
+                                    class="text-[10px] text-gray-500 uppercase tracking-widest font-bold border-b border-gray-800 pb-2">
+                                    3. 에프터케어 및 의료 보증</h4>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-[10px] uppercase text-gray-400 font-bold mb-2">사후 관리 및
+                                            통원
+                                            치료</label>
+                                        <select
+                                            class="w-full bg-black border border-gray-700 p-3 text-white text-[13px] focus:border-blue-500 outline-none appearance-none font-bold">
+                                            <option>수술 후 1개월 무상 회복 관리</option>
+                                            <option>수술 후 3개월 무상 회복 관리</option>
+                                            <option>사후 관리 비용 고객 별도 청구</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] uppercase text-gray-400 font-bold mb-2">재수술 및
+                                            부작용 책임
+                                            보증</label>
+                                        <select
+                                            class="w-full bg-black border border-gray-700 p-3 text-white text-[13px] focus:border-blue-500 outline-none appearance-none font-bold">
+                                            <option>1년 수술 결과 보증</option>
+                                            <option>3년 책임 시스템</option>
+                                            <option>미제공</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Notes -->
+                            <div>
+                                <label class="block text-[10px] uppercase text-gray-400 font-bold mb-2">담당 전문의 소견 (환자
+                                    지향)</label>
+                                <textarea rows="3"
+                                    class="w-full bg-black border border-gray-700 p-3 text-gray-300 text-[13px] focus:border-blue-500 outline-none transition-colors"
+                                    placeholder="현지 차트를 확인했습니다. 저희 병원의 3D 윤곽 분석 기술을 적용하면 기존 보형물을 안전하게 대체할 수 있습니다. 안심하고 내원 바랍니다."></textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        </main>
+
+    </div>
+
+    <script>
+        // PDF Drag and Drop Demo Script
+        const dropZone = document.getElementById('drop-zone');
+        const loadingZone = document.getElementById('loading-zone');
+        const resultZone = document.getElementById('result-zone');
+        const loadingText = document.getElementById('loading-text');
+
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Highlight drop zone when item is dragged over it
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropZone.classList.add('border-blue-500', 'bg-[#0a0f1a]');
+        }
+
+        function unhighlight(e) {
+            dropZone.classList.remove('border-blue-500', 'bg-[#0a0f1a]');
+        }
+
+        // Handle dropped files (Simulated AI processing)
+        dropZone.addEventListener('drop', handleDrop, false);
+        dropZone.addEventListener('click', handleDrop, false); // Allow clicking for demo purposes
+
+        function handleDrop(e) {
+            // Hide Drag Zone, Show Loading
+            dropZone.classList.add('hidden');
+            loadingZone.classList.remove('hidden');
+
+            // Simulate the processing steps
+            setTimeout(() => { loadingText.innerText = "LLM 의학 용어 매핑 중 [45%]"; }, 1000);
+            setTimeout(() => { loadingText.innerText = "영문 문맥 변환 및 구조화 [78%]"; }, 2000);
+            setTimeout(() => { loadingText.innerText = "생성형 PDF 렌더링 및 암호화 준비 [95%]"; }, 2800);
+
+            // Show result after 3.5s
+            setTimeout(() => {
+                loadingZone.classList.add('hidden');
+                resultZone.classList.remove('opacity-0', 'pointer-events-none');
+                resultZone.classList.add('opacity-100');
+            }, 3500);
+        }
+    </script>
+</body>
+
+</html>

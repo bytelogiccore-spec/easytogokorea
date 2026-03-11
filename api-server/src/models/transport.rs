@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use async_graphql::SimpleObject;
 
 // ── Seoul Bus API raw response ──
 
@@ -16,6 +17,7 @@ pub struct SeoulBusMsgBody {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[allow(dead_code)]
 pub struct SeoulBusRawItem {
     pub stn_nm: Option<String>,        // 정류장명
     pub bus_route_nm: Option<String>,   // 버스 노선명
@@ -36,6 +38,7 @@ pub struct SeoulSubwayRoot {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[allow(dead_code)]
 pub struct SubwayRawItem {
     pub subway_id: Option<String>,
     pub updnline: Option<String>,       // 상행/하행
@@ -49,13 +52,13 @@ pub struct SubwayRawItem {
 
 // ── Transformed output ──
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, SimpleObject)]
 pub struct BusArrival {
     pub station_name: String,
     pub arrivals: Vec<BusArrivalInfo>,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, SimpleObject)]
 pub struct BusArrivalInfo {
     pub route_name: String,
     pub route_type: String,
@@ -64,13 +67,13 @@ pub struct BusArrivalInfo {
     pub interval: Option<String>,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, SimpleObject)]
 pub struct SubwayArrival {
     pub station_name: String,
     pub arrivals: Vec<SubwayArrivalInfo>,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, SimpleObject)]
 pub struct SubwayArrivalInfo {
     pub line: String,
     pub direction: String,

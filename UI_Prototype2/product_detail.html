@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EasyToGo - Product Detail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .hero-bg {
+            background-image:
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.8) 70%, #000 100%),
+                url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80');
+            /* Clean hospital/clinic aesthetic */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hide-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scroll {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <!-- Mobile Device Simulator Container -->
+    <div
+        class="bg-black text-white h-[100dvh] max-h-[850px] w-full max-w-[400px] relative flex flex-col shadow-2xl rounded-[3rem] border-[8px] border-gray-900 ring-1 ring-gray-200 overflow-hidden">
+
+        <!-- Hero Section (Takes up most of the screen) -->
+        <main class="flex-1 hero-bg flex flex-col justify-between p-8 pt-12 relative overflow-y-auto hide-scroll pb-32">
+
+            <!-- Top Nav -->
+            <header class="flex justify-between items-center z-10">
+                <button class="text-4xl font-bold drop-shadow-md">&larr;</button>
+                <button class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center">
+                    <span class="text-xl">&hearts;</span>
+                </button>
+            </header>
+
+            <!-- Bottom Information -->
+            <div class="z-10 mt-auto pt-48">
+                <!-- Tiny Tags -->
+                <div class="flex gap-2 mb-4">
+                    <span
+                        class="px-3 py-1 bg-white text-black font-bold text-xs uppercase tracking-widest rounded-sm">Skin
+                        Care</span>
+                    <span
+                        class="px-3 py-1 border border-white/50 text-white font-bold text-xs uppercase tracking-widest rounded-sm">Gangnam</span>
+                </div>
+
+                <!-- Giant Title -->
+                <h1 class="text-[3.5rem] leading-[1] font-black tracking-tighter mb-4">Dream<br>Plastic<br>Surgery</h1>
+
+                <!-- Vital Stats in giant text -->
+                <div class="flex justify-between items-end border-b border-white/20 pb-6 mb-6">
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Rating</p>
+                        <p class="text-4xl font-black">4.9 &#9733;</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Languages</p>
+                        <p class="text-2xl font-bold">EN / JP</p>
+                    </div>
+                </div>
+
+                <!-- Minimal Description (Typography block) -->
+                <p class="text-lg font-bold text-gray-300 leading-snug mb-8">
+                    Certified board surgeons specializing in non-invasive skin treatments framing Botox and Fillers.
+                    English-speaking coordinators on site.
+                </p>
+
+                <!-- What's included (List converted to brutalist text) -->
+                <div class="flex flex-col gap-4">
+                    <p class="text-3xl font-black text-white/50">&rarr; 1 Day Recovery</p>
+                    <p class="text-3xl font-black text-white/50">&rarr; Free Consultation</p>
+                    <p class="text-3xl font-black text-blue-500">&rarr; Tax Refund (10%)</p>
+                </div>
+
+                <div class="h-12"></div>
+            </div>
+        </main>
+
+        <!-- Sticky Brutal Action Bottom -->
+        <footer class="absolute bottom-0 w-full bg-blue-600">
+            <button
+                class="w-full text-white text-3xl font-black tracking-tighter py-6 px-8 flex justify-between items-center hover:bg-black transition-colors">
+                <span>BOOK</span>
+                <span>$120 &rarr;</span>
+            </button>
+        </footer>
+
+    </div>
+</body>
+
+</html>

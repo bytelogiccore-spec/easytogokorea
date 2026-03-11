@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EasyToGo 파트너스 - 모바일 대시보드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .hide-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scroll {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Brutalist Ticket Shape */
+        .ticket-cut {
+            clip-path: polygon(0 0,
+                    100% 0,
+                    100% calc(100% - 15px),
+                    calc(100% - 15px) 100%,
+                    0 100%);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 overflow-hidden relative">
+
+    <!-- Mobile Device Simulator -->
+    <div
+        class="bg-black text-white h-[100dvh] max-h-[850px] w-full max-w-[400px] relative flex flex-col shadow-2xl rounded-[3rem] border-[8px] border-gray-900 ring-1 ring-gray-200 overflow-hidden">
+
+        <!-- Header: Partner Info -->
+        <header class="w-full pt-12 pb-6 px-6 bg-black flex justify-between items-start border-b border-gray-800">
+            <div>
+                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                    접속 중 (온라인)
+                </p>
+                <h1 class="text-3xl font-black tracking-tighter leading-tight text-balance">드림<br>성형외과</h1>
+            </div>
+
+            <!-- Dr. Profile -->
+            <div class="flex flex-col items-end">
+                <div
+                    class="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center font-black text-xl mb-1">
+                    원장</div>
+                <p class="text-[10px] font-mono text-gray-400">ID: KP-902</p>
+            </div>
+        </header>
+
+        <!-- Metrics Grid -->
+        <div class="grid grid-cols-2 gap-px bg-gray-800 border-b border-gray-800">
+            <div class="bg-black p-4 flex flex-col">
+                <p class="text-[10px] text-gray-400 font-bold tracking-widest uppercase mb-1">신규 매칭 알림</p>
+                <p class="text-4xl font-black text-blue-500 font-mono">14</p>
+            </div>
+            <div class="bg-black p-4 flex flex-col">
+                <p class="text-[10px] text-gray-400 font-bold tracking-widest uppercase mb-1">차트 분석 대기</p>
+                <p class="text-4xl font-black text-white font-mono">03</p>
+            </div>
+        </div>
+
+        <!-- Scrollable Feed -->
+        <main class="flex-1 overflow-y-auto hide-scroll p-4 bg-[#0a0a0a] space-y-4">
+
+            <div class="flex justify-between items-end mb-4 px-1 mt-2">
+                <h2 class="text-xs font-black tracking-widest text-gray-400 uppercase">실시간 환자 큐</h2>
+                <span class="text-[10px] font-mono text-gray-500">자동 새로고침: ON</span>
+            </div>
+
+            <!-- Urgent Patient Request Card -->
+            <div class="bg-blue-600 text-white p-5 ticket-cut shadow-[4px_4px_0px_#ffffff]">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-black px-2 py-1 text-[10px] font-black uppercase tracking-widest">[긴급] 매칭률
+                        98%</span>
+                    <span class="font-mono text-xs opacity-75">1분 전</span>
+                </div>
+
+                <h3 class="font-black text-2xl tracking-tighter mb-1">환자 #US-70A</h3>
+                <p class="text-xs font-bold opacity-90 mb-4">희망 부위: 안면윤곽 & 코 성형 재수술</p>
+
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <div class="border border-white/30 p-2">
+                        <p class="text-[9px] uppercase tracking-widest opacity-70">희망 일정</p>
+                        <p class="font-mono text-xs font-bold mt-1">10/10 - 10/15</p>
+                    </div>
+                    <div class="border border-white/30 p-2">
+                        <p class="text-[9px] uppercase tracking-widest opacity-70">수술 예산</p>
+                        <p class="font-mono text-xs font-bold mt-1">~$5,000</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center bg-black/20 p-3 rounded">
+                    <div class="flex items-center gap-2 border-r border-white/20 pr-3">
+                        <span class="w-2 h-2 rounded-full bg-white"></span>
+                        <span class="text-[10px] font-bold tracking-widest uppercase">의료차트 첨부됨</span>
+                    </div>
+                    <button
+                        class="bg-white text-black px-3 py-2 font-black text-xs uppercase tracking-widest hover:bg-gray-200 transition-colors">
+                        상세 검토 및 입찰
+                    </button>
+                </div>
+            </div>
+
+            <!-- Standard Patient Request Card -->
+            <div
+                class="bg-black text-white border-2 border-gray-800 p-5 ticket-cut hover:border-gray-500 transition-colors cursor-pointer">
+                <div class="flex justify-between items-start mb-4">
+                    <span
+                        class="bg-gray-800 text-gray-300 px-2 py-1 text-[10px] font-black uppercase tracking-widest">[일반]
+                        매칭률 82%</span>
+                    <span class="font-mono text-xs text-gray-500">14분 전</span>
+                </div>
+
+                <h3 class="font-black text-xl tracking-tighter mb-1 text-gray-200">환자 #JP-124</h3>
+                <p class="text-xs font-bold text-gray-500 mb-4">희망 부위: 피부 스킨부스터 종합</p>
+
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <div class="border border-gray-800 p-2">
+                        <p class="text-[9px] uppercase tracking-widest text-gray-600">희망 일정</p>
+                        <p class="font-mono text-xs font-bold text-gray-300 mt-1">11월 중 (유동적)</p>
+                    </div>
+                    <div class="border border-gray-800 p-2">
+                        <p class="text-[9px] uppercase tracking-widest text-gray-600">수술 예산</p>
+                        <p class="font-mono text-xs font-bold text-gray-300 mt-1">미정 (상담요청)</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center pt-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-gray-500"></span>
+                        <span class="text-[10px] font-bold text-gray-500 tracking-widest uppercase">온디바이스 AI 분석중</span>
+                    </div>
+                    <button
+                        class="text-gray-400 font-black text-xs uppercase tracking-widest underline decoration-gray-600 underline-offset-4">
+                        상세 보기
+                    </button>
+                </div>
+            </div>
+
+            <!-- Add some bottom breathing room -->
+            <div class="h-12 w-full"></div>
+
+        </main>
+
+        <!-- Bottom Tab Navigation -->
+        <nav class="w-full bg-black border-t border-gray-800 flex items-center justify-around py-4 z-40">
+            <button class="flex flex-col items-center gap-1 opacity-100">
+                <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2z" />
+                </svg>
+                <span class="text-[10px] font-bold tracking-widest text-blue-500">대기열</span>
+            </button>
+            <button class="flex flex-col items-center gap-1 opacity-50 hover:opacity-100 transition-opacity">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M19 3h-1V1h-2v2H8V1H6v2H5C3.89 3 3 3.9 3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z" />
+                </svg>
+                <span class="text-[10px] font-bold tracking-widest">일정관리</span>
+            </button>
+            <button class="flex flex-col items-center gap-1 opacity-50 hover:opacity-100 transition-opacity">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                </svg>
+                <span class="text-[10px] font-bold tracking-widest">병원정보</span>
+            </button>
+        </nav>
+    </div>
+
+</body>
+
+</html>

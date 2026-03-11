@@ -11,6 +11,7 @@ pub struct AppConfig {
     pub bok_api_key: Option<String>,
     pub seoul_api_key: Option<String>,
     pub emergency_api_key: Option<String>,
+    pub eligibility_api_key: Option<String>,
 }
 
 impl AppConfig {
@@ -29,6 +30,7 @@ impl AppConfig {
             bok_api_key: env::var("BOK_API_KEY").ok().filter(|k| !k.is_empty() && !k.starts_with("YOUR_")),
             seoul_api_key: env::var("SEOUL_API_KEY").ok().filter(|k| !k.is_empty() && !k.starts_with("YOUR_")),
             emergency_api_key: env::var("EMERGENCY_API_KEY").ok().filter(|k| !k.is_empty() && !k.starts_with("YOUR_")),
+            eligibility_api_key: env::var("ELIGIBILITY_API_KEY").ok().filter(|k| !k.is_empty() && !k.starts_with("YOUR_")),
         }
     }
 
@@ -41,6 +43,7 @@ impl AppConfig {
             ("BOK (환율)", &self.bok_api_key),
             ("Seoul (교통)", &self.seoul_api_key),
             ("Emergency (응급)", &self.emergency_api_key),
+            ("Eligibility (자격)", &self.eligibility_api_key),
         ];
 
         for (name, key) in &apis {

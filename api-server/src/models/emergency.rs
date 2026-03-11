@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use async_graphql::SimpleObject;
 
 // ── Emergency API raw response ──
 
@@ -32,6 +33,7 @@ pub struct EmergencyApiItems {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[allow(dead_code)]
 pub struct EmergencyRawItem {
     pub duty_name: Option<String>,       // 기관명
     pub duty_addr: Option<String>,       // 주소
@@ -47,7 +49,7 @@ pub struct EmergencyRawItem {
 
 // ── Transformed output ──
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, SimpleObject)]
 pub struct EmergencyRoom {
     pub name: String,
     pub address: String,

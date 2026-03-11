@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use async_graphql::SimpleObject;
 
 // ── 기상청 API raw response ──
 
@@ -22,6 +23,7 @@ pub struct WeatherApiHeader {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[allow(dead_code)]
 pub struct WeatherApiBody {
     pub data_type: Option<String>,
     pub items: Option<WeatherApiItems>,
@@ -34,6 +36,7 @@ pub struct WeatherApiItems {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[allow(dead_code)]
 pub struct WeatherRawItem {
     pub base_date: Option<String>,
     pub base_time: Option<String>,
@@ -47,7 +50,7 @@ pub struct WeatherRawItem {
 
 // ── Transformed output ──
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, SimpleObject)]
 pub struct WeatherForecast {
     pub date: String,
     pub time: String,
@@ -60,14 +63,14 @@ pub struct WeatherForecast {
     pub precipitation_probability: Option<String>,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, SimpleObject)]
 pub struct WeatherCondition {
     pub code: String,
     pub label: String,
     pub emoji: String,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, SimpleObject)]
 pub struct PrecipitationType {
     pub code: String,
     pub label: String,

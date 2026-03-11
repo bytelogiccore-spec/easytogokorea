@@ -21,19 +21,19 @@
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  프론트엔드                                                  │
-│  사용자 Web/PWA: Next.js 14 + TypeScript + Tailwind CSS     │
-│  사용자 Mobile: React Native (Expo)                         │
-│  사업자 Desktop/Mobile: Tauri + React / Flutter             │
+│  사용자 앱 (Desktop/Mobile): Tauri V2 + Svelte 5 (SvelteKit)│
+│  AR 연산 모듈: Rust → WebAssembly (WASM)                    │
+│  사업자 Web: SvelteKit (동일 스택)                            │
 ├─────────────────────────────────────────────────────────────┤
-│  백엔드 (마이크로서비스)                                      │
-│  Node.js 20 LTS + Express.js + TypeScript                   │
-│  API Gateway: Kong OSS                                      │
+│  백엔드                                                      │
+│  Rust (Actix-Web / Axum) + GraphQL (async-graphql)          │
+│  Tauri 네이티브 플러그인: Kotlin (Android) / Swift (iOS)     │
 ├─────────────────────────────────────────────────────────────┤
 │  실시간 통신                                                  │
-│  Socket.IO + Redis Pub/Sub                                  │
+│  WebSocket (tokio-tungstenite) + Redis Pub/Sub              │
 ├─────────────────────────────────────────────────────────────┤
 │  데이터베이스                                                 │
-│  PostgreSQL 16 (주 DB) + Redis 7 (캐시) + MongoDB 7 (채팅) │
+│  PostgreSQL 16 (주 DB) + Redis 7 (캐시)                     │
 │  Elasticsearch 8 (검색)                                     │
 ├─────────────────────────────────────────────────────────────┤
 │  인프라                                                      │
@@ -60,25 +60,26 @@
 | Socket.IO Client | 4.x | 실시간 채팅 |
 | PDFKit/Puppeteer | - | 보험서류 PDF 뷰어 |
 
-### 2.2 모바일 앱 (사용자용)
+### 2.2 사용자 앱 (Desktop/Mobile 통합 — Tauri V2)
 
 | 기술 | 버전 | 용도 |
 |------|------|------|
-| React Native | 0.73.x | 크로스플랫폼 모바일 |
-| Expo | 50.x | 개발 도구 및 배포 |
-| Expo Router | 3.x | 네비게이션 |
-| React Native Maps | 1.x | 지도 컴포넌트 |
-| expo-camera | 14.x | 영수증 촬영 |
-| expo-notifications | 0.27.x | 푸시 알림 |
+| Tauri | 2.x | 크로스플랫폼 (Windows/Mac/Linux/Android/iOS) |
+| Svelte | 5.x | UI 프레임워크 (SvelteKit + adapter-static) |
+| Vite | 6.x | 빌드 도구 + HMR 개발 서버 |
+| Rust → WASM | - | AR 연산 (옵티컬 플로우, 이미지 처리, OCR) |
+| WebRTC | - | 카메라 접근 (getUserMedia) |
+| SQLite (via Tauri) | - | 오프라인 캐싱 |
 
-### 2.3 데스크톱/모바일 앱 (사업자용)
+### 2.3 AR 엔진 (Rust WASM 모듈)
 
-| 기술 | 버젼 | 용도 |
-|------|------|------|
-| Tauri | 2.x | 윈도우/macOS 크로스플랫폼 데스크톱 앱 |
-| React (vite) | 18.x | Tauri 프론트엔드 프레임워크 |
-| Flutter | 3.x | 사업자용 모바일 점진적 전환 검토 |
-| SQLite (로컬) | - | 오프라인 주문 수신 캐싱 |
+| 기술 | 용도 |
+|------|------|
+| wasm-pack | Rust → WASM 빌드 |
+| wasm-bindgen | JS ↔ WASM 바인딩 |
+| image crate | 프레임 처리 (그레이스케일, 리사이징) |
+| nalgebra | 선형대수 (호모그래피 추정) |
+| ort (ONNX Runtime) | On-device AI 추론 (OCR, 객체 인식) |
 
 ### 2.4 상태 관리 전략
 
@@ -239,11 +240,12 @@ pnpm 8.x (패키지 매니저)
 kubectl + helm (K8s 관리)
 
 # IDE 권장 익스텐션
+Svelte for VS Code
+rust-analyzer
 ESLint + Prettier
-TypeScript Hero
 GitLens
 Docker
-Prisma (DB ORM 스키마 관리)
+Tauri (VS Code extension)
 ```
 
 ### 6.2 로컬 개발 환경 (Docker Compose)
@@ -306,34 +308,23 @@ Staging 환경 자동 배포 (ArgoCD)
 
 ```
 easytogo-korea/
-├── apps/
-│   ├── web/              # Next.js 웹 앱
-│   ├── mobile/           # React Native 앱
-│   └── admin/            # 관리자 대시보드
+├── app/                  # Tauri V2 + Svelte 앱 (사용자/사업자 통합)
+│   ├── src/              # SvelteKit 프론트엔드
+│   │   ├── routes/       # 페이지 (파일 기반 라우팅)
+│   │   └── lib/          # 공유 컴포넌트·스토어
+│   ├── src-tauri/        # Tauri Rust 백엔드
+│   └── crates/
+│       └── ar-engine/    # Rust WASM AR 연산 모듈
 │
-├── services/             # 백엔드 마이크로서비스
-│   ├── auth-service/
-│   ├── planner-service/
-│   ├── info-service/
-│   ├── chat-service/
-│   ├── medical-service/
-│   ├── commerce-service/
-│   ├── experience-service/
-│   ├── shuttle-service/
-│   ├── notification-service/
-│   └── file-service/
-│
-├── packages/             # 공유 패키지
-│   ├── types/            # 공유 TypeScript 타입 정의
-│   ├── utils/            # 공유 유틸리티 함수
-│   ├── ui/               # 공유 UI 컴포넌트
-│   └── config/           # 공유 설정 (ESLint, TypeScript)
+├── api-server/           # Rust 백엔드 (GraphQL)
 │
 ├── infrastructure/       # Terraform + K8s 매니페스트
 │   ├── terraform/
 │   └── k8s/
 │
-└── docs/                 # 프로젝트 문서 (이 파일들)
+├── UI_Prototype2/        # HTML 디자인 프로토타입
+│
+└── docs/                 # 프로젝트 문서
 ```
 
 ---

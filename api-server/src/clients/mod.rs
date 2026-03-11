@@ -4,3 +4,4 @@ pub mod air_quality_api;
 pub mod exchange_api;
 pub mod transport_api;
 pub mod emergency_api;
+pub mod eligibility_api;

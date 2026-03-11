@@ -15,9 +15,11 @@ pub enum AppError {
     JsonParse(#[from] serde_json::Error),
 
     #[error("API key not configured: {0}")]
+    #[allow(dead_code)]
     ApiKeyMissing(String),
 
     #[error("Invalid parameter: {0}")]
+    #[allow(dead_code)]
     InvalidParam(String),
 
     #[error("Not found: {0}")]
