@@ -1,0 +1,54 @@
+name: iOS Test Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_dir:
+        description: 'App directory to build'
+        required: true
+        default: 'mobile'
+        type: choice
+        options:
+          - mobile
+          - partner
+
+jobs:
+  build-ios:
+    runs-on: macos-14
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version "^2"
+
+      - name: Install frontend dependencies
+        working-directory: ${{ inputs.app_dir }}
+        run: npm install
+
+      - name: Initialize Tauri iOS project
+        working-directory: ${{ inputs.app_dir }}
+        run: cargo tauri ios init
+
+      - name: Build iOS (Debug)
+        working-directory: ${{ inputs.app_dir }}
+        run: cargo tauri ios build --debug
+
+      - name: Find and upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.app_dir }}-ios-debug
+          path: |
+            ${{ inputs.app_dir }}/src-tauri/gen/apple/build/**/*.ipa
+            ${{ inputs.app_dir }}/src-tauri/gen/apple/build/**/*.app
+          retention-days: 7

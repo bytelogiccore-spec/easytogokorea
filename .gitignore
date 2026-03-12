@@ -1,1 +1,30 @@
-/api-server/target
+# Dependencies
+node_modules/
+package-lock.json
+
+# Rust
+**/target/
+**/*.rs.bk
+Cargo.lock
+
+# Tauri
+**/src-tauri/gen/
+
+# Build
+dist/
+build/
+.svelte-kit/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# DBX
+partner_dbx/
+
+# Logs
+*.log
