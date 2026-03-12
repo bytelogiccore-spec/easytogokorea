@@ -1,0 +1,340 @@
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `npm run build`
+
+> app-desktop@0.1.0 build
+> vite build
+
+[36mvite v6.4.1 [32mbuilding SSR bundle for production...[36m[39m
+transforming...
+오후 9:05:00 [vite-plugin-svelte] src/routes/editor/+page.svelte:45:10 A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control
+43:         <h2>🏥 기본 정보</h2>
+44:         <div class="field">
+45:           <label>상호명</label>
+                                ^
+46:           <input type="text" bind:value={profile.name} class="input-field" placeholder="병원/식당 이름을 입력하세요"/>
+47:         </div>
+오후 9:05:00 [vite-plugin-svelte] src/routes/editor/+page.svelte:49:10 A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control
+47:         </div>
+48:         <div class="field">
+49:           <label>소개글</label>
+                                ^
+50:           <textarea bind:value={profile.description} class="input-field" rows="3" placeholder="관광객을 위한 안내 문구를 작성해 주세요"></textarea>
+51:         </div>
+오후 9:05:00 [vite-plugin-svelte] src/routes/editor/+page.svelte:53:10 A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control
+51:         </div>
+52:         <div class="field">
+53:           <label>대표 이미지 URL</label>
+                                       ^
+54:           <input type="text" bind:value={profile.imageUrl} class="input-field" placeholder="이미지 주소 (http://...)"/>
+55:         </div>
+[32m✓[39m 196 modules transformed.
+rendering chunks...
+[36mvite v6.4.1 [32mbuilding for production...[36m[39m
+transforming...
+오후 9:05:02 [vite-plugin-svelte] src/routes/editor/+page.svelte:45:10 A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control
+43:         <h2>🏥 기본 정보</h2>
+44:         <div class="field">
+45:           <label>상호명</label>
+                                ^
+46:           <input type="text" bind:value={profile.name} class="input-field" placeholder="병원/식당 이름을 입력하세요"/>
+47:         </div>
+오후 9:05:02 [vite-plugin-svelte] src/routes/editor/+page.svelte:49:10 A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control
+47:         </div>
+48:         <div class="field">
+49:           <label>소개글</label>
+                                ^
+50:           <textarea bind:value={profile.description} class="input-field" rows="3" placeholder="관광객을 위한 안내 문구를 작성해 주세요"></textarea>
+51:         </div>
+오후 9:05:02 [vite-plugin-svelte] src/routes/editor/+page.svelte:53:10 A form label must be associated with a control
+https://svelte.dev/e/a11y_label_has_associated_control
+51:         </div>
+52:         <div class="field">
+53:           <label>대표 이미지 URL</label>
+                                       ^
+54:           <input type="text" bind:value={profile.imageUrl} class="input-field" placeholder="이미지 주소 (http://...)"/>
+55:         </div>
+[32m✓[39m 161 modules transformed.
+Export "tick" of module "node_modules/svelte/src/internal/client/runtime.js" was reexported through module "node_modules/svelte/src/index-client.js" while both modules are dependencies of each other and will end up in different chunks by current Rollup settings. This scenario is not well supported at the moment as it will produce a circular dependency between chunks and will likely lead to broken execution order.
+Either change the import in ".svelte-kit/generated/root.svelte" to point directly to the exporting module or reconfigure "output.manualChunks" to ensure these modules end up in the same chunk.
+rendering chunks...
+computing gzip size...
+[2m.svelte-kit/output/client/[22m[32m_app/version.json                       [39m[1m[2m 0.03 kB[22m[1m[22m[2m │ gzip:  0.05 kB[22m
+[2m.svelte-kit/output/client/[22m[32m.vite/manifest.json                     [39m[1m[2m 4.92 kB[22m[1m[22m[2m │ gzip:  0.81 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/0.DJolY8ou.css    [39m[1m[2m 1.35 kB[22m[1m[22m[2m │ gzip:  0.56 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/2.R1j0xsHp.css    [39m[1m[2m 2.87 kB[22m[1m[22m[2m │ gzip:  0.85 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/3.Bf_h_bWs.css    [39m[1m[2m 4.22 kB[22m[1m[22m[2m │ gzip:  1.17 kB[22m
+[2m.svelte-kit/output/client/[22m[35m_app/immutable/assets/4.BBVr7-m2.css    [39m[1m[2m 4.65 kB[22m[1m[22m[2m │ gzip:  1.28 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/l0sNRNKZ.js       [39m[1m[2m 0.00 kB[22m[1m[22m[2m │ gzip:  0.02 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/entry/start.Bk7ZmjzW.js  [39m[1m[2m 0.08 kB[22m[1m[22m[2m │ gzip:  0.09 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/AuI5IdKx.js       [39m[1m[2m 0.37 kB[22m[1m[22m[2m │ gzip:  0.27 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/CDsdmTDE.js       [39m[1m[2m 0.37 kB[22m[1m[22m[2m │ gzip:  0.27 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/C_7ofdGj.js       [39m[1m[2m 0.40 kB[22m[1m[22m[2m │ gzip:  0.29 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/CkLfrO85.js       [39m[1m[2m 0.41 kB[22m[1m[22m[2m │ gzip:  0.29 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/1.BSYu-e6q.js      [39m[1m[2m 1.03 kB[22m[1m[22m[2m │ gzip:  0.60 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/BMGVJoc3.js       [39m[1m[2m 1.33 kB[22m[1m[22m[2m │ gzip:  0.73 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/0.lSk8CgEs.js      [39m[1m[2m 1.59 kB[22m[1m[22m[2m │ gzip:  0.81 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/CAnFtAZH.js       [39m[1m[2m 1.74 kB[22m[1m[22m[2m │ gzip:  0.90 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/C8DY_KSH.js       [39m[1m[2m 2.23 kB[22m[1m[22m[2m │ gzip:  0.98 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/2.-BBSQcs9.js      [39m[1m[2m 3.37 kB[22m[1m[22m[2m │ gzip:  1.17 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/C3LPKugl.js       [39m[1m[2m 4.49 kB[22m[1m[22m[2m │ gzip:  2.08 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/3.DakHGX_6.js      [39m[1m[2m 4.78 kB[22m[1m[22m[2m │ gzip:  2.23 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/nodes/4.BUip6yU1.js      [39m[1m[2m 5.44 kB[22m[1m[22m[2m │ gzip:  2.36 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/BB9TiV9n.js       [39m[1m[2m 7.77 kB[22m[1m[22m[2m │ gzip:  3.35 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/entry/app.DRTh0LH6.js    [39m[1m[2m 8.11 kB[22m[1m[22m[2m │ gzip:  3.68 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/ChW2mroh.js       [39m[1m[2m24.71 kB[22m[1m[22m[2m │ gzip:  9.71 kB[22m
+[2m.svelte-kit/output/client/[22m[36m_app/immutable/chunks/B4PjyZ3_.js       [39m[1m[2m28.20 kB[22m[1m[22m[2m │ gzip: 10.91 kB[22m
+[32m✓ built in 1.37s[39m
+[2m.svelte-kit/output/server/[22m[32m.vite/manifest.json                         [39m[1m[2m  3.73 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_layout.DJolY8ou.css  [39m[1m[2m  1.35 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_page.R1j0xsHp.css    [39m[1m[2m  2.87 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_page.Bf_h_bWs.css    [39m[1m[2m  4.22 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[35m_app/immutable/assets/_page.BBVr7-m2.css    [39m[1m[2m  4.65 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/_layout.js                    [39m[1m[2m  0.04 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/false.js                             [39m[1m[2m  0.05 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36minternal.js                                 [39m[1m[2m  0.35 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/environment.js                       [39m[1m[2m  0.62 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/utils.js                             [39m[1m[2m  1.15 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/context.js                           [39m[1m[2m  1.18 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/chat/_page.svelte.js          [39m[1m[2m  1.25 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/_layout.svelte.js             [39m[1m[2m  1.30 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/fallbacks/error.svelte.js           [39m[1m[2m  1.42 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/_page.svelte.js               [39m[1m[2m  3.24 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/internal.js                          [39m[1m[2m  3.34 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mentries/pages/editor/_page.svelte.js        [39m[1m[2m  5.11 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/exports.js                           [39m[1m[2m  6.98 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mremote-entry.js                             [39m[1m[2m 19.03 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/shared.js                            [39m[1m[2m 27.07 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/index.js                             [39m[1m[2m 36.65 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mchunks/root.js                              [39m[1m[2m 78.86 kB[22m[1m[22m
+[2m.svelte-kit/output/server/[22m[36mindex.js                                    [39m[1m[2m125.75 kB[22m[1m[22m
+[32m✓ built in 4.48s[39m
+
+Run npm run preview to preview your production build locally.
+
+> Using @sveltejs/adapter-static
+  Wrote site to "build"
+  ✔ done
+ Downloading crates ...
+  Downloaded tempfile v3.27.0
+   Compiling getrandom v0.2.17
+   Compiling serde_core v1.0.228
+   Compiling libm v0.2.16
+   Compiling ppv-lite86 v0.2.21
+   Compiling num-traits v0.2.19
+   Compiling equivalent v1.0.2
+   Compiling typenum v1.19.0
+   Compiling generic-array v0.14.7
+   Compiling getrandom v0.3.4
+   Compiling rand_core v0.6.4
+   Compiling bitflags v1.3.2
+   Compiling hashbrown v0.16.1
+   Compiling rand_chacha v0.3.1
+   Compiling rand_chacha v0.2.2
+   Compiling fxhash v0.2.1
+   Compiling rand v0.8.5
+   Compiling jobserver v0.1.34
+   Compiling rand v0.7.3
+   Compiling cc v1.2.56
+   Compiling ahash v0.8.12
+   Compiling foldhash v0.1.5
+   Compiling phf_generator v0.11.3
+   Compiling phf_generator v0.10.0
+   Compiling crypto-common v0.1.7
+   Compiling phf_codegen v0.11.3
+   Compiling string_cache_codegen v0.5.4
+   Compiling phf_macros v0.10.0
+   Compiling phf_macros v0.11.3
+   Compiling phf_generator v0.8.0
+   Compiling phf_codegen v0.8.0
+   Compiling allocator-api2 v0.2.21
+   Compiling selectors v0.24.0
+   Compiling markup5ever v0.14.1
+   Compiling phf v0.11.3
+   Compiling phf v0.10.1
+   Compiling hashbrown v0.15.5
+   Compiling indexmap v2.13.0
+   Compiling serde v1.0.228
+   Compiling cssparser v0.29.6
+   Compiling arrow-schema v54.3.1
+   Compiling vswhom-sys v0.1.3
+   Compiling cpufeatures v0.2.17
+   Compiling serde_json v1.0.149
+   Compiling block-buffer v0.10.4
+   Compiling lexical-util v1.0.7
+   Compiling html5ever v0.29.1
+   Compiling subtle v2.6.1
+   Compiling vswhom v0.1.0
+   Compiling tracing-attributes v0.1.31
+   Compiling embed-resource v3.0.6
+   Compiling num-integer v0.1.46
+   Compiling num-complex v0.4.6
+   Compiling half v2.7.1
+   Compiling chrono v0.4.44
+   Compiling lexical-parse-integer v1.0.6
+   Compiling num-bigint v0.4.6
+   Compiling num-iter v0.1.45
+   Compiling kuchikiki v0.8.8-speedreader
+   Compiling lexical-write-integer v1.0.6
+   Compiling tauri-winres v0.3.5
+   Compiling bitflags v2.11.0
+   Compiling uuid v1.22.0
+   Compiling tauri-utils v2.8.3
+   Compiling pkg-config v0.3.32
+   Compiling tracing v0.1.44
+   Compiling url v2.5.8
+   Compiling lexical-write-float v1.0.6
+   Compiling lexical-parse-float v1.0.6
+   Compiling num-rational v0.4.2
+   Compiling miniz_oxide v0.8.9
+   Compiling zstd-sys v2.0.16+zstd.1.5.7
+   Compiling num v0.4.3
+   Compiling arrow-buffer v54.3.1
+   Compiling dpi v0.1.2
+   Compiling inout v0.1.4
+   Compiling zeroize v1.8.2
+   Compiling winapi v0.3.9
+   Compiling unicode-width v0.2.2
+   Compiling cipher v0.4.4
+   Compiling lexical-core v1.0.6
+   Compiling flate2 v1.1.9
+   Compiling cfb v0.7.3
+   Compiling atoi v2.0.0
+   Compiling comfy-table v7.2.2
+   Compiling jsonptr v0.6.3
+   Compiling erased-serde v0.4.10
+   Compiling serde_spanned v1.0.4
+   Compiling arrow-data v54.3.1
+   Compiling toml_datetime v0.7.5+spec-1.1.0
+   Compiling crossbeam-epoch v0.9.18
+   Compiling flatbuffers v24.12.23
+   Compiling toml v0.9.12+spec-1.1.0
+   Compiling digest v0.10.7
+   Compiling serde-untagged v0.1.9
+   Compiling infer v0.19.0
+   Compiling arrow-array v54.3.1
+   Compiling json-patch v3.0.1
+   Compiling png v0.17.16
+   Compiling urlpattern v0.3.0
+   Compiling universal-hash v0.5.1
+   Compiling serde_with v3.17.0
+   Compiling parking_lot_core v0.8.6
+   Compiling opaque-debug v0.3.1
+   Compiling zstd-safe v7.2.4
+   Compiling ico v0.5.0
+   Compiling sha2 v0.10.9
+   Compiling csv-core v0.1.13
+   Compiling instant v0.1.13
+   Compiling arrow-select v54.3.1
+   Compiling simdutf8 v0.1.5
+   Compiling simd-adler32 v0.3.8
+   Compiling snap v1.1.1
+   Compiling arrow-ipc v54.3.1
+   Compiling tauri-build v2.5.6
+   Compiling tauri-plugin v2.5.4
+   Compiling tauri-codegen v2.5.5
+   Compiling arrow-cast v54.3.1
+   Compiling csv v1.4.0
+   Compiling wry v0.54.3
+   Compiling tao v0.34.6
+   Compiling crossbeam-deque v0.8.6
+   Compiling softbuffer v0.4.8
+   Compiling keyboard-types v0.7.0
+   Compiling ordered-float v2.10.1
+   Compiling aead v0.5.2
+   Compiling brotli-decompressor v4.0.3
+   Compiling minimal-lexical v0.2.1
+   Compiling lazy_static v1.5.0
+   Compiling twox-hash v2.1.2
+   Compiling tauri-runtime v2.10.1
+   Compiling integer-encoding v3.0.4
+   Compiling brotli v7.0.0
+   Compiling tauri-runtime-wry v2.10.1
+   Compiling thrift v0.17.0
+   Compiling nom v7.1.3
+   Compiling lz4_flex v0.11.5
+   Compiling arrow-csv v54.3.1
+   Compiling moxcms v0.8.1
+   Compiling serialize-to-javascript v0.1.2
+   Compiling arrow-json v54.3.1
+   Compiling muda v0.17.1
+   Compiling rayon-core v1.13.0
+   Compiling zstd v0.13.3
+   Compiling tauri v2.10.3
+   Compiling tauri-plugin-opener v2.5.3
+   Compiling tauri-macros v2.5.5
+   Compiling arrow-string v54.3.1
+   Compiling arrow-ord v54.3.1
+   Compiling parking_lot v0.11.2
+   Compiling twox-hash v1.6.3
+   Compiling arrow-arith v54.3.1
+   Compiling arrow-row v54.3.1
+   Compiling hmac v0.12.1
+   Compiling fs2 v0.4.3
+   Compiling polyval v0.6.2
+   Compiling poly1305 v0.8.0
+   Compiling aes v0.8.4
+   Compiling chacha20 v0.9.1
+   Compiling ctr v0.9.2
+   Compiling either v1.15.0
+   Compiling seq-macro v0.3.6
+   Compiling fastrand v2.3.0
+   Compiling image v0.25.10
+   Compiling rayon v1.11.0
+   Compiling tempfile v3.27.0
+   Compiling parquet v54.3.1
+   Compiling chacha20poly1305 v0.10.1
+   Compiling aes-gcm-siv v0.11.1
+   Compiling arrow v54.3.1
+   Compiling sled v0.34.7
+   Compiling hkdf v0.12.4
+   Compiling axum-core v0.4.5
+   Compiling app-desktop v0.1.0 (D:\ByteLogicCore\EasyToGoKorea\app-desktop\src-tauri)
+   Compiling cron v0.12.1
+   Compiling tower v0.5.3
+   Compiling crossbeam-skiplist v0.1.3
+   Compiling serde_urlencoded v0.7.1
+   Compiling lru v0.12.5
+   Compiling bincode v1.3.3
+   Compiling serde_path_to_error v0.1.20
+   Compiling sqlparser v0.52.0
+   Compiling num_cpus v1.17.0
+   Compiling axum v0.7.9
+   Compiling qrcode v0.14.1
+   Compiling btleplug v0.11.8
+   Compiling tower-http v0.5.2
+   Compiling dbx-core v0.0.6-beta
+warning: unused import: `post`
+ --> src\server.rs:3:20
+  |
+3 |     routing::{get, post},
+  |                    ^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `img`
+  --> src\ble.rs:72:9
+   |
+72 |     let img = code.render::<qrcode::render::unicode::Dense1x2>()
+   |         ^^^ help: if this is intentional, prefix it with an underscore: `_img`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `app-desktop` (lib) generated 2 warnings (run `cargo fix --lib -p app-desktop` to apply 2 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4m 26s
+       Built application at: D:\ByteLogicCore\EasyToGoKorea\app-desktop\src-tauri\target\debug\app-desktop.exe
+        Info Patching D:\ByteLogicCore\EasyToGoKorea\app-desktop\src-tauri\target\debug\app-desktop.exe with bundle type information: msi
+        Info Target: x64
+     Running candle for "D:\\ByteLogicCore\\EasyToGoKorea\\app-desktop\\src-tauri\\target\\debug\\wix\\x64\\main.wxs"
+     Running light to produce D:\ByteLogicCore\EasyToGoKorea\app-desktop\src-tauri\target\debug\bundle\msi\app-desktop_0.1.0_x64_en-US.msi
+        Info Patching D:\ByteLogicCore\EasyToGoKorea\app-desktop\src-tauri\target\debug\app-desktop.exe with bundle type information: nsis
+        Info Target: x64
+     Running makensis to produce D:\ByteLogicCore\EasyToGoKorea\app-desktop\src-tauri\target\debug\bundle\nsis\app-desktop_0.1.0_x64-setup.exe
+    Finished 2 bundles at:
+        D:\ByteLogicCore\EasyToGoKorea\app-desktop\src-tauri\target\debug\bundle\msi\app-desktop_0.1.0_x64_en-US.msi
+        D:\ByteLogicCore\EasyToGoKorea\app-desktop\src-tauri\target\debug\bundle\nsis\app-desktop_0.1.0_x64-setup.exe
+

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "EasyToGoKorea API Server",
+  "version": "0.1.0",
+  "identifier": "com.bytelogiccore.easytogo.apiserver",
+  "build": {
+    "beforeDevCommand": "npm --prefix ./frontend run dev",
+    "beforeBuildCommand": "npm --prefix ./frontend run build",
+    "devUrl": "http://localhost:5173",
+    "frontendDist": "./frontend/dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "EasyToGoKorea API Server node",
+        "width": 800,
+        "height": 600
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  }
+}
