@@ -36,9 +36,10 @@
       }
     ],
     // Translated versions (populated by AI)
-    translations: {}
+    translations: /** @type {Record<string, {name?: string, catchphrase?: string, description?: string, advantages?: string[]}>} */ ({})
   });
 
+  /** @param {number} categoryIndex */
   function addItem(categoryIndex) {
     profile.categories[categoryIndex].items.push({ id: Date.now(), name: '', price: '' });
   }
@@ -50,12 +51,14 @@
   function addGalleryImage() {
     profile.gallery.push('');
   }
+  /** @param {number} index */
   function removeGalleryImage(index) {
     profile.gallery.splice(index, 1);
   }
   function addAdvantage() {
     profile.advantages.push('');
   }
+  /** @param {number} index */
   function removeAdvantage(index) {
     profile.advantages.splice(index, 1);
   }
@@ -121,10 +124,12 @@
   }
 
   // Get display text based on current language
+  /** @param {'name'|'catchphrase'|'description'} field */
   function t(field) {
     if (currentLang === 'ko') return profile[field];
     return profile.translations?.[currentLang]?.[field] || profile[field];
   }
+  /** @param {number} index */
   function tAdv(index) {
     if (currentLang === 'ko') return profile.advantages[index];
     return profile.translations?.[currentLang]?.advantages?.[index] || profile.advantages[index];
@@ -520,8 +525,7 @@
   .data-row { display: flex; justify-content: space-between; align-items: flex-end; }
   .name { font-size: 1.7rem; font-weight: 900; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 0.75rem; color: black;}
   .proc { font-size: 0.7rem; font-weight: 700; color: #a3a3a3; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.25rem; }
-  .price { font-size: 2rem; font-weight: 900; letter-spacing: -0.05em; color: black;}
-  .price-blue { color: #2563eb; }
+
   .right { text-align: right; }
   .rating { font-size: 1rem; font-weight: 700; }
   .langs { font-size: 0.75rem; font-weight: 700; color: #a3a3a3; margin-top: 0.25rem; }
