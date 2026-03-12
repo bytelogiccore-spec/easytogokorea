@@ -10,8 +10,11 @@
   const languages = [
     { code: 'ko', label: '한국어' },
     { code: 'en', label: 'English' },
-    { code: 'ja', label: '日本語' },
     { code: 'zh', label: '中文' },
+    { code: 'fr', label: 'Français' },
+    { code: 'de', label: 'Deutsch' },
+    { code: 'ru', label: 'Русский' },
+    { code: 'ar', label: 'العربية' },
   ];
   let currentLang = $state('ko');
 
@@ -82,8 +85,33 @@
     }
   }
 
-  // Simulated On-Device AI functions
+  // AI Translation state
   let isGenerating = $state(false);
+  let modelsReady = $state(false);
+  let downloadProgress = $state('');
+
+  // Check if translation models are downloaded on mount
+  async function checkModels() {
+    try {
+      /** @type {Record<string, boolean>} */
+      const status = await invoke('check_models_status');
+      modelsReady = Object.values(status).every(Boolean);
+    } catch { modelsReady = false; }
+  }
+  checkModels();
+
+  async function downloadModels() {
+    isGenerating = true;
+    downloadProgress = '모델 다운로드 시작...';
+    try {
+      await invoke('download_translation_models');
+      modelsReady = true;
+      downloadProgress = '';
+    } catch (e) {
+      downloadProgress = `다운로드 실패: ${e}`;
+    }
+    isGenerating = false;
+  }
 
   async function generateAIPhrase() {
     if (!profile.name) { alert("먼저 상호명을 입력해주세요!"); return; }
@@ -96,30 +124,36 @@
 
   async function generateAITranslation() {
     isGenerating = true;
-    await new Promise(r => setTimeout(r, 1500));
-
-    // Simulate multi-language translation
-    const translations = {
-      en: {
-        name: profile.name === '현대 병원' ? 'Hyundai Hospital' : profile.name,
-        catchphrase: 'Premier Medical Center for International Patients',
-        description: 'Top-tier medical services for international patients. One-stop health checkups and interpretation services.',
-        advantages: ['EN / JP Interpretation', 'Free Airport Pickup', 'Tax Refund 10%'],
-      },
-      ja: {
-        name: profile.name === '현대 병원' ? '現代病院' : profile.name,
-        catchphrase: '外国人診療特化総合病院',
-        description: '外国人患者のための最高の医療サービス。ワンストップ健康診断と通訳サービスを提供します。',
-        advantages: ['EN / JP 通訳対応', '無料空港ピックアップ', 'Tax Refund 10%'],
-      },
-      zh: {
-        name: profile.name === '현대 병원' ? '现代医院' : profile.name,
-        catchphrase: '外国人诊疗专业综合医院',
-        description: '为外国患者提供最优质的医疗服务。一站式健康检查和翻译服务。',
-        advantages: ['EN / JP 翻译支持', '免费机场接送', 'Tax Refund 10%'],
+    try {
+      // Translate each field via Tauri commands
+      /** @type {Record<string, {name?: string, catchphrase?: string, description?: string, advantages?: string[]}>} */
+      const translations = {};
+      for (const lang of languages) {
+        if (lang.code === 'ko') continue;
+        const [name, catchphrase, description] = await Promise.all([
+          invoke('translate_text', { text: profile.name, source: 'ko', target: lang.code }),
+          invoke('translate_text', { text: profile.catchphrase, source: 'ko', target: lang.code }),
+          invoke('translate_text', { text: profile.description, source: 'ko', target: lang.code }),
+        ]);
+        const advantages = await Promise.all(
+          profile.advantages.map((/** @type {string} */ adv) =>
+            invoke('translate_text', { text: adv, source: 'ko', target: lang.code })
+          )
+        );
+        translations[lang.code] = { name, catchphrase, description, advantages };
       }
-    };
-    profile.translations = translations;
+      profile.translations = translations;
+    } catch (e) {
+      // Fallback: simulated translation for dev mode (no Tauri)
+      console.warn('Translation invoke failed, using simulation:', e);
+      profile.translations = {
+        en: {
+          name: profile.name, catchphrase: 'Premier Medical Center',
+          description: 'Top-tier medical services for international patients.',
+          advantages: profile.advantages.map((/** @type {string} */ a) => a),
+        },
+      };
+    }
     isGenerating = false;
   }
 
@@ -213,11 +247,26 @@
         <section class="edit-section">
           <div class="section-top">
             <h2>🌐 다국어 자동 번역</h2>
-            <button class="ai-btn" onclick={generateAITranslation} disabled={isGenerating}>
-              {isGenerating ? '⏳ 번역중...' : '🌐 AI 자동 번역'}
-            </button>
+            {#if modelsReady}
+              <button class="ai-btn" onclick={generateAITranslation} disabled={isGenerating}>
+                {isGenerating ? '⏳ 번역중...' : '🌐 AI 자동 번역'}
+              </button>
+            {:else}
+              <button class="ai-btn" onclick={downloadModels} disabled={isGenerating}>
+                {isGenerating ? '⏳ 다운로드중...' : '📥 번역 모델 다운로드'}
+              </button>
+            {/if}
           </div>
-          <p class="section-desc">입력된 한국어를 영/일/중으로 자동 번역합니다.</p>
+          <p class="section-desc">
+            {#if !modelsReady}
+              번역 모델이 아직 설치되지 않았습니다. 먼저 다운로드가 필요합니다 (약 420MB).
+            {:else}
+              입력된 한국어를 영/중/불/독/러/아랍어로 자동 번역합니다. (온디바이스 AI)
+            {/if}
+          </p>
+          {#if downloadProgress}
+            <p class="section-desc" style="color: #3b82f6;">{downloadProgress}</p>
+          {/if}
           <div class="lang-selector">
             {#each languages as lang}
               <button class="lang-btn" class:active={currentLang === lang.code} onclick={() => currentLang = lang.code}>{lang.label}</button>
