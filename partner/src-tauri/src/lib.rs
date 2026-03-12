@@ -1,9 +1,10 @@
 mod ble;
 mod server;
 
-use ble::{BleChat, ChatMessage, ChatStatus};
-use std::sync::{Arc, Mutex};
+use ble::{BleChat, ChatMessage, ChatStatus, NearbyDevice};
+use std::sync::Arc;
 use std::collections::HashMap;
+use tokio::sync::Mutex;
 use tauri::{State, AppHandle, Emitter};
 
 struct AppState {
@@ -11,39 +12,83 @@ struct AppState {
     translator: Arc<translator::Translator>,
 }
 
+// ─── BLE Chat Commands ───
+
 #[tauri::command]
-fn start_chat_host(pin: String, state: State<AppState>) -> ChatStatus {
-    let mut chat = state.chat.lock().unwrap();
-    chat.start_host(pin);
-    chat.status()
+async fn init_ble(state: State<'_, AppState>) -> Result<String, String> {
+    let mut chat = state.chat.lock().await;
+    chat.init_adapter().await?;
+    Ok("BLE adapter initialized".to_string())
 }
 
 #[tauri::command]
-fn send_chat_message(text: String, state: State<AppState>) -> bool {
-    let mut chat = state.chat.lock().unwrap();
+async fn start_ble_scan(state: State<'_, AppState>) -> Result<String, String> {
+    let mut chat = state.chat.lock().await;
+    chat.start_scan().await?;
+    Ok("Scanning started".to_string())
+}
+
+#[tauri::command]
+async fn stop_ble_scan(state: State<'_, AppState>) -> Result<String, String> {
+    let chat = state.chat.lock().await;
+    chat.stop_scan().await?;
+    Ok("Scanning stopped".to_string())
+}
+
+#[tauri::command]
+async fn get_nearby_devices(state: State<'_, AppState>) -> Result<Vec<NearbyDevice>, String> {
+    let mut chat = state.chat.lock().await;
+    chat.get_nearby_devices().await
+}
+
+#[tauri::command]
+async fn connect_ble_device(device_id: String, state: State<'_, AppState>) -> Result<String, String> {
+    let mut chat = state.chat.lock().await;
+    chat.connect_to_device(&device_id).await?;
+    Ok("Connected".to_string())
+}
+
+#[tauri::command]
+async fn send_ble_message(text: String, state: State<'_, AppState>) -> Result<bool, String> {
+    let mut chat = state.chat.lock().await;
+    chat.send_ble_message(&text).await?;
+    Ok(true)
+}
+
+#[tauri::command]
+async fn start_chat_host(pin: String, state: State<'_, AppState>) -> Result<ChatStatus, String> {
+    let mut chat = state.chat.lock().await;
+    chat.start_host(pin);
+    Ok(chat.status())
+}
+
+#[tauri::command]
+async fn send_chat_message(text: String, state: State<'_, AppState>) -> Result<bool, String> {
+    let mut chat = state.chat.lock().await;
     chat.add_message(ChatMessage {
         msg_type: "sent".into(),
         text,
     });
-    true
+    Ok(true)
 }
 
 #[tauri::command]
-fn get_chat_messages(state: State<AppState>) -> Vec<ChatMessage> {
-    let mut chat = state.chat.lock().unwrap();
-    chat.drain_messages()
+async fn get_chat_messages(state: State<'_, AppState>) -> Result<Vec<ChatMessage>, String> {
+    let mut chat = state.chat.lock().await;
+    Ok(chat.drain_messages())
 }
 
 #[tauri::command]
-fn get_chat_status(state: State<AppState>) -> ChatStatus {
-    let chat = state.chat.lock().unwrap();
-    chat.status()
+async fn get_chat_status(state: State<'_, AppState>) -> Result<ChatStatus, String> {
+    let chat = state.chat.lock().await;
+    Ok(chat.status())
 }
 
 #[tauri::command]
-fn disconnect_chat(state: State<AppState>) {
-    let mut chat = state.chat.lock().unwrap();
+async fn disconnect_chat(state: State<'_, AppState>) -> Result<(), String> {
+    let mut chat = state.chat.lock().await;
     *chat = BleChat::new();
+    Ok(())
 }
 
 #[tauri::command]
@@ -132,6 +177,14 @@ pub fn run() {
             translator: Arc::new(translator::Translator::new()),
         })
         .invoke_handler(tauri::generate_handler![
+            // BLE commands
+            init_ble,
+            start_ble_scan,
+            stop_ble_scan,
+            get_nearby_devices,
+            connect_ble_device,
+            send_ble_message,
+            // Legacy chat
             start_chat_host,
             send_chat_message,
             get_chat_messages,
@@ -139,6 +192,7 @@ pub fn run() {
             disconnect_chat,
             generate_qr,
             ping_api_server,
+            // Translation
             translate_text,
             translate_all,
             check_models_status,
@@ -148,4 +202,3 @@ pub fn run() {
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
-

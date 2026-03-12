@@ -48,6 +48,32 @@ fn ar_get_tracking_info() -> serde_json::Value {
     })
 }
 
+/// Save e-arrival card data locally (on-device only, no cloud)
+#[tauri::command]
+fn save_arrival_data(data: String) -> Result<String, String> {
+    let dir = dirs::data_local_dir()
+        .unwrap_or_else(|| std::path::PathBuf::from("."))
+        .join("easytogokorea");
+    std::fs::create_dir_all(&dir).map_err(|e| format!("Dir error: {e}"))?;
+    let path = dir.join("arrival_data.json");
+    std::fs::write(&path, &data).map_err(|e| format!("Write error: {e}"))?;
+    Ok(format!("Saved to {}", path.display()))
+}
+
+/// Load previously saved e-arrival card data
+#[tauri::command]
+fn load_arrival_data() -> Result<String, String> {
+    let path = dirs::data_local_dir()
+        .unwrap_or_else(|| std::path::PathBuf::from("."))
+        .join("easytogokorea")
+        .join("arrival_data.json");
+    if path.exists() {
+        std::fs::read_to_string(&path).map_err(|e| format!("Read error: {e}"))
+    } else {
+        Ok("{}".to_string())
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -57,7 +83,9 @@ pub fn run() {
             ar_check_availability,
             ar_start_session,
             ar_hit_test,
-            ar_get_tracking_info
+            ar_get_tracking_info,
+            save_arrival_data,
+            load_arrival_data
         ])
         .setup(|_app| {
             Ok(())

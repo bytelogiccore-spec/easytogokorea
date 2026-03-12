@@ -24,17 +24,30 @@ jobs:
         with:
           targets: aarch64-apple-ios
 
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ${{ inputs.app_dir }}/src-tauri/target
+          key: rust-ios-${{ inputs.app_dir }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            rust-ios-${{ inputs.app_dir }}-
+
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
+          cache-dependency-path: '${{ inputs.app_dir }}/package-lock.json'
 
       - name: Install Tauri CLI
-        run: cargo install tauri-cli --version "^2"
+        run: cargo install tauri-cli --version "^2" --locked
 
       - name: Install frontend dependencies
         working-directory: ${{ inputs.app_dir }}
-        run: npm install
+        run: npm ci
 
       - name: Initialize Tauri iOS project
         working-directory: ${{ inputs.app_dir }}
@@ -43,6 +56,8 @@ jobs:
       - name: Build iOS (Debug)
         working-directory: ${{ inputs.app_dir }}
         run: cargo tauri ios build --debug
+        env:
+          DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
 
       - name: Find and upload IPA
         uses: actions/upload-artifact@v4
@@ -52,3 +67,4 @@ jobs:
             ${{ inputs.app_dir }}/src-tauri/gen/apple/build/**/*.ipa
             ${{ inputs.app_dir }}/src-tauri/gen/apple/build/**/*.app
           retention-days: 7
+          if-no-files-found: warn
