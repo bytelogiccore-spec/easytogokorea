@@ -2,6 +2,32 @@ use ort::session::Session;
 use std::path::Path;
 use tokenizers::Tokenizer;
 
+/// Fix onnx-community tokenizer.json: strip null Precompiled normalizer
+fn load_tokenizer_fixed(path: &Path) -> Result<Tokenizer, String> {
+    let json_str = std::fs::read_to_string(path)
+        .map_err(|e| format!("Failed to read tokenizer: {e}"))?;
+
+    // Parse and fix the normalizer if it has null precompiled_charsmap
+    let mut json: serde_json::Value = serde_json::from_str(&json_str)
+        .map_err(|e| format!("Failed to parse tokenizer JSON: {e}"))?;
+
+    if let Some(normalizer) = json.get("normalizer") {
+        if let Some(charsmap) = normalizer.get("precompiled_charsmap") {
+            if charsmap.is_null() {
+                // Remove the broken normalizer
+                json["normalizer"] = serde_json::Value::Null;
+                eprintln!("[Tokenizer] Stripped null Precompiled normalizer");
+            }
+        }
+    }
+
+    let fixed_json = serde_json::to_vec(&json)
+        .map_err(|e| format!("Failed to serialize fixed tokenizer: {e}"))?;
+
+    Tokenizer::from_bytes(&fixed_json)
+        .map_err(|e| format!("Failed to load tokenizer: {e}"))
+}
+
 /// Opus-MT Translation Model (single language pair, non-merged decoder)
 pub struct OpusMtModel {
     encoder: Session,
@@ -38,8 +64,7 @@ impl OpusMtModel {
             .commit_from_file(&decoder_path)
             .map_err(|e| format!("Failed to load decoder: {e}"))?;
 
-        let tokenizer = Tokenizer::from_file(&tokenizer_path)
-            .map_err(|e| format!("Failed to load tokenizer: {e}"))?;
+        let tokenizer = load_tokenizer_fixed(&tokenizer_path)?;
 
         eprintln!("[OpusMT] Model loaded successfully");
         Ok(Self { encoder, decoder, tokenizer })
