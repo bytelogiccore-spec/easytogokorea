@@ -88,7 +88,6 @@
   // AI Translation state
   let isGenerating = $state(false);
   let modelsReady = $state(false);
-  let downloadProgress = $state('');
 
   // Check if translation models are downloaded on mount
   async function checkModels() {
@@ -99,19 +98,6 @@
     } catch { modelsReady = false; }
   }
   checkModels();
-
-  async function downloadModels() {
-    isGenerating = true;
-    downloadProgress = '모델 다운로드 시작...';
-    try {
-      await invoke('download_translation_models');
-      modelsReady = true;
-      downloadProgress = '';
-    } catch (e) {
-      downloadProgress = `다운로드 실패: ${e}`;
-    }
-    isGenerating = false;
-  }
 
   async function generateAIPhrase() {
     if (!profile.name) { alert("먼저 상호명을 입력해주세요!"); return; }
@@ -252,21 +238,16 @@
                 {isGenerating ? '⏳ 번역중...' : '🌐 AI 자동 번역'}
               </button>
             {:else}
-              <button class="ai-btn" onclick={downloadModels} disabled={isGenerating}>
-                {isGenerating ? '⏳ 다운로드중...' : '📥 번역 모델 다운로드'}
-              </button>
+              <a href="/settings" class="ai-btn" style="text-decoration:none;">⚙️ 설정에서 모델 다운로드</a>
             {/if}
           </div>
           <p class="section-desc">
             {#if !modelsReady}
-              번역 모델이 아직 설치되지 않았습니다. 먼저 다운로드가 필요합니다 (약 420MB).
+              번역 모델이 설치되지 않았습니다. <a href="/settings" style="color: #60a5fa;">설정 페이지</a>에서 다운로드해주세요.
             {:else}
               입력된 한국어를 영/중/불/독/러/아랍어로 자동 번역합니다. (온디바이스 AI)
             {/if}
           </p>
-          {#if downloadProgress}
-            <p class="section-desc" style="color: #3b82f6;">{downloadProgress}</p>
-          {/if}
           <div class="lang-selector">
             {#each languages as lang}
               <button class="lang-btn" class:active={currentLang === lang.code} onclick={() => currentLang = lang.code}>{lang.label}</button>
