@@ -7,46 +7,51 @@ use tokio::io::AsyncWriteExt;
 #[derive(Debug, Clone)]
 pub struct ModelInfo {
     pub name: &'static str,
+    /// Primary repo (onnx-community preferred)
     pub repo_id: &'static str,
-    pub files: &'static [&'static str],
+    /// Files in onnx/ subdirectory
+    pub onnx_files: &'static [&'static str],
+    /// Files at repo root
+    pub root_files: &'static [&'static str],
 }
 
-/// All supported translation models
+/// All supported translation models — using onnx-community repos with pre-exported ONNX
 pub const MODELS: &[ModelInfo] = &[
     ModelInfo {
         name: "ko-en",
-        repo_id: "Helsinki-NLP/opus-mt-ko-en",
-        files: &["encoder_model.onnx", "decoder_model.onnx", "source.spm", "target.spm", "tokenizer.json"],
-    },
-    ModelInfo {
-        name: "en-ko",
-        repo_id: "Helsinki-NLP/opus-mt-en-ko",
-        files: &["encoder_model.onnx", "decoder_model.onnx", "source.spm", "target.spm", "tokenizer.json"],
+        repo_id: "onnx-community/opus-mt-ko-en",
+        onnx_files: &["encoder_model.onnx", "decoder_model_merged.onnx"],
+        root_files: &["tokenizer.json", "source.spm", "target.spm"],
     },
     ModelInfo {
         name: "en-zh",
-        repo_id: "Helsinki-NLP/opus-mt-en-zh",
-        files: &["encoder_model.onnx", "decoder_model.onnx", "source.spm", "target.spm", "tokenizer.json"],
+        repo_id: "onnx-community/opus-mt-en-zh",
+        onnx_files: &["encoder_model.onnx", "decoder_model_merged.onnx"],
+        root_files: &["tokenizer.json", "source.spm", "target.spm"],
     },
     ModelInfo {
         name: "en-fr",
-        repo_id: "Helsinki-NLP/opus-mt-en-fr",
-        files: &["encoder_model.onnx", "decoder_model.onnx", "source.spm", "target.spm", "tokenizer.json"],
+        repo_id: "onnx-community/opus-mt-en-fr",
+        onnx_files: &["encoder_model.onnx", "decoder_model_merged.onnx"],
+        root_files: &["tokenizer.json", "source.spm", "target.spm"],
     },
     ModelInfo {
         name: "en-de",
-        repo_id: "Helsinki-NLP/opus-mt-en-de",
-        files: &["encoder_model.onnx", "decoder_model.onnx", "source.spm", "target.spm", "tokenizer.json"],
+        repo_id: "onnx-community/opus-mt-en-de",
+        onnx_files: &["encoder_model.onnx", "decoder_model_merged.onnx"],
+        root_files: &["tokenizer.json", "source.spm", "target.spm"],
     },
     ModelInfo {
         name: "en-ru",
-        repo_id: "Helsinki-NLP/opus-mt-en-ru",
-        files: &["encoder_model.onnx", "decoder_model.onnx", "source.spm", "target.spm", "tokenizer.json"],
+        repo_id: "onnx-community/opus-mt-en-ru",
+        onnx_files: &["encoder_model.onnx", "decoder_model_merged.onnx"],
+        root_files: &["tokenizer.json", "source.spm", "target.spm"],
     },
     ModelInfo {
         name: "en-ar",
-        repo_id: "Helsinki-NLP/opus-mt-en-ar",
-        files: &["encoder_model.onnx", "decoder_model.onnx", "source.spm", "target.spm", "tokenizer.json"],
+        repo_id: "onnx-community/opus-mt-en-ar",
+        onnx_files: &["encoder_model.onnx", "decoder_model_merged.onnx"],
+        root_files: &["tokenizer.json", "source.spm", "target.spm"],
     },
 ];
 
@@ -81,43 +86,50 @@ pub async fn download_model(
         .await
         .map_err(|e| format!("Failed to create model dir: {e}"))?;
 
-    let client = Client::new();
+    let client = Client::builder()
+        .timeout(std::time::Duration::from_secs(600))
+        .build()
+        .map_err(|e| format!("HTTP client error: {e}"))?;
 
-    for file_name in model.files {
+    // Download ONNX files from onnx/ subdirectory
+    for file_name in model.onnx_files {
         let file_path = model_dir.join(file_name);
         if file_path.exists() {
-            continue; // skip already downloaded files
+            continue;
         }
 
-        // Try ONNX subdirectory first (optimum-exported), then root
-        let urls = vec![
-            format!(
-                "https://huggingface.co/{}/resolve/main/onnx/{}",
-                model.repo_id, file_name
-            ),
-            format!(
-                "https://huggingface.co/{}/resolve/main/{}",
-                model.repo_id, file_name
-            ),
-        ];
+        let url = format!(
+            "https://huggingface.co/{}/resolve/main/onnx/{}",
+            model.repo_id, file_name
+        );
 
-        let mut downloaded = false;
-        for url in &urls {
-            match download_file(&client, url, &file_path, model.name, progress).await {
-                Ok(_) => {
-                    downloaded = true;
-                    break;
+        download_file(&client, &url, &file_path, model.name, progress)
+            .await
+            .map_err(|e| format!("Failed to download {file_name} for {}: {e}", model.name))?;
+    }
+
+    // Download root files (tokenizer, spm)
+    for file_name in model.root_files {
+        let file_path = model_dir.join(file_name);
+        if file_path.exists() {
+            continue;
+        }
+
+        let url = format!(
+            "https://huggingface.co/{}/resolve/main/{}",
+            model.repo_id, file_name
+        );
+
+        match download_file(&client, &url, &file_path, model.name, progress).await {
+            Ok(_) => {}
+            Err(e) => {
+                // SPM files are nice to have but not critical if tokenizer.json exists
+                if file_name.ends_with(".spm") {
+                    eprintln!("Warning: could not download {file_name}: {e}");
+                    continue;
                 }
-                Err(_) => continue,
+                return Err(format!("Failed to download {file_name} for {}: {e}", model.name));
             }
-        }
-
-        if !downloaded {
-            // Non-critical files (spm) can be skipped
-            if !file_name.ends_with(".onnx") && !file_name.ends_with(".json") {
-                continue;
-            }
-            return Err(format!("Failed to download {file_name} for {}", model.name));
         }
     }
 
@@ -145,17 +157,21 @@ async fn download_file(
 ) -> Result<(), String> {
     let response = client
         .get(url)
+        .header("User-Agent", "EasyToGo/0.1.0")
         .send()
         .await
         .map_err(|e| format!("HTTP error: {e}"))?;
 
     if !response.status().is_success() {
-        return Err(format!("HTTP {}", response.status()));
+        return Err(format!("HTTP {} for {}", response.status(), url));
     }
 
     let total = response.content_length().unwrap_or(0);
     let mut stream = response.bytes_stream();
-    let mut file = tokio::fs::File::create(dest)
+
+    // Write to temp file first, then rename (atomic download)
+    let tmp_path = dest.with_extension("tmp");
+    let mut file = tokio::fs::File::create(&tmp_path)
         .await
         .map_err(|e| format!("File create error: {e}"))?;
 
@@ -174,5 +190,12 @@ async fn download_file(
     }
 
     file.flush().await.map_err(|e| format!("Flush error: {e}"))?;
+    drop(file);
+
+    // Atomic rename
+    tokio::fs::rename(&tmp_path, dest)
+        .await
+        .map_err(|e| format!("Rename error: {e}"))?;
+
     Ok(())
 }

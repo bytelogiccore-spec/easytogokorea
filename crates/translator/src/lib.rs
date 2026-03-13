@@ -23,19 +23,15 @@ pub fn get_model_name(source: &str, target: &str) -> Option<String> {
     if source == target {
         return None;
     }
-    // Direct ko<->en
+    // Direct ko→en
     if source == "ko" && target == "en" {
         return Some("ko-en".to_string());
     }
-    if source == "en" && target == "ko" {
-        return Some("en-ko".to_string());
-    }
-    // en -> other
+    // en → other (direct)
     if source == "en" {
         return Some(format!("en-{target}"));
     }
-    // ko -> other (needs 2-step: ko->en->target)
-    // Return the first step model name
+    // ko → other (needs 2-step: ko→en→target)
     if source == "ko" {
         return Some("ko-en".to_string());
     }
@@ -81,8 +77,8 @@ impl Translator {
             return Ok(String::new());
         }
 
-        // Direct translation (ko<->en, en->X)
-        if source == "en" || (source == "ko" && target == "en") || (source == "en" && target == "ko") {
+        // Direct translation (ko→en, en→X)
+        if source == "en" || (source == "ko" && target == "en") {
             let model_name = get_model_name(source, target)
                 .ok_or_else(|| format!("No model for {source}->{target}"))?;
             self.ensure_model(&model_name)?;
@@ -151,5 +147,10 @@ mod tests {
     #[test]
     fn test_supported_languages() {
         assert_eq!(SUPPORTED_LANGUAGES.len(), 7);
+    }
+
+    #[test]
+    fn test_model_count() {
+        assert_eq!(MODELS.len(), 6); // ko-en, en-zh, en-fr, en-de, en-ru, en-ar
     }
 }
