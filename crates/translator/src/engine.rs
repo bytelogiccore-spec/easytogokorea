@@ -125,10 +125,14 @@ impl NllbModel {
                 (vec![1i64, seq_len as i64], enc_attn_data)
             ).map_err(|e| format!("Enc attn tensor error: {e}"))?;
 
-            // Build decoder inputs: [input_ids, encoder_attention_mask, encoder_hidden_states]
-            // We pass the view of encoder output directly
+            // use_cache_branch = false (no KV cache, recompute each step)
+            let use_cache = ort::value::Tensor::from_array(
+                (vec![1i64], vec![false])
+            ).map_err(|e| format!("Cache flag tensor error: {e}"))?;
+
+            // Build decoder inputs: input_ids, encoder_attention_mask, encoder_hidden_states, use_cache_branch
             let decoder_output = self.decoder.run(
-                ort::inputs![decoder_input, enc_attn_tensor, &encoder_output[0]]
+                ort::inputs![decoder_input, enc_attn_tensor, &encoder_output[0], use_cache]
             ).map_err(|e| format!("Decoder run error: {e}"))?;
 
             // Get logits from output — try_extract_tensor returns (&Shape, &[T])
