@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { invoke } from '@tauri-apps/api/core';
   import { listen } from '@tauri-apps/api/event';
 
   let visible = $state(true);
@@ -7,44 +8,80 @@
   let statusText = $state('시스템 초기화...');
   let progress = $state(0);
 
+  /** @param {number} bytes */
+  function formatBytes(bytes) {
+    if (bytes < 1048576) return (bytes / 1024).toFixed(0) + ' KB';
+    if (bytes < 1073741824) return (bytes / 1048576).toFixed(1) + ' MB';
+    return (bytes / 1073741824).toFixed(2) + ' GB';
+  }
+
   onMount(() => {
-    /** @type {(() => void) | null} */
-    let cleanup = null;
-    
+    /** @type {(() => void)[]} */
+    let cleanups = [];
+
     (async () => {
-    // Animate progress steps
-    /** @type {[number, string, number][]} */
-    const steps = [
-      [300, 'AI 번역 엔진 초기화...', 15],
-      [800, 'ONNX Runtime 로딩...', 35],
-      [1500, '모델 파일 검증...', 55],
-    ];
+      // Step 1: Init
+      await new Promise(r => setTimeout(r, 500));
+      statusText = 'AI 번역 엔진 확인 중...';
+      progress = 10;
 
-    for (const [delay, text, pct] of steps) {
-      await new Promise(r => setTimeout(r, delay));
-      statusText = text;
-      progress = pct;
-    }
+      // Step 2: Check if model is downloaded
+      /** @type {Record<string, boolean>} */
+      let models = {};
+      try {
+        models = await invoke('check_models_status');
+      } catch { /* ignore */ }
 
-    // Listen for preload complete from Rust backend
-    const unlisten = await listen('translator-preloaded', () => {
-      statusText = '준비 완료!';
-      progress = 100;
-      setTimeout(dismiss, 600);
-    });
-    cleanup = unlisten;
+      const nllbReady = models['nllb-200'] ?? false;
 
-    // Timeout: dismiss after 8s even if preload event doesn't fire
-    setTimeout(() => {
-      if (visible) {
-        statusText = '준비 완료!';
-        progress = 100;
-        setTimeout(dismiss, 400);
+      if (!nllbReady) {
+        // Model not downloaded → auto-download
+        statusText = 'NLLB-200 번역 모델 다운로드 준비...';
+        progress = 15;
+
+        // Listen for download progress
+        const unlistenProgress = await listen('translation-download-progress', (/** @type {any} */ event) => {
+          const { file, downloaded, total } = event.payload;
+          const pct = total > 0 ? Math.round((downloaded / total) * 100) : 0;
+          progress = 15 + Math.round(pct * 0.65);
+          statusText = `다운로드: ${file} (${formatBytes(downloaded)} / ${formatBytes(total)})`;
+        });
+        cleanups.push(unlistenProgress);
+
+        try {
+          await invoke('download_nllb_model');
+          statusText = '다운로드 완료! 모델 로딩 중...';
+          progress = 82;
+        } catch (e) {
+          statusText = `❌ 다운로드 실패: ${e}`;
+          progress = 0;
+          setTimeout(dismiss, 5000);
+          return;
+        }
+      } else {
+        statusText = '번역 모델 로딩 중...';
+        progress = 60;
       }
-    }, 8000);
+
+      // Step 3: Wait for preload complete
+      const unlistenPreload = await listen('translator-preloaded', () => {
+        statusText = '✅ 준비 완료!';
+        progress = 100;
+        setTimeout(dismiss, 600);
+      });
+      cleanups.push(unlistenPreload);
+
+      // Timeout: dismiss after 30s
+      setTimeout(() => {
+        if (visible) {
+          statusText = '✅ 준비 완료!';
+          progress = 100;
+          setTimeout(dismiss, 400);
+        }
+      }, 30000);
     })();
 
-    return () => { if (cleanup) cleanup(); };
+    return () => { cleanups.forEach(fn => fn()); };
   });
 
   function dismiss() {
@@ -224,7 +261,7 @@
   /* Loading */
   .loading-area {
     position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%);
-    width: 320px; text-align: center;
+    width: 380px; text-align: center;
     opacity: 0; animation: fadeIn 0.8s ease 2s forwards;
   }
 
@@ -239,9 +276,10 @@
   }
 
   .status-text {
-    font-size: 0.75rem; color: rgba(255,255,255,0.4);
+    font-size: 0.72rem; color: rgba(255,255,255,0.4);
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.03em;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .partner-label {
     font-size: 0.6rem; color: rgba(255,255,255,0.15);
