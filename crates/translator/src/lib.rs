@@ -1,3 +1,4 @@
+pub mod config;
 pub mod downloader;
 pub mod engine;       // NLLB-200 engine
 pub mod engine_opus;  // Opus-MT engine
@@ -11,6 +12,7 @@ pub use downloader::{
     nllb_models_dir, base_models_dir,
     ProgressCallback,
 };
+pub use config::TranslatorConfig;
 pub use engine::{NllbModel, lang_code_to_nllb};
 pub use engine_opus::OpusMtModel;
 
@@ -72,24 +74,45 @@ pub struct Translator {
     engine: Mutex<EngineType>,
     nllb_model: Mutex<Option<NllbModel>>,
     opus_models: Mutex<HashMap<String, OpusMtModel>>,
+    config: Mutex<TranslatorConfig>,
 }
 
 impl Translator {
     pub fn new() -> Self {
-        // Default to Opus-MT if models are available, else NLLB
-        let default_engine = if is_any_opus_downloaded() {
-            EngineType::OpusMT
-        } else if is_nllb_downloaded() {
-            EngineType::Nllb200
-        } else {
-            EngineType::OpusMT
+        let config = TranslatorConfig::load();
+        let default_engine = match config.default_engine.as_str() {
+            "Nllb200" | "nllb-200" | "nllb" => EngineType::Nllb200,
+            _ => EngineType::OpusMT,
         };
-        eprintln!("[Translator] Default engine: {:?}", default_engine);
+        eprintln!("[Translator] Config engine: {:?}", default_engine);
 
         Self {
             engine: Mutex::new(default_engine),
             nllb_model: Mutex::new(None),
             opus_models: Mutex::new(HashMap::new()),
+            config: Mutex::new(config),
+        }
+    }
+
+    /// Preload the selected engine's model (call on startup)
+    pub fn preload(&self) {
+        let engine = self.current_engine();
+        eprintln!("[Translator] Preloading {:?}...", engine);
+        match engine {
+            EngineType::OpusMT => {
+                if let Err(e) = self.ensure_opus_model("ko-en") {
+                    eprintln!("[Translator] Preload ko-en failed: {e}");
+                } else {
+                    eprintln!("[Translator] ko-en preloaded");
+                }
+            }
+            EngineType::Nllb200 => {
+                if let Err(e) = self.ensure_nllb() {
+                    eprintln!("[Translator] Preload NLLB failed: {e}");
+                } else {
+                    eprintln!("[Translator] NLLB preloaded");
+                }
+            }
         }
     }
 
@@ -98,10 +121,17 @@ impl Translator {
         self.engine.lock().unwrap().clone()
     }
 
-    /// Switch engine
+    /// Switch engine and persist to config
     pub fn set_engine(&self, engine: EngineType) {
         eprintln!("[Translator] Switching to {:?}", engine);
-        *self.engine.lock().unwrap() = engine;
+        *self.engine.lock().unwrap() = engine.clone();
+        // Save to config
+        if let Ok(mut cfg) = self.config.lock() {
+            cfg.default_engine = format!("{:?}", engine);
+            if let Err(e) = cfg.save() {
+                eprintln!("[Translator] Config save error: {e}");
+            }
+        }
     }
 
     /// Translate with the selected engine

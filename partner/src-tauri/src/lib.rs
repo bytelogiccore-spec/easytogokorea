@@ -194,11 +194,23 @@ pub fn run() {
         server::start_server(3333).await;
     });
 
+    let translator = Arc::new(translator::Translator::new());
+
+    // Preload default engine in background thread
+    let preload_translator = translator.clone();
+    std::thread::Builder::new()
+        .name("translator-preload".to_string())
+        .stack_size(8 * 1024 * 1024) // 8MB stack for ONNX
+        .spawn(move || {
+            preload_translator.preload();
+        })
+        .ok();
+
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .manage(AppState {
             chat: Mutex::new(BleChat::new()),
-            translator: Arc::new(translator::Translator::new()),
+            translator,
         })
         .invoke_handler(tauri::generate_handler![
             // BLE commands
