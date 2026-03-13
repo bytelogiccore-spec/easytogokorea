@@ -97,10 +97,11 @@ impl OpusMtModel {
         ).map_err(|e| format!("Encoder run error: {e}"))?;
 
         // Greedy decoding
-        let eos_token_id: i64 = 0;
-        let pad_token_id: i64 = eos_token_id;
+        // Marian: </s> = 0 (EOS), <pad> = 65000 (decoder start token)
+        let eos_token_id: i64 = self.tokenizer.token_to_id("</s>").unwrap_or(0) as i64;
+        let decoder_start_id: i64 = self.tokenizer.token_to_id("<pad>").unwrap_or(65000) as i64;
         let max_length = (seq_len * 3).min(512);
-        let mut generated_ids: Vec<i64> = vec![pad_token_id];
+        let mut generated_ids: Vec<i64> = vec![decoder_start_id];
 
         for _ in 0..max_length {
             let dec_len = generated_ids.len();
