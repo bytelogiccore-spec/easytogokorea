@@ -39,9 +39,6 @@
         "installMode": "both",
         "displayLanguageSelector": false
       }
-    },
-    "resources": {
-      "readme": "../../README.md"
     }
   }
 }
