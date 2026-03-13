@@ -47,6 +47,9 @@
       <a href="/editor" class="nav-item" class:active={currentPage === 'editor'}>
         <span class="nav-icon">📱</span> 모바일 화면 꾸미기
       </a>
+      <a href="/translate" class="nav-item" class:active={currentPage === 'translate'}>
+        <span class="nav-icon">🌐</span> 번역 테스트
+      </a>
       <a href="/settings" class="nav-item" class:active={currentPage === 'settings'}>
         <span class="nav-icon">⚙️</span> 설정
       </a>

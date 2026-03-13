@@ -135,24 +135,23 @@ fn translate_all(
 #[tauri::command]
 fn check_models_status() -> HashMap<String, bool> {
     let mut status = HashMap::new();
-    for model in translator::MODELS {
-        status.insert(model.name.to_string(), translator::is_model_downloaded(model.name));
-    }
+    let downloaded = translator::is_model_downloaded();
+    status.insert("nllb-200".to_string(), downloaded);
     status
 }
 
 #[tauri::command]
 async fn download_translation_models(app: AppHandle) -> Result<String, String> {
-    let progress_cb: translator::ProgressCallback = Box::new(move |model_name, downloaded, total| {
+    let progress_cb: translator::ProgressCallback = Box::new(move |file_name, downloaded, total| {
         let _ = app.emit("translation-download-progress", serde_json::json!({
-            "model": model_name,
+            "file": file_name,
             "downloaded": downloaded,
             "total": total,
         }));
     });
 
-    translator::download_all_models(Some(&progress_cb)).await?;
-    Ok("All models downloaded".to_string())
+    translator::download_model(Some(&progress_cb)).await?;
+    Ok("NLLB-200 model downloaded successfully".to_string())
 }
 
 #[tauri::command]

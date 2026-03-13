@@ -1,69 +1,55 @@
 pub mod downloader;
 pub mod engine;
 
-use std::collections::HashMap;
 use std::sync::Mutex;
 
-pub use downloader::{download_model, download_all_models, is_model_downloaded, models_dir, MODELS, ProgressCallback};
-pub use engine::TranslationModel;
+pub use downloader::{download_model, is_model_downloaded, models_dir, ProgressCallback};
+pub use engine::{NllbModel, lang_code_to_nllb};
 
-/// Supported language codes
+/// Supported language codes (expandable — NLLB supports 200+)
 pub const SUPPORTED_LANGUAGES: &[(&str, &str)] = &[
     ("ko", "한국어"),
     ("en", "English"),
     ("zh", "中文"),
+    ("ja", "日本語"),
     ("fr", "Français"),
     ("de", "Deutsch"),
+    ("es", "Español"),
     ("ru", "Русский"),
     ("ar", "العربية"),
+    ("vi", "Tiếng Việt"),
+    ("th", "ไทย"),
+    ("id", "Bahasa"),
+    ("pt", "Português"),
+    ("it", "Italiano"),
+    ("tr", "Türkçe"),
 ];
 
-/// Get the model name needed to translate from source to target
-pub fn get_model_name(source: &str, target: &str) -> Option<String> {
-    if source == target {
-        return None;
-    }
-    // Direct ko→en
-    if source == "ko" && target == "en" {
-        return Some("ko-en".to_string());
-    }
-    // en → other (direct)
-    if source == "en" {
-        return Some(format!("en-{target}"));
-    }
-    // ko → other (needs 2-step: ko→en→target)
-    if source == "ko" {
-        return Some("ko-en".to_string());
-    }
-    None
-}
-
-/// High-level translator that manages loaded models
+/// High-level translator (single NLLB model for all language pairs)
 pub struct Translator {
-    models: Mutex<HashMap<String, TranslationModel>>,
+    model: Mutex<Option<NllbModel>>,
 }
 
 impl Translator {
     pub fn new() -> Self {
         Self {
-            models: Mutex::new(HashMap::new()),
+            model: Mutex::new(None),
         }
     }
 
-    /// Load a model if not already loaded
-    fn ensure_model(&self, model_name: &str) -> Result<(), String> {
-        let mut models = self.models.lock().map_err(|e| format!("Lock error: {e}"))?;
-        if models.contains_key(model_name) {
+    /// Load the NLLB model if not already loaded
+    fn ensure_model(&self) -> Result<(), String> {
+        let mut model = self.model.lock().map_err(|e| format!("Lock error: {e}"))?;
+        if model.is_some() {
             return Ok(());
         }
 
-        let model_dir = models_dir().join(model_name);
-        if !model_dir.exists() {
-            return Err(format!("Model {model_name} not downloaded. Call download first."));
+        if !is_model_downloaded() {
+            return Err("NLLB model not downloaded. Please download from Settings.".to_string());
         }
 
-        let model = TranslationModel::load(&model_dir, model_name)?;
-        models.insert(model_name.to_string(), model);
+        let m = NllbModel::load(&models_dir())?;
+        *model = Some(m);
         Ok(())
     }
 
@@ -72,53 +58,23 @@ impl Translator {
         if source == target {
             return Ok(text.to_string());
         }
-
         if text.trim().is_empty() {
             return Ok(String::new());
         }
 
-        // Direct translation (ko→en, en→X)
-        if source == "en" || (source == "ko" && target == "en") {
-            let model_name = get_model_name(source, target)
-                .ok_or_else(|| format!("No model for {source}->{target}"))?;
-            self.ensure_model(&model_name)?;
-            let mut models = self.models.lock().map_err(|e| format!("Lock error: {e}"))?;
-            let model = models.get_mut(&model_name)
-                .ok_or_else(|| format!("Model {model_name} not loaded"))?;
-            return model.translate(text);
-        }
-
-        // 2-step translation: ko -> en -> target
-        if source == "ko" {
-            // Step 1: ko -> en
-            self.ensure_model("ko-en")?;
-            let english = {
-                let mut models = self.models.lock().map_err(|e| format!("Lock error: {e}"))?;
-                let model = models.get_mut("ko-en").ok_or("ko-en model not loaded")?;
-                model.translate(text)?
-            };
-
-            // Step 2: en -> target
-            let target_model = format!("en-{target}");
-            self.ensure_model(&target_model)?;
-            let mut models = self.models.lock().map_err(|e| format!("Lock error: {e}"))?;
-            let model = models.get_mut(&target_model)
-                .ok_or_else(|| format!("Model {target_model} not loaded"))?;
-            return model.translate(&english);
-        }
-
-        Err(format!("Unsupported translation: {source} -> {target}"))
+        self.ensure_model()?;
+        let mut model = self.model.lock().map_err(|e| format!("Lock error: {e}"))?;
+        let m = model.as_mut().ok_or("Model not loaded")?;
+        m.translate(text, source, target)
     }
 
-    /// Translate text to all supported languages at once
-    pub fn translate_all(&self, text: &str, source: &str) -> HashMap<String, String> {
-        let mut results = HashMap::new();
+    /// Translate text to all supported languages
+    pub fn translate_all(&self, text: &str, source: &str) -> std::collections::HashMap<String, String> {
+        let mut results = std::collections::HashMap::new();
         for &(lang, _) in SUPPORTED_LANGUAGES {
-            if lang == source {
-                continue;
-            }
+            if lang == source { continue; }
             match self.translate(text, source, lang) {
-                Ok(translated) => { results.insert(lang.to_string(), translated); }
+                Ok(t) => { results.insert(lang.to_string(), t); }
                 Err(e) => { results.insert(lang.to_string(), format!("[Error: {e}]")); }
             }
         }
@@ -127,9 +83,7 @@ impl Translator {
 }
 
 impl Default for Translator {
-    fn default() -> Self {
-        Self::new()
-    }
+    fn default() -> Self { Self::new() }
 }
 
 #[cfg(test)]
@@ -137,20 +91,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_get_model_name() {
-        assert_eq!(get_model_name("ko", "en"), Some("ko-en".to_string()));
-        assert_eq!(get_model_name("en", "fr"), Some("en-fr".to_string()));
-        assert_eq!(get_model_name("ko", "fr"), Some("ko-en".to_string())); // first step
-        assert_eq!(get_model_name("ko", "ko"), None);
+    fn test_nllb_lang_codes() {
+        assert_eq!(lang_code_to_nllb("ko"), Some("kor_Hang"));
+        assert_eq!(lang_code_to_nllb("en"), Some("eng_Latn"));
+        assert_eq!(lang_code_to_nllb("zh"), Some("zho_Hans"));
+        assert_eq!(lang_code_to_nllb("xx"), None);
     }
 
     #[test]
     fn test_supported_languages() {
-        assert_eq!(SUPPORTED_LANGUAGES.len(), 7);
-    }
-
-    #[test]
-    fn test_model_count() {
-        assert_eq!(MODELS.len(), 6); // ko-en, en-zh, en-fr, en-de, en-ru, en-ar
+        assert!(SUPPORTED_LANGUAGES.len() >= 15);
     }
 }

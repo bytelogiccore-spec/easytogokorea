@@ -3,59 +3,22 @@ use futures_util::StreamExt;
 use std::path::{Path, PathBuf};
 use tokio::io::AsyncWriteExt;
 
-/// Model info for a single translation direction
-#[derive(Debug, Clone)]
-pub struct ModelInfo {
-    pub name: &'static str,
-    /// Primary repo (onnx-community preferred)
-    pub repo_id: &'static str,
-    /// Files in onnx/ subdirectory
-    pub onnx_files: &'static [&'static str],
-    /// Files at repo root
-    pub root_files: &'static [&'static str],
-}
+/// NLLB-200-distilled-600M ONNX model from HuggingFace
+const REPO_ID: &str = "AxolsWebAI/nllb-200-distilled-600M-onnx";
 
-/// All supported translation models — using onnx-community repos with pre-exported ONNX
-pub const MODELS: &[ModelInfo] = &[
-    ModelInfo {
-        name: "ko-en",
-        repo_id: "onnx-community/opus-mt-ko-en",
-        onnx_files: &["encoder_model.onnx", "decoder_model_merged.onnx"],
-        root_files: &["tokenizer.json", "source.spm", "target.spm"],
-    },
-    ModelInfo {
-        name: "en-zh",
-        repo_id: "onnx-community/opus-mt-en-zh",
-        onnx_files: &["encoder_model.onnx", "decoder_model_merged.onnx"],
-        root_files: &["tokenizer.json", "source.spm", "target.spm"],
-    },
-    ModelInfo {
-        name: "en-fr",
-        repo_id: "onnx-community/opus-mt-en-fr",
-        onnx_files: &["encoder_model.onnx", "decoder_model_merged.onnx"],
-        root_files: &["tokenizer.json", "source.spm", "target.spm"],
-    },
-    ModelInfo {
-        name: "en-de",
-        repo_id: "onnx-community/opus-mt-en-de",
-        onnx_files: &["encoder_model.onnx", "decoder_model_merged.onnx"],
-        root_files: &["tokenizer.json", "source.spm", "target.spm"],
-    },
-    ModelInfo {
-        name: "en-ru",
-        repo_id: "onnx-community/opus-mt-en-ru",
-        onnx_files: &["encoder_model.onnx", "decoder_model_merged.onnx"],
-        root_files: &["tokenizer.json", "source.spm", "target.spm"],
-    },
-    ModelInfo {
-        name: "en-ar",
-        repo_id: "onnx-community/opus-mt-en-ar",
-        onnx_files: &["encoder_model.onnx", "decoder_model_merged.onnx"],
-        root_files: &["tokenizer.json", "source.spm", "target.spm"],
-    },
+/// Files to download from the onnx/ subdirectory (quantized for smaller size)
+const ONNX_FILES: &[&str] = &[
+    "encoder_model_quantized.onnx",       // ~416 MB
+    "decoder_model_merged_quantized.onnx", // ~731 MB
 ];
 
-/// Progress callback type: (model_name, downloaded_bytes, total_bytes)
+/// Files to download from the repo root
+const ROOT_FILES: &[&str] = &[
+    "tokenizer.json",      // ~32 MB
+    "config.json",
+];
+
+/// Progress callback type: (file_name, downloaded_bytes, total_bytes)
 pub type ProgressCallback = Box<dyn Fn(&str, u64, u64) + Send + Sync>;
 
 /// Get the models cache directory
@@ -64,35 +27,37 @@ pub fn models_dir() -> PathBuf {
         .unwrap_or_else(|| PathBuf::from("."))
         .join("easytogokorea")
         .join("models")
+        .join("nllb-200")
 }
 
-/// Check if a specific model is already downloaded
-pub fn is_model_downloaded(model_name: &str) -> bool {
-    let dir = models_dir().join(model_name);
+/// Check if the NLLB model is already downloaded
+pub fn is_model_downloaded() -> bool {
+    let dir = models_dir();
     if !dir.exists() {
         return false;
     }
-    // Check for encoder at minimum
-    dir.join("encoder_model.onnx").exists()
+    // Check that quantized encoder exists
+    dir.join("encoder_model_quantized.onnx").exists()
+        && dir.join("decoder_model_merged_quantized.onnx").exists()
+        && dir.join("tokenizer.json").exists()
 }
 
-/// Download a single model from HuggingFace Hub
+/// Download the NLLB-200 model from HuggingFace Hub
 pub async fn download_model(
-    model: &ModelInfo,
     progress: Option<&ProgressCallback>,
 ) -> Result<PathBuf, String> {
-    let model_dir = models_dir().join(model.name);
+    let model_dir = models_dir();
     tokio::fs::create_dir_all(&model_dir)
         .await
         .map_err(|e| format!("Failed to create model dir: {e}"))?;
 
     let client = Client::builder()
-        .timeout(std::time::Duration::from_secs(600))
+        .timeout(std::time::Duration::from_secs(1800)) // 30 min for large files
         .build()
         .map_err(|e| format!("HTTP client error: {e}"))?;
 
-    // Download ONNX files from onnx/ subdirectory
-    for file_name in model.onnx_files {
+    // Download ONNX model files
+    for file_name in ONNX_FILES {
         let file_path = model_dir.join(file_name);
         if file_path.exists() {
             continue;
@@ -100,16 +65,16 @@ pub async fn download_model(
 
         let url = format!(
             "https://huggingface.co/{}/resolve/main/onnx/{}",
-            model.repo_id, file_name
+            REPO_ID, file_name
         );
 
-        download_file(&client, &url, &file_path, model.name, progress)
+        download_file(&client, &url, &file_path, file_name, progress)
             .await
-            .map_err(|e| format!("Failed to download {file_name} for {}: {e}", model.name))?;
+            .map_err(|e| format!("Failed to download {file_name}: {e}"))?;
     }
 
-    // Download root files (tokenizer, spm)
-    for file_name in model.root_files {
+    // Download root files (tokenizer, config)
+    for file_name in ROOT_FILES {
         let file_path = model_dir.join(file_name);
         if file_path.exists() {
             continue;
@@ -117,42 +82,22 @@ pub async fn download_model(
 
         let url = format!(
             "https://huggingface.co/{}/resolve/main/{}",
-            model.repo_id, file_name
+            REPO_ID, file_name
         );
 
-        match download_file(&client, &url, &file_path, model.name, progress).await {
-            Ok(_) => {}
-            Err(e) => {
-                // SPM files are nice to have but not critical if tokenizer.json exists
-                if file_name.ends_with(".spm") {
-                    eprintln!("Warning: could not download {file_name}: {e}");
-                    continue;
-                }
-                return Err(format!("Failed to download {file_name} for {}: {e}", model.name));
-            }
-        }
+        download_file(&client, &url, &file_path, file_name, progress)
+            .await
+            .map_err(|e| format!("Failed to download {file_name}: {e}"))?;
     }
 
     Ok(model_dir)
-}
-
-/// Download all required models with progress
-pub async fn download_all_models(
-    progress: Option<&ProgressCallback>,
-) -> Result<(), String> {
-    for model in MODELS {
-        if !is_model_downloaded(model.name) {
-            download_model(model, progress).await?;
-        }
-    }
-    Ok(())
 }
 
 async fn download_file(
     client: &Client,
     url: &str,
     dest: &Path,
-    model_name: &str,
+    file_label: &str,
     progress: Option<&ProgressCallback>,
 ) -> Result<(), String> {
     let response = client
@@ -185,7 +130,7 @@ async fn download_file(
         downloaded += chunk.len() as u64;
 
         if let Some(cb) = &progress {
-            cb(model_name, downloaded, total);
+            cb(file_label, downloaded, total);
         }
     }
 

@@ -3,29 +3,19 @@
   import { listen } from '@tauri-apps/api/event';
   import { onMount } from 'svelte';
 
-  /** @type {Record<string, {downloaded: boolean, name: string}>} */
-  let modelStatus = $state({});
+  let modelReady = $state(false);
   let isDownloading = $state(false);
   let downloadLog = $state('');
-  let currentModel = $state('');
   let downloadPercent = $state(0);
-
-  /** @type {Array<{code: string, label: string}>} */
-  let supportedLangs = $state([]);
 
   onMount(async () => {
     await refreshStatus();
-    try {
-      const langs = await invoke('get_supported_languages');
-      supportedLangs = langs.map((/** @type {[string, string]} */ l) => ({ code: l[0], label: l[1] }));
-    } catch { /* ignore in dev */ }
 
     // Listen for download progress events
     await listen('translation-download-progress', (/** @type {any} */ event) => {
-      const { model, downloaded, total } = event.payload;
-      currentModel = model;
+      const { file, downloaded, total } = event.payload;
       downloadPercent = total > 0 ? Math.round((downloaded / total) * 100) : 0;
-      downloadLog = `${model}: ${formatBytes(downloaded)} / ${formatBytes(total)} (${downloadPercent}%)`;
+      downloadLog = `${file}: ${formatBytes(downloaded)} / ${formatBytes(total)} (${downloadPercent}%)`;
     });
   });
 
@@ -33,12 +23,9 @@
     try {
       /** @type {Record<string, boolean>} */
       const status = await invoke('check_models_status');
-      modelStatus = {};
-      for (const [name, downloaded] of Object.entries(status)) {
-        modelStatus[name] = { downloaded, name };
-      }
+      modelReady = status['nllb-200'] === true;
     } catch {
-      modelStatus = {};
+      modelReady = false;
     }
   }
 
@@ -46,22 +33,17 @@
   function formatBytes(bytes) {
     if (bytes < 1024) return bytes + ' B';
     if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-    return (bytes / 1048576).toFixed(1) + ' MB';
+    if (bytes < 1073741824) return (bytes / 1048576).toFixed(1) + ' MB';
+    return (bytes / 1073741824).toFixed(2) + ' GB';
   }
 
-  $effect(() => {
-    // computed
-  });
-  let allDownloaded = $derived(Object.keys(modelStatus).length > 0 && Object.values(modelStatus).every(m => m.downloaded));
-  let downloadedCount = $derived(Object.values(modelStatus).filter(m => m.downloaded).length);
-  let totalCount = $derived(Object.keys(modelStatus).length);
-
-  async function downloadAll() {
+  async function downloadModel() {
     isDownloading = true;
-    downloadLog = '다운로드 시작...';
+    downloadLog = '다운로드 준비중...';
+    downloadPercent = 0;
     try {
       await invoke('download_translation_models');
-      downloadLog = '✅ 모든 모델 다운로드 완료!';
+      downloadLog = '✅ NLLB-200 모델 다운로드 완료!';
       await refreshStatus();
     } catch (e) {
       downloadLog = `❌ 다운로드 실패: ${e}`;
@@ -79,16 +61,16 @@
   <section class="settings-card">
     <div class="card-header">
       <div>
-        <h2>🌐 AI 번역 모델</h2>
-        <p class="card-desc">온디바이스 번역을 위한 Opus-MT ONNX 모델입니다. 한 번 다운로드하면 인터넷 없이 사용 가능합니다.</p>
+        <h2>🌐 NLLB-200 번역 모델</h2>
+        <p class="card-desc">Meta의 No Language Left Behind — 1개 모델로 200개 언어 번역. 온디바이스 처리.</p>
       </div>
-      <button class="download-btn" onclick={downloadAll} disabled={isDownloading || allDownloaded}>
-        {#if allDownloaded}
-          ✅ 모두 설치됨
+      <button class="download-btn" onclick={downloadModel} disabled={isDownloading || modelReady}>
+        {#if modelReady}
+          ✅ 설치됨
         {:else if isDownloading}
           ⏳ 다운로드중...
         {:else}
-          📥 모든 모델 다운로드
+          📥 모델 다운로드 (~1.2GB)
         {/if}
       </button>
     </div>
@@ -100,26 +82,27 @@
       <p class="download-log">{downloadLog}</p>
     {/if}
 
-    <div class="model-grid">
-      {#each Object.entries(modelStatus) as [name, info]}
-        <div class="model-item" class:downloaded={info.downloaded}>
-          <span class="model-status">{info.downloaded ? '✅' : '⬜'}</span>
-          <span class="model-name">{name}</span>
-          <span class="model-badge">{info.downloaded ? '설치됨' : '미설치'}</span>
-        </div>
-      {/each}
-      {#if Object.keys(modelStatus).length === 0}
-        <p class="no-models">모델 정보를 불러오는 중... (Tauri 연결 필요)</p>
-      {/if}
+    <div class="model-info">
+      <div class="info-item">
+        <span class="dot" class:active={modelReady}></span>
+        <span>encoder_model_quantized.onnx</span>
+        <span class="size">~416 MB</span>
+      </div>
+      <div class="info-item">
+        <span class="dot" class:active={modelReady}></span>
+        <span>decoder_model_merged_quantized.onnx</span>
+        <span class="size">~731 MB</span>
+      </div>
+      <div class="info-item">
+        <span class="dot" class:active={modelReady}></span>
+        <span>tokenizer.json</span>
+        <span class="size">~32 MB</span>
+      </div>
     </div>
 
     <div class="model-summary">
-      <span>{downloadedCount} / {totalCount} 모델 설치됨</span>
-      {#if supportedLangs.length > 0}
-        <span class="lang-list">
-          지원 언어: {supportedLangs.map(l => l.label).join(', ')}
-        </span>
-      {/if}
+      <span>{modelReady ? '✅ 모델 준비 완료' : '⬜ 모델 미설치'}</span>
+      <span class="lang-count">200개 언어 지원</span>
     </div>
   </section>
 
@@ -127,7 +110,8 @@
     <h2>📋 앱 정보</h2>
     <div class="info-grid">
       <div class="info-row"><span class="info-label">버전</span><span>v0.1.0</span></div>
-      <div class="info-row"><span class="info-label">번역 엔진</span><span>ONNX Runtime + Opus-MT</span></div>
+      <div class="info-row"><span class="info-label">번역 엔진</span><span>NLLB-200 (ONNX Runtime)</span></div>
+      <div class="info-row"><span class="info-label">모델</span><span>nllb-200-distilled-600M (quantized)</span></div>
       <div class="info-row"><span class="info-label">데이터 저장</span><span>온디바이스 (No-Storage 정책)</span></div>
       <div class="info-row"><span class="info-label">BLE 채팅</span><span>btleplug v0.11</span></div>
     </div>
@@ -168,28 +152,25 @@
   }
   .download-log { font-size: 0.75rem; color: #60a5fa; font-family: 'JetBrains Mono', monospace; margin-bottom: 1rem; }
 
-  .model-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem; }
-  .model-item {
+  .model-info { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+  .info-item {
     display: flex; align-items: center; gap: 0.5rem;
-    padding: 0.6rem 0.75rem; border-radius: 8px;
+    padding: 0.5rem 0.75rem; border-radius: 8px;
     background: rgba(255,255,255,0.03); font-size: 0.8rem;
   }
-  .model-item.downloaded { background: rgba(34,197,94,0.08); }
-  .model-status { font-size: 0.9rem; }
-  .model-name { font-weight: 700; flex: 1; }
-  .model-badge {
-    font-size: 0.65rem; padding: 0.15rem 0.5rem; border-radius: 6px;
-    background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3);
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.15); flex-shrink: 0;
   }
-  .model-item.downloaded .model-badge { background: rgba(34,197,94,0.15); color: #4ade80; }
-  .no-models { color: rgba(255,255,255,0.3); font-size: 0.8rem; grid-column: 1 / -1; }
+  .dot.active { background: #4ade80; }
+  .size { margin-left: auto; color: rgba(255,255,255,0.3); font-size: 0.7rem; }
 
   .model-summary {
     display: flex; justify-content: space-between; font-size: 0.75rem;
     color: rgba(255,255,255,0.3); border-top: 1px solid rgba(255,255,255,0.06);
     padding-top: 0.75rem;
   }
-  .lang-list { color: rgba(255,255,255,0.2); }
+  .lang-count { color: #60a5fa; }
 
   .info-grid { margin-top: 0.75rem; }
   .info-row {
