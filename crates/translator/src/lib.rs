@@ -125,7 +125,16 @@ impl Translator {
         let model_dir = opus_models_dir().join(model_name);
         if !model_dir.exists() { return Err(format!("Opus-MT model '{}' not downloaded", model_name)); }
 
-        let model = OpusMtModel::load(&model_dir)?;
+        // Load model on a thread with 8MB stack (ONNX graph parsing needs large stack)
+        let dir = model_dir.clone();
+        let model = std::thread::Builder::new()
+            .name(format!("opus-load-{model_name}"))
+            .stack_size(8 * 1024 * 1024) // 8MB stack
+            .spawn(move || OpusMtModel::load(&dir))
+            .map_err(|e| format!("Thread spawn error: {e}"))?
+            .join()
+            .map_err(|_| "Model load thread panicked".to_string())??;
+
         models.insert(model_name.to_string(), model);
         Ok(())
     }
@@ -167,7 +176,15 @@ impl Translator {
 
         if !is_nllb_downloaded() { return Err("NLLB model not downloaded".to_string()); }
 
-        let m = NllbModel::load(&models_dir())?;
+        // Load on thread with 8MB stack
+        let dir = models_dir();
+        let m = std::thread::Builder::new()
+            .name("nllb-load".to_string())
+            .stack_size(8 * 1024 * 1024)
+            .spawn(move || NllbModel::load(&dir))
+            .map_err(|e| format!("Thread spawn error: {e}"))?
+            .join()
+            .map_err(|_| "NLLB load thread panicked".to_string())??;
         *model = Some(m);
         Ok(())
     }
