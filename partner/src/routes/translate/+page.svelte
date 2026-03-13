@@ -2,237 +2,156 @@
   import { invoke } from '@tauri-apps/api/core';
   import { onMount } from 'svelte';
 
-  let sourceText = $state('안녕하세요, 한국에 오신 것을 환영합니다!');
-  let sourceLang = $state('ko');
-  let targetLang = $state('en');
+  let sourceLanguage = $state('ko');
+  let targetLanguage = $state('en');
+  let inputText = $state('안녕하세요, 한국에 오신 것을 환영합니다!');
   let translatedText = $state('');
   let isTranslating = $state(false);
-  let error = $state('');
-  let currentEngine = $state('OpusMT');
-  let engines = $state({});
+  let errorMsg = $state('');
+  /** @type {Array<{code: string, label: string}>} */
+  let languages = $state([]);
 
   onMount(async () => {
     try {
-      currentEngine = await invoke('get_engine');
-      engines = await invoke('check_models_status');
-    } catch {}
+      /** @type {[string, string][]} */
+      const langs = await invoke('get_supported_languages');
+      languages = langs.map(([code, label]) => ({ code, label }));
+    } catch (e) {
+      console.error('Failed to load languages:', e);
+    }
   });
 
-  async function switchEngine(/** @type {string} */ e) {
-    try {
-      await invoke('set_engine', { engine: e });
-      currentEngine = await invoke('get_engine');
-      error = '';
-    } catch (err) { error = String(err); }
-  }
-
-  const languages = [
-    { code: 'ko', label: '한국어' },
-    { code: 'en', label: 'English' },
-    { code: 'zh', label: '中文' },
-    { code: 'ja', label: '日本語' },
-    { code: 'fr', label: 'Français' },
-    { code: 'de', label: 'Deutsch' },
-    { code: 'es', label: 'Español' },
-    { code: 'ru', label: 'Русский' },
-    { code: 'ar', label: 'العربية' },
-    { code: 'vi', label: 'Tiếng Việt' },
-    { code: 'th', label: 'ไทย' },
-    { code: 'id', label: 'Bahasa' },
-    { code: 'pt', label: 'Português' },
-    { code: 'it', label: 'Italiano' },
-    { code: 'tr', label: 'Türkçe' },
-  ];
-
   async function doTranslate() {
-    if (!sourceText.trim()) return;
+    if (!inputText.trim()) return;
     isTranslating = true;
-    error = '';
+    errorMsg = '';
     translatedText = '';
-
     try {
-      const result = await invoke('translate_text', {
-        text: sourceText,
-        source: sourceLang,
-        target: targetLang,
+      translatedText = await invoke('translate_text', {
+        text: inputText,
+        source: sourceLanguage,
+        target: targetLanguage,
       });
-      translatedText = result;
     } catch (e) {
-      error = String(e);
-      // Fallback simulation for browser dev
-      if (String(e).includes('not a function') || String(e).includes('__TAURI__')) {
-        translatedText = `[시뮬레이션] ${sourceText} → ${targetLang}`;
-        error = '';
-      }
+      errorMsg = `❌ ${e}`;
     }
     isTranslating = false;
   }
 
-  function swap() {
-    const tmp = sourceLang;
-    sourceLang = targetLang;
-    targetLang = tmp;
+  function swapLanguages() {
+    const tmp = sourceLanguage;
+    sourceLanguage = targetLanguage;
+    targetLanguage = tmp;
     if (translatedText) {
-      const tmpText = sourceText;
-      sourceText = translatedText;
-      translatedText = tmpText;
+      inputText = translatedText;
+      translatedText = '';
     }
   }
 </script>
 
 <div class="translate-page">
   <header class="page-header">
-    <div class="header-top">
-      <h1>🌐 번역 테스트</h1>
-      <div class="engine-switch">
-        <button class="eng-btn" class:active={currentEngine === 'OpusMT'} onclick={() => switchEngine('opus-mt')} disabled={!engines['opus-mt']}>
-          Opus-MT
-        </button>
-        <button class="eng-btn" class:active={currentEngine === 'Nllb200'} onclick={() => switchEngine('nllb-200')} disabled={!engines['nllb-200']}>
-          NLLB-200
-        </button>
-      </div>
-    </div>
-    <p class="subtitle">
-      {currentEngine === 'OpusMT' ? 'Opus-MT · 6개 언어쌍 (ko→en→X)' : 'NLLB-200 · 200개 언어 직접 번역'} · 온디바이스
-    </p>
+    <h1 class="page-title">🌐 번역 테스트</h1>
+    <p class="page-desc">NLLB-200 · 200개 언어 직접 번역</p>
   </header>
 
-  <div class="translate-card">
-    <div class="lang-row">
-      <select id="source-lang-select" bind:value={sourceLang}>
-        {#each languages as l}
-          <option value={l.code}>{l.label}</option>
-        {/each}
-      </select>
+  <!-- Language selectors -->
+  <div class="lang-row">
+    <select class="lang-select" bind:value={sourceLanguage}>
+      {#each languages as lang}
+        <option value={lang.code}>{lang.label}</option>
+      {/each}
+    </select>
 
-      <button class="swap-btn" onclick={swap} title="언어 교체">⇄</button>
+    <button class="swap-btn" onclick={swapLanguages} title="언어 교체">⇄</button>
 
-      <select id="target-lang-select" bind:value={targetLang}>
-        {#each languages as l}
-          <option value={l.code}>{l.label}</option>
-        {/each}
-      </select>
-    </div>
-
-    <div class="text-area-row">
-      <div class="text-box">
-        <textarea
-          bind:value={sourceText}
-          placeholder="번역할 텍스트를 입력하세요..."
-          rows="5"
-        ></textarea>
-        <span class="char-count">{sourceText.length}</span>
-      </div>
-
-      <div class="text-box result">
-        {#if isTranslating}
-          <div class="loading">
-            <span class="spinner">⏳</span> 번역중...
-          </div>
-        {:else if translatedText}
-          <p class="translated">{translatedText}</p>
-        {:else}
-          <p class="placeholder-text">번역 결과가 여기에 표시됩니다</p>
-        {/if}
-      </div>
-    </div>
-
-    {#if error}
-      <div class="error-msg">❌ {error}</div>
-    {/if}
-
-    <button class="translate-btn" onclick={doTranslate} disabled={isTranslating || !sourceText.trim()}>
-      {isTranslating ? '⏳ 번역중...' : '🌐 번역하기'}
-    </button>
+    <select class="lang-select" bind:value={targetLanguage}>
+      {#each languages as lang}
+        <option value={lang.code}>{lang.label}</option>
+      {/each}
+    </select>
   </div>
 
-  <div class="info-note">
-    <p><strong>{currentEngine === 'OpusMT' ? 'Opus-MT' : 'NLLB-200'}</strong> — {currentEngine === 'OpusMT' ? 'Helsinki-NLP 경량 번역 모델 (언어쌍별)' : 'Meta NLLB (1개 모델 200개 언어)'}</p>
-    <p>온디바이스 번역 · 인터넷 불필요 · 데이터 외부 전송 없음</p>
+  <!-- Input -->
+  <div class="text-area-wrap">
+    <textarea
+      class="text-input"
+      bind:value={inputText}
+      placeholder="번역할 텍스트를 입력하세요..."
+      rows="4"
+    ></textarea>
   </div>
+
+  <!-- Translate button -->
+  <button class="translate-btn" onclick={doTranslate} disabled={isTranslating || !inputText.trim()}>
+    {#if isTranslating}⏳ 번역중...{:else}🌐 번역하기{/if}
+  </button>
+
+  <!-- Error -->
+  {#if errorMsg}
+    <div class="error-box">{errorMsg}</div>
+  {/if}
+
+  <!-- Result -->
+  {#if translatedText}
+    <div class="result-box">
+      <p class="result-label">번역 결과</p>
+      <p class="result-text">{translatedText}</p>
+    </div>
+  {/if}
+
+  <p class="info-note">💡 NLLB-200은 언어 간 직접 번역하여 영어를 경유하지 않습니다.</p>
 </div>
 
 <style>
-  .translate-page { max-width: 720px; }
+  .translate-page { max-width: 640px; }
   .page-header { margin-bottom: 1.5rem; }
-  .header-top { display: flex; justify-content: space-between; align-items: center; }
-  .page-header h1 { font-size: 1.75rem; font-weight: 900; }
-  .subtitle { color: rgba(255,255,255,0.4); font-size: 0.85rem; margin-top: 0.25rem; }
+  .page-title { font-size: 1.75rem; font-weight: 900; }
+  .page-desc { color: rgba(255,255,255,0.35); font-size: 0.8rem; margin-top: 0.25rem; }
 
-  .engine-switch { display: flex; gap: 0.25rem; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 3px; }
-  .eng-btn {
-    padding: 0.35rem 0.75rem; border: none; border-radius: 8px; font-size: 0.75rem;
-    font-weight: 700; cursor: pointer; transition: all 0.15s;
-    background: transparent; color: rgba(255,255,255,0.3);
-  }
-  .eng-btn.active { background: rgba(59,130,246,0.2); color: #60a5fa; }
-  .eng-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-  .eng-btn:hover:not(:disabled):not(.active) { color: rgba(255,255,255,0.6); }
-
-  .translate-card {
-    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px; padding: 1.5rem;
-  }
-
-  .lang-row {
-    display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
-  }
-  .lang-row select {
-    flex: 1; padding: 0.6rem 0.75rem; background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
-    color: white; font-size: 0.9rem; font-weight: 600;
+  .lang-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .lang-select {
+    flex: 1; padding: 0.6rem 0.8rem; border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; background: rgba(255,255,255,0.04); color: white;
+    font-size: 0.85rem; font-weight: 600;
   }
   .swap-btn {
-    width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.04); color: white; font-size: 1.2rem;
-    cursor: pointer; transition: all 0.2s;
+    padding: 0.5rem 0.8rem; border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; background: rgba(255,255,255,0.04); color: #60a5fa;
+    font-size: 1.1rem; cursor: pointer; transition: all 0.15s;
   }
-  .swap-btn:hover { background: rgba(59,130,246,0.15); border-color: #3b82f6; }
+  .swap-btn:hover { background: rgba(59,130,246,0.1); transform: scale(1.1); }
 
-  .text-area-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-
-  .text-box {
-    position: relative; min-height: 140px;
-    background: rgba(255,255,255,0.04); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);
+  .text-area-wrap { margin-bottom: 1rem; }
+  .text-input {
+    width: 100%; padding: 1rem; border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px; background: rgba(255,255,255,0.03); color: white;
+    font-size: 0.9rem; resize: vertical; font-family: inherit; line-height: 1.6;
   }
-  .text-box textarea {
-    width: 100%; height: 100%; min-height: 140px;
-    background: transparent; border: none; padding: 1rem;
-    color: white; font-size: 0.9rem; resize: none; outline: none;
-    font-family: inherit;
-  }
-  .text-box.result { display: flex; align-items: flex-start; padding: 1rem; }
-  .char-count {
-    position: absolute; bottom: 0.5rem; right: 0.75rem;
-    font-size: 0.65rem; color: rgba(255,255,255,0.2);
-  }
-
-  .translated { color: #60a5fa; font-size: 0.9rem; line-height: 1.6; margin: 0; }
-  .placeholder-text { color: rgba(255,255,255,0.2); font-size: 0.85rem; margin: 0; }
-
-  .loading { display: flex; align-items: center; gap: 0.5rem; color: rgba(255,255,255,0.4); }
-  .spinner { animation: spin 1s linear infinite; display: inline-block; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .error-msg {
-    background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
-    color: #f87171; padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.8rem;
-    margin-bottom: 1rem;
-  }
+  .text-input:focus { outline: none; border-color: #3b82f6; }
 
   .translate-btn {
-    width: 100%; padding: 0.75rem; border: none; border-radius: 12px;
+    width: 100%; padding: 0.8rem; border: none; border-radius: 12px;
+    font-weight: 800; font-size: 0.9rem; cursor: pointer;
     background: linear-gradient(135deg, #3b82f6, #2563eb); color: white;
-    font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: all 0.2s;
+    transition: all 0.2s; margin-bottom: 1rem;
   }
   .translate-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(59,130,246,0.3); }
-  .translate-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .translate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  .info-note {
-    margin-top: 1rem; padding: 1rem; border-radius: 12px;
-    background: rgba(59,130,246,0.05); border: 1px solid rgba(59,130,246,0.1);
-    font-size: 0.75rem; color: rgba(255,255,255,0.35); text-align: center;
+  .error-box {
+    padding: 0.75rem 1rem; border-radius: 10px;
+    background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
+    color: #f87171; font-size: 0.8rem; margin-bottom: 1rem;
   }
-  .info-note strong { color: #60a5fa; }
+
+  .result-box {
+    padding: 1.25rem; border-radius: 14px;
+    background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15);
+    margin-bottom: 1rem;
+  }
+  .result-label { font-size: 0.7rem; color: rgba(255,255,255,0.3); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.1em; }
+  .result-text { font-size: 1rem; color: white; line-height: 1.6; }
+
+  .info-note { font-size: 0.72rem; color: rgba(255,255,255,0.25); text-align: center; margin-top: 1rem; }
 </style>

@@ -134,7 +134,9 @@ fn translate_all(
 
 #[tauri::command]
 fn check_models_status(state: State<AppState>) -> HashMap<String, bool> {
-    state.translator.available_engines()
+    let mut status = HashMap::new();
+    status.insert("nllb-200".to_string(), state.translator.is_model_ready());
+    status
 }
 
 #[tauri::command]
@@ -147,20 +149,7 @@ async fn download_nllb_model(app: AppHandle) -> Result<String, String> {
         }));
     });
     translator::download_nllb(Some(&progress_cb)).await?;
-    Ok("NLLB-200 model downloaded successfully".to_string())
-}
-
-#[tauri::command]
-async fn download_opus_models(app: AppHandle) -> Result<String, String> {
-    let progress_cb: translator::ProgressCallback = Box::new(move |file_name, downloaded, total| {
-        let _ = app.emit("translation-download-progress", serde_json::json!({
-            "file": file_name,
-            "downloaded": downloaded,
-            "total": total,
-        }));
-    });
-    translator::download_opus_models(Some(&progress_cb)).await?;
-    Ok("Opus-MT models downloaded successfully".to_string())
+    Ok("NLLB-200 모델 다운로드 완료".to_string())
 }
 
 #[tauri::command]
@@ -169,22 +158,6 @@ fn get_supported_languages() -> Vec<(String, String)> {
         .iter()
         .map(|&(code, label)| (code.to_string(), label.to_string()))
         .collect()
-}
-
-#[tauri::command]
-fn get_engine(state: State<AppState>) -> String {
-    format!("{:?}", state.translator.current_engine())
-}
-
-#[tauri::command]
-fn set_engine(engine: String, state: State<AppState>) -> Result<String, String> {
-    let engine_type = match engine.as_str() {
-        "OpusMT" | "opus-mt" | "opus" => translator::EngineType::OpusMT,
-        "Nllb200" | "nllb-200" | "nllb" => translator::EngineType::Nllb200,
-        _ => return Err(format!("Unknown engine: {engine}")),
-    };
-    state.translator.set_engine(engine_type);
-    Ok(format!("Engine set to {engine}"))
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -232,15 +205,12 @@ pub fn run() {
             disconnect_chat,
             generate_qr,
             ping_api_server,
-            // Translation
+            // Translation (NLLB-200 only)
             translate_text,
             translate_all,
             check_models_status,
             download_nllb_model,
-            download_opus_models,
             get_supported_languages,
-            get_engine,
-            set_engine,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
