@@ -138,7 +138,7 @@ fn check_models_status(state: State<AppState>) -> HashMap<String, bool> {
 }
 
 #[tauri::command]
-async fn download_translation_models(app: AppHandle) -> Result<String, String> {
+async fn download_nllb_model(app: AppHandle) -> Result<String, String> {
     let progress_cb: translator::ProgressCallback = Box::new(move |file_name, downloaded, total| {
         let _ = app.emit("translation-download-progress", serde_json::json!({
             "file": file_name,
@@ -146,9 +146,21 @@ async fn download_translation_models(app: AppHandle) -> Result<String, String> {
             "total": total,
         }));
     });
-
     translator::download_nllb(Some(&progress_cb)).await?;
     Ok("NLLB-200 model downloaded successfully".to_string())
+}
+
+#[tauri::command]
+async fn download_opus_models(app: AppHandle) -> Result<String, String> {
+    let progress_cb: translator::ProgressCallback = Box::new(move |file_name, downloaded, total| {
+        let _ = app.emit("translation-download-progress", serde_json::json!({
+            "file": file_name,
+            "downloaded": downloaded,
+            "total": total,
+        }));
+    });
+    translator::download_opus_models(Some(&progress_cb)).await?;
+    Ok("Opus-MT models downloaded successfully".to_string())
 }
 
 #[tauri::command]
@@ -208,7 +220,8 @@ pub fn run() {
             translate_text,
             translate_all,
             check_models_status,
-            download_translation_models,
+            download_nllb_model,
+            download_opus_models,
             get_supported_languages,
             get_engine,
             set_engine,

@@ -2,7 +2,7 @@ use ort::session::Session;
 use std::path::Path;
 use tokenizers::Tokenizer;
 
-/// Opus-MT Translation Model (single language pair)
+/// Opus-MT Translation Model (single language pair, non-merged decoder)
 pub struct OpusMtModel {
     encoder: Session,
     decoder: Session,
@@ -12,10 +12,17 @@ pub struct OpusMtModel {
 impl OpusMtModel {
     pub fn load(model_dir: &Path) -> Result<Self, String> {
         let encoder_path = model_dir.join("encoder_model.onnx");
-        let decoder_path = model_dir.join("decoder_model_merged.onnx");
+        // Use non-merged decoder (no KV cache complexity)
+        let decoder_path = model_dir.join("decoder_model.onnx");
         let tokenizer_path = model_dir.join("tokenizer.json");
 
-        eprintln!("[OpusMT] Loading encoder: {:?}", encoder_path);
+        if !decoder_path.exists() {
+            return Err(format!(
+                "decoder_model.onnx not found. Please re-download from settings."
+            ));
+        }
+
+        eprintln!("[OpusMT] Loading encoder from {:?}", encoder_path);
         let encoder = Session::builder()
             .map_err(|e| format!("Session builder error: {e}"))?
             .with_intra_threads(4)
@@ -23,8 +30,7 @@ impl OpusMtModel {
             .commit_from_file(&encoder_path)
             .map_err(|e| format!("Failed to load encoder: {e}"))?;
 
-        eprintln!("[OpusMT] Encoder loaded");
-
+        eprintln!("[OpusMT] Loading decoder from {:?}", decoder_path);
         let decoder = Session::builder()
             .map_err(|e| format!("Session builder error: {e}"))?
             .with_intra_threads(4)
@@ -32,11 +38,10 @@ impl OpusMtModel {
             .commit_from_file(&decoder_path)
             .map_err(|e| format!("Failed to load decoder: {e}"))?;
 
-        eprintln!("[OpusMT] Decoder loaded");
-
         let tokenizer = Tokenizer::from_file(&tokenizer_path)
             .map_err(|e| format!("Failed to load tokenizer: {e}"))?;
 
+        eprintln!("[OpusMT] Model loaded successfully");
         Ok(Self { encoder, decoder, tokenizer })
     }
 
@@ -61,12 +66,10 @@ impl OpusMtModel {
             ort::inputs![input_ids_tensor, attention_mask_tensor]
         ).map_err(|e| format!("Encoder run error: {e}"))?;
 
-        // Greedy decoding
-        let eos_token_id: i64 = 0; // Opus-MT uses 0 as EOS
+        // Greedy decoding with non-merged decoder (no KV cache needed)
+        let eos_token_id: i64 = 0; // Opus-MT EOS
         let pad_token_id: i64 = eos_token_id;
         let max_length = (seq_len * 3).min(512);
-
-        // Start with decoder_start_token (pad token for Marian)
         let mut generated_ids: Vec<i64> = vec![pad_token_id];
 
         for _ in 0..max_length {
@@ -81,14 +84,9 @@ impl OpusMtModel {
                 (vec![1i64, seq_len as i64], enc_attn_data)
             ).map_err(|e| format!("Enc attn tensor error: {e}"))?;
 
-            // use_cache_branch = false (no KV cache)
-            let use_cache = ort::value::Tensor::from_array(
-                (vec![1i64], vec![0.0f32])
-            ).map_err(|e| format!("Cache flag error: {e}"))?;
-
-            // Try with use_cache_branch first, fall back without
+            // Non-merged decoder: just input_ids, encoder_attention_mask, encoder_hidden_states
             let decoder_output = self.decoder.run(
-                ort::inputs![decoder_input, enc_attn_tensor, &encoder_output[0], use_cache]
+                ort::inputs![decoder_input, enc_attn_tensor, &encoder_output[0]]
             ).map_err(|e| format!("Decoder run error: {e}"))?;
 
             let (_shape, logits_data) = decoder_output[0]

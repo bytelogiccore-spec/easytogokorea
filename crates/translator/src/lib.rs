@@ -5,7 +5,12 @@ pub mod engine_opus;  // Opus-MT engine
 use std::collections::HashMap;
 use std::sync::Mutex;
 
-pub use downloader::{download_model as download_nllb, is_model_downloaded as is_nllb_downloaded, models_dir, ProgressCallback};
+pub use downloader::{
+    download_nllb, download_opus_models,
+    is_nllb_downloaded, is_opus_model_downloaded,
+    nllb_models_dir, base_models_dir,
+    ProgressCallback,
+};
 pub use engine::{NllbModel, lang_code_to_nllb};
 pub use engine_opus::OpusMtModel;
 
@@ -47,15 +52,11 @@ pub enum EngineType {
 
 /// Check which Opus-MT models are downloaded
 pub fn opus_models_dir() -> std::path::PathBuf {
-    dirs::data_local_dir()
-        .unwrap_or_else(|| std::path::PathBuf::from("."))
-        .join("easytogokorea")
-        .join("models")
+    base_models_dir()
 }
 
-pub fn is_opus_model_downloaded(name: &str) -> bool {
-    let dir = opus_models_dir().join(name);
-    dir.join("encoder_model.onnx").exists() && dir.join("decoder_model_merged.onnx").exists()
+pub fn is_any_opus_downloaded() -> bool {
+    is_opus_model_downloaded("ko-en")
 }
 
 /// Get Opus-MT model name for a language pair
@@ -76,7 +77,7 @@ pub struct Translator {
 impl Translator {
     pub fn new() -> Self {
         // Default to Opus-MT if models are available, else NLLB
-        let default_engine = if is_opus_model_downloaded("ko-en") {
+        let default_engine = if is_any_opus_downloaded() {
             EngineType::OpusMT
         } else if is_nllb_downloaded() {
             EngineType::Nllb200
@@ -177,7 +178,7 @@ impl Translator {
         if !is_nllb_downloaded() { return Err("NLLB model not downloaded".to_string()); }
 
         // Load on thread with 8MB stack
-        let dir = models_dir();
+        let dir = nllb_models_dir();
         let m = std::thread::Builder::new()
             .name("nllb-load".to_string())
             .stack_size(8 * 1024 * 1024)
