@@ -133,11 +133,8 @@ fn translate_all(
 }
 
 #[tauri::command]
-fn check_models_status() -> HashMap<String, bool> {
-    let mut status = HashMap::new();
-    let downloaded = translator::is_model_downloaded();
-    status.insert("nllb-200".to_string(), downloaded);
-    status
+fn check_models_status(state: State<AppState>) -> HashMap<String, bool> {
+    state.translator.available_engines()
 }
 
 #[tauri::command]
@@ -150,7 +147,7 @@ async fn download_translation_models(app: AppHandle) -> Result<String, String> {
         }));
     });
 
-    translator::download_model(Some(&progress_cb)).await?;
+    translator::download_nllb(Some(&progress_cb)).await?;
     Ok("NLLB-200 model downloaded successfully".to_string())
 }
 
@@ -160,6 +157,22 @@ fn get_supported_languages() -> Vec<(String, String)> {
         .iter()
         .map(|&(code, label)| (code.to_string(), label.to_string()))
         .collect()
+}
+
+#[tauri::command]
+fn get_engine(state: State<AppState>) -> String {
+    format!("{:?}", state.translator.current_engine())
+}
+
+#[tauri::command]
+fn set_engine(engine: String, state: State<AppState>) -> Result<String, String> {
+    let engine_type = match engine.as_str() {
+        "OpusMT" | "opus-mt" | "opus" => translator::EngineType::OpusMT,
+        "Nllb200" | "nllb-200" | "nllb" => translator::EngineType::Nllb200,
+        _ => return Err(format!("Unknown engine: {engine}")),
+    };
+    state.translator.set_engine(engine_type);
+    Ok(format!("Engine set to {engine}"))
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -197,6 +210,8 @@ pub fn run() {
             check_models_status,
             download_translation_models,
             get_supported_languages,
+            get_engine,
+            set_engine,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

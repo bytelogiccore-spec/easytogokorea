@@ -1,5 +1,6 @@
 <script>
   import { invoke } from '@tauri-apps/api/core';
+  import { onMount } from 'svelte';
 
   let sourceText = $state('안녕하세요, 한국에 오신 것을 환영합니다!');
   let sourceLang = $state('ko');
@@ -7,6 +8,23 @@
   let translatedText = $state('');
   let isTranslating = $state(false);
   let error = $state('');
+  let currentEngine = $state('OpusMT');
+  let engines = $state({});
+
+  onMount(async () => {
+    try {
+      currentEngine = await invoke('get_engine');
+      engines = await invoke('check_models_status');
+    } catch {}
+  });
+
+  async function switchEngine(/** @type {string} */ e) {
+    try {
+      await invoke('set_engine', { engine: e });
+      currentEngine = await invoke('get_engine');
+      error = '';
+    } catch (err) { error = String(err); }
+  }
 
   const languages = [
     { code: 'ko', label: '한국어' },
@@ -64,8 +82,20 @@
 
 <div class="translate-page">
   <header class="page-header">
-    <h1>🌐 번역 테스트</h1>
-    <p class="subtitle">NLLB-200 · 200개 언어 온디바이스 번역</p>
+    <div class="header-top">
+      <h1>🌐 번역 테스트</h1>
+      <div class="engine-switch">
+        <button class="eng-btn" class:active={currentEngine === 'OpusMT'} onclick={() => switchEngine('opus-mt')} disabled={!engines['opus-mt']}>
+          Opus-MT
+        </button>
+        <button class="eng-btn" class:active={currentEngine === 'Nllb200'} onclick={() => switchEngine('nllb-200')} disabled={!engines['nllb-200']}>
+          NLLB-200
+        </button>
+      </div>
+    </div>
+    <p class="subtitle">
+      {currentEngine === 'OpusMT' ? 'Opus-MT · 6개 언어쌍 (ko→en→X)' : 'NLLB-200 · 200개 언어 직접 번역'} · 온디바이스
+    </p>
   </header>
 
   <div class="translate-card">
@@ -118,16 +148,27 @@
   </div>
 
   <div class="info-note">
-    <p><strong>NLLB-200</strong> (No Language Left Behind) — Meta의 온디바이스 번역 모델</p>
-    <p>1개 모델로 200개 언어 지원 · 인터넷 불필요 · 데이터 외부 전송 없음</p>
+    <p><strong>{currentEngine === 'OpusMT' ? 'Opus-MT' : 'NLLB-200'}</strong> — {currentEngine === 'OpusMT' ? 'Helsinki-NLP 경량 번역 모델 (언어쌍별)' : 'Meta NLLB (1개 모델 200개 언어)'}</p>
+    <p>온디바이스 번역 · 인터넷 불필요 · 데이터 외부 전송 없음</p>
   </div>
 </div>
 
 <style>
   .translate-page { max-width: 720px; }
   .page-header { margin-bottom: 1.5rem; }
+  .header-top { display: flex; justify-content: space-between; align-items: center; }
   .page-header h1 { font-size: 1.75rem; font-weight: 900; }
   .subtitle { color: rgba(255,255,255,0.4); font-size: 0.85rem; margin-top: 0.25rem; }
+
+  .engine-switch { display: flex; gap: 0.25rem; background: rgba(255,255,255,0.04); border-radius: 10px; padding: 3px; }
+  .eng-btn {
+    padding: 0.35rem 0.75rem; border: none; border-radius: 8px; font-size: 0.75rem;
+    font-weight: 700; cursor: pointer; transition: all 0.15s;
+    background: transparent; color: rgba(255,255,255,0.3);
+  }
+  .eng-btn.active { background: rgba(59,130,246,0.2); color: #60a5fa; }
+  .eng-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .eng-btn:hover:not(:disabled):not(.active) { color: rgba(255,255,255,0.6); }
 
   .translate-card {
     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
