@@ -131,9 +131,9 @@ impl NllbModel {
                 (vec![1i64, seq_len as i64], enc_attn_data)
             ).map_err(|e| format!("Enc attn tensor error: {e}"))?;
 
-            // Non-merged decoder: just input_ids, encoder_attention_mask, encoder_hidden_states
+            // Non-merged decoder inputs: input_ids, encoder_hidden_states, encoder_attention_mask
             let decoder_output = self.decoder.run(
-                ort::inputs![decoder_input, enc_attn_tensor, &encoder_output[0]]
+                ort::inputs![decoder_input, &encoder_output[0], enc_attn_tensor]
             ).map_err(|e| format!("Decoder run error: {e}"))?;
 
             let (_shape, logits_data) = decoder_output[0]
