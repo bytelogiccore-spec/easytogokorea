@@ -84,11 +84,20 @@ const OPUS_ROOT_FILES: &[&str] = &[
     "target.spm",
 ];
 
-pub fn base_models_dir() -> PathBuf {
+/// App data directory name — fixed, used across all platforms.
+/// Windows: %LOCALAPPDATA%/EasyToGoKorea/
+/// macOS:   ~/Library/Application Support/EasyToGoKorea/
+/// Linux:   ~/.local/share/EasyToGoKorea/
+const APP_DATA_DIR: &str = "EasyToGoKorea";
+
+pub fn app_data_dir() -> PathBuf {
     dirs::data_local_dir()
         .unwrap_or_else(|| PathBuf::from("."))
-        .join("easytogokorea")
-        .join("models")
+        .join(APP_DATA_DIR)
+}
+
+pub fn base_models_dir() -> PathBuf {
+    app_data_dir().join("models")
 }
 
 pub fn is_opus_model_downloaded(name: &str) -> bool {

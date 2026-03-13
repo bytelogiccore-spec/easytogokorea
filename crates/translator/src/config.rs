@@ -1,28 +1,26 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
+use crate::downloader::app_data_dir;
 
 const CONFIG_FILE: &str = "translator_config.json";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TranslatorConfig {
-    /// Default engine: "OpusMT" or "Nllb200"
+    /// Default engine: "Nllb200"
     pub default_engine: String,
 }
 
 impl Default for TranslatorConfig {
     fn default() -> Self {
         Self {
-            default_engine: "OpusMT".to_string(),
+            default_engine: "Nllb200".to_string(),
         }
     }
 }
 
 impl TranslatorConfig {
     fn config_path() -> PathBuf {
-        dirs::data_local_dir()
-            .unwrap_or_else(|| PathBuf::from("."))
-            .join("easytogokorea")
-            .join(CONFIG_FILE)
+        app_data_dir().join(CONFIG_FILE)
     }
 
     /// Load config from disk, or return default
