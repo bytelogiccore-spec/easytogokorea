@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
+  import Splash from '$lib/Splash.svelte';
   let { children } = $props();
   
   // Reactively compute the current page from the store
@@ -29,6 +30,8 @@
     connectWebSocket();
   });
 </script>
+
+<Splash />
 
 <div class="app-shell">
   <aside class="sidebar">
