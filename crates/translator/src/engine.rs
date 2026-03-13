@@ -2,7 +2,7 @@ use ort::session::Session;
 use std::path::Path;
 use tokenizers::Tokenizer;
 
-/// NLLB-200 language codes (BCP-47 style used by NLLB)
+/// NLLB-200 language codes
 pub fn lang_code_to_nllb(code: &str) -> Option<&'static str> {
     match code {
         "ko" => Some("kor_Hang"),
@@ -38,19 +38,18 @@ pub struct NllbModel {
     encoder: Session,
     decoder: Session,
     tokenizer: Tokenizer,
+    /// Decoder input names from model metadata
+    dec_input_names: Vec<String>,
 }
 
 impl NllbModel {
     pub fn load(model_dir: &Path) -> Result<Self, String> {
         let encoder_path = model_dir.join("encoder_model_quantized.onnx");
-        // Use non-merged decoder (no KV cache complexity)
         let decoder_path = model_dir.join("decoder_model_quantized.onnx");
         let tokenizer_path = model_dir.join("tokenizer.json");
 
         if !decoder_path.exists() {
-            return Err(
-                "decoder_model_quantized.onnx not found. Please re-download from settings.".to_string()
-            );
+            return Err("decoder_model_quantized.onnx not found. Please re-download from settings.".to_string());
         }
 
         eprintln!("[NLLB] Loading encoder from {:?}", encoder_path);
@@ -69,11 +68,19 @@ impl NllbModel {
             .commit_from_file(&decoder_path)
             .map_err(|e| format!("Failed to load decoder: {e}"))?;
 
+        // Read decoder input names from model metadata
+        let dec_input_names: Vec<String> = decoder.inputs().iter()
+            .map(|i| i.name().to_string())
+            .collect();
+        for (idx, input) in decoder.inputs().iter().enumerate() {
+            eprintln!("[NLLB] Decoder input {}: name='{}' type={:?}", idx, input.name(), input.dtype());
+        }
+
         let tokenizer = Tokenizer::from_file(&tokenizer_path)
             .map_err(|e| format!("Failed to load tokenizer: {e}"))?;
 
         eprintln!("[NLLB] Model loaded successfully");
-        Ok(Self { encoder, decoder, tokenizer })
+        Ok(Self { encoder, decoder, tokenizer, dec_input_names })
     }
 
     pub fn translate(
@@ -87,7 +94,6 @@ impl NllbModel {
         let tgt_nllb = lang_code_to_nllb(target_lang)
             .ok_or_else(|| format!("Unsupported target language: {target_lang}"))?;
 
-        // NLLB tokenization: prepend source language token
         let input_text = format!("{} {}", src_nllb, text);
 
         let encoding = self.tokenizer.encode(input_text.as_str(), true)
@@ -114,10 +120,10 @@ impl NllbModel {
         let tgt_token_id = self.tokenizer.token_to_id(tgt_nllb)
             .ok_or_else(|| format!("Target language token '{tgt_nllb}' not in vocabulary"))?;
 
-        // Greedy decoding with non-merged decoder
+        // Greedy decoding
         let eos_token_id = self.tokenizer.token_to_id("</s>").unwrap_or(2) as i64;
         let max_length = (seq_len * 3).min(512);
-        let mut generated_ids: Vec<i64> = vec![eos_token_id, tgt_token_id as i64]; // </s> <tgt_lang>
+        let mut generated_ids: Vec<i64> = vec![eos_token_id, tgt_token_id as i64];
 
         for _ in 0..max_length {
             let dec_len = generated_ids.len();
@@ -131,10 +137,19 @@ impl NllbModel {
                 (vec![1i64, seq_len as i64], enc_attn_data)
             ).map_err(|e| format!("Enc attn tensor error: {e}"))?;
 
-            // Non-merged decoder inputs: input_ids, encoder_hidden_states, encoder_attention_mask
-            let decoder_output = self.decoder.run(
-                ort::inputs![decoder_input, &encoder_output[0], enc_attn_tensor]
-            ).map_err(|e| format!("Decoder run error: {e}"))?;
+            // Pass inputs by name — order doesn't matter
+            let mut input_map: Vec<(String, ort::session::SessionInputValue<'_>)> = Vec::new();
+            for name in &self.dec_input_names {
+                match name.as_str() {
+                    "input_ids" => input_map.push(("input_ids".into(), decoder_input.clone().into())),
+                    "encoder_attention_mask" => input_map.push(("encoder_attention_mask".into(), enc_attn_tensor.clone().into())),
+                    "encoder_hidden_states" => input_map.push(("encoder_hidden_states".into(), (&encoder_output[0]).into())),
+                    other => eprintln!("[NLLB] Skipping unknown decoder input: {}", other),
+                }
+            }
+
+            let decoder_output = self.decoder.run(input_map)
+                .map_err(|e| format!("Decoder run error: {e}"))?;
 
             let (_shape, logits_data) = decoder_output[0]
                 .try_extract_tensor::<f32>()
